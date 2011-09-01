@@ -18,7 +18,7 @@ using System.IO;
 using Microsoft.Win32;
 using System.Threading;
 
-namespace WindowsPhoneDevInstallTool
+namespace WindowsPhoneToolbox
 {
     
     /// <summary>
@@ -28,7 +28,7 @@ namespace WindowsPhoneDevInstallTool
     {
 
         private WindowsPhoneDevice _device = new WindowsPhoneDevice();
-
+        private PersistedData _data = PersistedData.Current;
         public MainWindow()
         {
             InitializeComponent();
@@ -57,8 +57,6 @@ namespace WindowsPhoneDevInstallTool
                 _device.RefreshInstalledApps();
             }
         }
-
-
 
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
@@ -151,9 +149,35 @@ namespace WindowsPhoneDevInstallTool
             RemoteAppIsoStoreItem item = treeIsoStore.SelectedItem as RemoteAppIsoStoreItem;
 
             if (item != null)
-            {
                 item.Update();
+        }
+
+        /// <summary>
+        /// There has to be a better way to do this.
+        /// 
+        /// We use FakeRemoteAppIsoStoreItems to make sure that the little expander arrows
+        /// appear near next to expandables (apps & folders) in the file browser, and we 
+        /// remove them when Update is called. Expanded for some reason seems to always pass in
+        /// the actual items and not the item that we're trying to expand, so we walk upwards to
+        /// the parent and update that.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void treeIsoStore_Expanded(object sender, RoutedEventArgs e)
+        {
+            TreeViewItem item = e.OriginalSource as TreeViewItem;
+
+            if (item.Items.Count == 1)
+            {
+                FakeRemoteAppIsoStoreItem fake = item.Items[0] as FakeRemoteAppIsoStoreItem;
+
+                if (fake != null)
+                {
+                    fake.Parent.Update();
+                }
+
             }
+            
         }
 
         # region INotifyPropertyChanged
@@ -169,5 +193,6 @@ namespace WindowsPhoneDevInstallTool
         }
 
         #endregion
+
     }
 }

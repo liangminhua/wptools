@@ -33,10 +33,17 @@ namespace WindowsPhone.Tools
             // no set - cannot be replaced
         }
 
+        private RemoteAppIsoStoreItem _parent;
+        public RemoteAppIsoStoreItem Parent
+        {
+            get { return _parent; }
+            private set { _parent = value; }
+        }
+
         private bool _updated = false;
 
         /// <summary>
-        /// Construct a new IsoStore representation for this xap
+        /// Construct a new toplevel IsoStore representation for this xap
         /// </summary>
         /// <param name="device"></param>
         /// <param name="xap"></param>
@@ -52,11 +59,21 @@ namespace WindowsPhone.Tools
             _path = "";
 
             IsApplication = true;
+
+            // add a fake item so that anyone binding to us will show expanders
+            Children.Add(new FakeRemoteAppIsoStoreItem(this));
         }
 
-        private RemoteAppIsoStoreItem(RemoteApplication app, RemoteFileInfo remoteFile)
+        /// <summary>
+        /// Construct a representation of a real remote file (or directory)
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="remoteFile"></param>
+        private RemoteAppIsoStoreItem(RemoteApplication app, RemoteFileInfo remoteFile, RemoteAppIsoStoreItem parent)
         {
             _app = app;
+            Parent = parent;
+
             RemoteFile = remoteFile;
             
             string name = RemoteFile.Name;
@@ -67,6 +84,19 @@ namespace WindowsPhone.Tools
 
             _path = name.Substring(name.IndexOf("IsolatedStore\\") + "IsolatedStore\\".Length);
 
+            if (RemoteFile.IsDirectory())
+            {
+                Children.Add(new FakeRemoteAppIsoStoreItem(this));
+            }
+
+        }
+
+        /// <summary>
+        /// Used to create a fake entry so that directories can be queried
+        /// </summary>
+        internal RemoteAppIsoStoreItem(RemoteAppIsoStoreItem parent)
+        {
+            Parent = parent;
         }
 
         /// <summary>
@@ -80,6 +110,8 @@ namespace WindowsPhone.Tools
                 return;
             }
 
+            Children.Clear();
+
             _updated = true;
 
             RemoteIsolatedStorageFile remoteIso = _app.GetIsolatedStore();
@@ -92,7 +124,7 @@ namespace WindowsPhone.Tools
 
                 foreach (RemoteFileInfo remoteFile in remoteFiles)
                 {
-                    Children.Add(new RemoteAppIsoStoreItem(_app, remoteFile));
+                    Children.Add(new RemoteAppIsoStoreItem(_app, remoteFile, this));
                 }
             }
             catch (FileNotFoundException)
@@ -116,4 +148,11 @@ namespace WindowsPhone.Tools
 
         #endregion
     }
+
+    public class FakeRemoteAppIsoStoreItem : RemoteAppIsoStoreItem
+    {
+        public FakeRemoteAppIsoStoreItem(RemoteAppIsoStoreItem parent) : base(parent) { }
+    }
+
+
 }
