@@ -1,0 +1,71 @@
+﻿<Window x:Class="WindowsPhoneDevInstallTool.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:this="clr-namespace:WindowsPhoneToolbox"
+        Title="MainWindow" Height="350" Width="525">
+    
+    <Window.Resources>
+        <this:FileTypeToIconConverter x:Key="FileTypeToIconConverter"></this:FileTypeToIconConverter>
+    </Window.Resources>
+    
+    <Grid>
+        <TabControl Height="311" HorizontalAlignment="Left" Name="tabControl1" VerticalAlignment="Top" Width="503">
+            <TabItem Header="Connection">
+                <Grid>
+                    <TextBlock Margin="6,17,320,240">Connect to:</TextBlock>
+                    <ComboBox Margin="173,13,16,240" ItemsSource="{Binding Devices}" SelectedItem="{Binding CurrentDevice, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"></TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <TextBlock Text="Platform:" Margin="173,45,256,216"></TextBlock>
+                    <TextBlock Text="{Binding StatusMessage}" Margin="173,134,24,57" TextWrapping="Wrap"></TextBlock>
+                    <TextBlock Text="{Binding CurrentDevice.Platform.Name}" Margin="233,45,49,0" Height="18" VerticalAlignment="Top"></TextBlock>
+                    <Button x:Name="btnConnect" Content="Connect" Margin="173,79,211,161" Click="btnConnect_Click"></Button>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Install / Update" IsEnabled="{Binding Connected}">
+                <Grid>
+                    <TextBox Height="28" HorizontalAlignment="Left" Margin="28,53,0,0" Name="txtXapFile" VerticalAlignment="Top" Width="340" />
+                    <Button Content="Browse" Height="25" HorizontalAlignment="Left" Margin="406,54,0,0" Name="btnBrowse" VerticalAlignment="Top" Width="81" Click="btnBrowse_Click" />
+                    <Button Content="Install" Height="37" HorizontalAlignment="Left" Margin="28,95,0,0" Name="btnInstall" VerticalAlignment="Top" Width="94" Click="btnInstall_Click" />
+                    <Button Content="Update" Height="37" HorizontalAlignment="Left" Margin="167,95,0,0" Name="btnUpdate" VerticalAlignment="Top" Width="94" Click="btnUpdate_Click" />
+                    <TextBlock Height="23" HorizontalAlignment="Left" Margin="28,26,0,0" Name="textBlock1" VerticalAlignment="Top" Width="340">XAP Path. Separate multiple files with a semi-colon (;)s</TextBlock>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Uninstall" x:Name="tabUninstall" IsEnabled="{Binding Connected}">
+                <Canvas>
+                    <TextBlock Margin="6,11,349,243">Installed Apps</TextBlock>
+                    <Button Content="Uninstall" Height="23" HorizontalAlignment="Left" Margin="358,103,0,0" Name="btnUninstall" VerticalAlignment="Top" Width="75" Click="btnUninstall_Click" Canvas.Left="40" Canvas.Top="139" />
+                    
+                    <ListBox Height="241" HorizontalAlignment="Left" Margin="6,32,0,0" Name="lstInstalledApps" VerticalAlignment="Top" Width="242" SelectionChanged="lstInstalledApps_SelectionChanged" ItemsSource="{Binding InstalledApplications}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding ProductID}"></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                </Canvas>
+            </TabItem>
+            <TabItem Header="File Browser" IsEnabled="{Binding Connected}" >
+                <Canvas>
+                    <TreeView Height="273" Width="278" x:Name="treeIsoStore" SelectedItemChanged="treeIsoStore_SelectedItemChanged" ItemsSource="{Binding RemoteIsoStores}">
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Height="16" Width="16" Source="{Binding RemoteFile, Converter={StaticResource FileTypeToIconConverter}}" Margin="0,0,5,5"></Image>
+                                    <TextBlock Text="{Binding Name}"></TextBlock>
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </Canvas>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
