@@ -28,7 +28,7 @@ namespace WindowsPhoneToolbox
     {
 
         private WindowsPhoneDevice _device = new WindowsPhoneDevice();
-        private PersistedData _data = PersistedData.Current;
+        
         public MainWindow()
         {
             InitializeComponent();

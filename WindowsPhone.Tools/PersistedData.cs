@@ -6,7 +6,7 @@ using System.IO.IsolatedStorage;
 using System.IO;
 using System.Xml.Serialization;
 
-namespace WindowsPhoneToolbox
+namespace WindowsPhone.Tools
 {
     [Serializable]
     public class PersistedData
@@ -31,8 +31,16 @@ namespace WindowsPhoneToolbox
 
         private const string PERSISTED_DATA_FILE = "persisted_data.xml";
 
+        private Dictionary<Guid, string> _knownApplications;
+        public Dictionary<Guid, string> KnownApplication
+        {
+            get { return _knownApplications; }
+            private set { _knownApplications = value; }
+        }
+
         private PersistedData()
         {
+            KnownApplication = new Dictionary<Guid, string>();
         }
 
         private static PersistedData Load()
