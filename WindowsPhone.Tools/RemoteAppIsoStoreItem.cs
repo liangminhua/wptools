@@ -92,6 +92,19 @@ namespace WindowsPhone.Tools
         }
 
         /// <summary>
+        /// Copies the remote item to the path specified. If this is a directory then it 
+        /// will recursively copy it down.
+        /// </summary>
+        /// <param name="path"></param>
+        public void Copy(string localPath)
+        {
+            RemoteIsolatedStorageFile remoteIso = _app.GetIsolatedStore();
+
+            // TODO: finish this :)
+            remoteIso.ReceiveFile(_path, localPath, true);
+        }
+
+        /// <summary>
         /// Used to create a fake entry so that directories can be queried
         /// </summary>
         internal RemoteAppIsoStoreItem(RemoteAppIsoStoreItem parent)
