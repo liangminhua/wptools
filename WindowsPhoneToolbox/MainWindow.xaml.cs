@@ -160,20 +160,27 @@ namespace WindowsPhoneToolbox
                 item.Update();
         }
 
+        private static int _doubleClickCount = 0;
+
         private void treeIsoStore_OnDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            RemoteAppIsoStoreItem item = treeIsoStore.SelectedItem as RemoteAppIsoStoreItem;
 
-            if (item != null && !item.RemoteFile.IsDirectory())
+            if (++_doubleClickCount % 2 == 0)
             {
-                string path = System.IO.Path.GetTempFileName();
 
-                item.Copy(path);
+                RemoteAppIsoStoreItem item = treeIsoStore.SelectedItem as RemoteAppIsoStoreItem;
 
-                System.Diagnostics.Debug.WriteLine(path);
+                if (item != null && !item.IsApplication && !item.RemoteFile.IsDirectory())
+                {
+                    string path = System.IO.Path.GetTempPath();
+
+                    string localFilePath = item.Get(path);
+
+                    System.Diagnostics.Debug.WriteLine(path);
+                }
+
+                e.Handled = true;
             }
-
-            
         }
 
         /// <summary>
