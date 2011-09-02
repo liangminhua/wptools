@@ -96,12 +96,16 @@ namespace WindowsPhone.Tools
         /// will recursively copy it down.
         /// </summary>
         /// <param name="path"></param>
-        public void Copy(string localPath)
+        public string Get(string localPath)
         {
             RemoteIsolatedStorageFile remoteIso = _app.GetIsolatedStore();
 
+            string fullLocalPath = Path.Combine(localPath, Path.GetFileName(Name));
+
             // TODO: finish this :)
-            remoteIso.ReceiveFile(_path, localPath, true);
+            remoteIso.ReceiveFile(_path, fullLocalPath, true);
+
+            return fullLocalPath;
         }
 
         /// <summary>
