@@ -24,12 +24,23 @@ namespace WindowsPhone.Tools
             get
             {
                 if (_guid == Guid.Empty)
-                {
-                    _guid = GetGuid();
-                }
+                    InitFromManifest();
 
                 return _guid;
             }
+            private set { _guid = value; }
+        }
+
+        private string _name;
+        public string Name
+        {
+            get {
+                if (_name == null)
+                    InitFromManifest();
+
+                return _name; 
+            }
+            private set { _name = value; }
         }
 
         public Xap(string file)
@@ -40,12 +51,18 @@ namespace WindowsPhone.Tools
             FilePath = file;
         }
 
-        private Guid GetGuid()
+        private void InitFromManifest()
         {
             Stream manifestStream = GetFileStreamFromXap("WMAppManifest.xml");
 
-            XPathDocument document = new XPathDocument(manifestStream);
-            return new Guid(document.CreateNavigator().SelectSingleNode("//App").GetAttribute("ProductID", string.Empty));
+            XPathDocument document   = new XPathDocument(manifestStream);
+            XPathNavigator navigator = document.CreateNavigator().SelectSingleNode("//App");
+
+            Guid = new Guid(navigator.GetAttribute("ProductID", string.Empty));
+            Name = navigator.GetAttribute("Title", string.Empty);
+
+            // add this xap to persisted data
+            PersistedData.Current.KnownApplication[Guid] = Name;
         }
 
         private Stream GetFileStreamFromXap(string file)
