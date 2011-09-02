@@ -43,16 +43,24 @@ namespace WindowsPhoneToolbox
 
         private void lstInstalledApps_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            
+            RemoteApplicationEx app = lstInstalledApps.SelectedItem as RemoteApplicationEx;
+
+            if (app != null)
+            {
+                // TODO: not sure why we're not doing this directly in binding
+                txtAppGuid.Text = app.RemoteApplication.ProductID.ToString();
+            }
         }
 
         private void btnUninstall_Click(object sender, RoutedEventArgs e)
         {
-            RemoteApplication app = lstInstalledApps.SelectedItem as RemoteApplication;
+            RemoteApplicationEx app = lstInstalledApps.SelectedItem as RemoteApplicationEx;
 
             if (app != null)
             {
-                app.Uninstall();
+                app.RemoteApplication.Uninstall();
+
+                txtAppGuid.Text = "";
 
                 _device.RefreshInstalledApps();
             }
@@ -150,6 +158,22 @@ namespace WindowsPhoneToolbox
 
             if (item != null)
                 item.Update();
+        }
+
+        private void treeIsoStore_OnDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            RemoteAppIsoStoreItem item = treeIsoStore.SelectedItem as RemoteAppIsoStoreItem;
+
+            if (item != null && !item.RemoteFile.IsDirectory())
+            {
+                string path = System.IO.Path.GetTempFileName();
+
+                item.Copy(path);
+
+                System.Diagnostics.Debug.WriteLine(path);
+            }
+
+            
         }
 
         /// <summary>

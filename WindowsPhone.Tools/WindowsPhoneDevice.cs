@@ -109,8 +109,8 @@ namespace WindowsPhone.Tools
             }
         }
 
-        private Collection<RemoteApplication> _installedApplications;
-        public Collection<RemoteApplication> InstalledApplications
+        private Collection<RemoteApplicationEx> _installedApplications;
+        public Collection<RemoteApplicationEx> InstalledApplications
         {
             get { return _installedApplications; }
             set
@@ -175,7 +175,16 @@ namespace WindowsPhone.Tools
 
         public void RefreshInstalledApps()
         {
-            InstalledApplications = CurrentDevice.GetInstalledApplications();
+            //RemoteApplicationEx
+
+            Collection<RemoteApplication> installed = CurrentDevice.GetInstalledApplications();
+
+            Collection<RemoteApplicationEx> installedCollection = new Collection<RemoteApplicationEx>();
+
+            foreach (RemoteApplication app in installed)
+                installedCollection.Add(new RemoteApplicationEx(app));
+
+            InstalledApplications = installedCollection;
 
             RefreshRemoteIsoStores();
         }
@@ -184,9 +193,9 @@ namespace WindowsPhone.Tools
         {
             List<RemoteAppIsoStoreItem> xapIsoStores = new List<RemoteAppIsoStoreItem>();
 
-            foreach (RemoteApplication app in _installedApplications)
+            foreach (RemoteApplicationEx app in _installedApplications)
             {
-                xapIsoStores.Add(new RemoteAppIsoStoreItem(_currentDevice, app));
+                xapIsoStores.Add(new RemoteAppIsoStoreItem(_currentDevice, app.RemoteApplication));
             }
 
             RemoteIsoStores = xapIsoStores;

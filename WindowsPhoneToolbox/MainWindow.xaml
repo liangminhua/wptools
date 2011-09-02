@@ -44,17 +44,23 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel>
-                                    <TextBlock Text="{Binding ProductID}"></TextBlock>
+                                    <TextBlock Text="{Binding Name}"></TextBlock>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-
+                    <TextBlock Canvas.Left="263" Canvas.Top="52" Height="22" Name="txtAppGuid" Width="210" />
+                    <TextBlock Canvas.Left="263" Canvas.Top="34" Height="20" Text="Guid:" Width="193" />
                 </Canvas>
             </TabItem>
             <TabItem Header="File Browser" IsEnabled="{Binding Connected}" >
                 <Canvas>
                     <TreeView Height="273" Width="278" x:Name="treeIsoStore" SelectedItemChanged="treeIsoStore_SelectedItemChanged" ItemsSource="{Binding RemoteIsoStores}" TreeViewItem.Expanded="treeIsoStore_Expanded">
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="{x:Type TreeViewItem}">
+                                <EventSetter Event="MouseDoubleClick" Handler="treeIsoStore_OnDoubleClick"></EventSetter>
+                            </Style>
+                        </TreeView.ItemContainerStyle>
                         <TreeView.ItemTemplate>
                             <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                                 <StackPanel Orientation="Horizontal">

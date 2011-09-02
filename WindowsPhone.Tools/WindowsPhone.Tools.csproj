@@ -48,6 +48,7 @@
     <Compile Include="CoreConExtensions.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="PersistedData.cs" />
+    <Compile Include="RemoteApplicationEx.cs" />
     <Compile Include="WindowsPhoneDevice.cs" />
     <Compile Include="Xap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
