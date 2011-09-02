@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO.IsolatedStorage;
 using System.IO;
-using System.Xml.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace WindowsPhone.Tools
 {
@@ -29,8 +29,8 @@ namespace WindowsPhone.Tools
 
         #endregion
 
-        private const string PERSISTED_DATA_FILE = "persisted_data.xml";
-
+        private const string PERSISTED_DATA_FILE = "persisted_data";
+        
         private Dictionary<Guid, string> _knownApplications;
         public Dictionary<Guid, string> KnownApplication
         {
@@ -53,9 +53,9 @@ namespace WindowsPhone.Tools
                 {
                     using (IsolatedStorageFileStream stream = store.OpenFile(PERSISTED_DATA_FILE, FileMode.OpenOrCreate, FileAccess.Read))
                     {
-                        XmlSerializer xmlSerializer = new XmlSerializer(typeof(PersistedData));
+                        BinaryFormatter formatter = new BinaryFormatter();
 
-                        return xmlSerializer.Deserialize(stream) as PersistedData;
+                        return formatter.Deserialize(stream) as PersistedData;
                     }
                 }
                 catch { } // ignore the errors, anything falling through will get the default, empty, object
@@ -71,9 +71,8 @@ namespace WindowsPhone.Tools
 
             using (IsolatedStorageFileStream stream = store.OpenFile(PERSISTED_DATA_FILE, FileMode.OpenOrCreate, FileAccess.Write))
             {
-                XmlSerializer xmlSerializer = new XmlSerializer(typeof(PersistedData));
-
-                xmlSerializer.Serialize(stream, _theOne);
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, _theOne);
             }
         }
 
