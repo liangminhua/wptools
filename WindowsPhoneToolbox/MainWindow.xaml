@@ -6,6 +6,11 @@
     
     <Window.Resources>
         <this:FileTypeToIconConverter x:Key="FileTypeToIconConverter"></this:FileTypeToIconConverter>
+
+        <Style x:Key="DeviceInfoHeader" TargetType="TextBlock">
+            <Setter Property="Margin" Value="0,0,12,0"></Setter>
+        </Style>
+        
     </Window.Resources>
     
     <Grid>
@@ -20,10 +25,72 @@
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-                    <TextBlock Text="Platform:" Margin="82,46,347,215"></TextBlock>
-                    <TextBlock Text="{Binding StatusMessage}" Margin="82,135,115,56" TextWrapping="Wrap"></TextBlock>
-                    <TextBlock Text="{Binding CurrentDevice.Platform.Name}" Margin="142,46,140,0" Height="18" VerticalAlignment="Top"></TextBlock>
-                    <Button x:Name="btnConnect" Content="Connect" Margin="82,80,302,160" Click="btnConnect_Click"></Button>
+                    <TextBlock Text="{Binding StatusMessage}" Margin="202,41,33,199" TextWrapping="Wrap" Foreground="Red"></TextBlock>
+                    <Button x:Name="btnConnect" Content="Connect" Margin="82,41,302,199" Click="btnConnect_Click"></Button>
+
+                    <Expander Header="Device Information" Height="182" HorizontalAlignment="Left" Margin="6,93,0,0" VerticalAlignment="Top" Width="469">
+                        
+                        <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="110*"></ColumnDefinition>
+                            <ColumnDefinition Width="129*"></ColumnDefinition>
+                            <ColumnDefinition Width="125*"></ColumnDefinition>
+                            <ColumnDefinition Width="129*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Platform"></TextBlock>
+                            <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="OS Version Major"></TextBlock>
+                            <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="OS Version Major"></TextBlock>
+                            <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="OS Build No"></TextBlock>
+
+                            <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Architecture"></TextBlock>
+                            <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Instruction Set"></TextBlock>
+                            <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Processors"></TextBlock>
+
+                            <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Device Time"></TextBlock>
+                            <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Default Locale"></TextBlock>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="{Binding CurrentDevice.Platform.Name}" Height="18" VerticalAlignment="Top"></TextBlock>
+                            <TextBlock Text="{Binding SystemInfo.OSBuildNo}"></TextBlock>
+                            <TextBlock Text="{Binding SystemInfo.OSMajor}"></TextBlock>
+                            <TextBlock Text="{Binding SystemInfo.OSMinor}"></TextBlock>
+
+                            <TextBlock Text="{Binding SystemInfo.ProcessorArchitecture}"></TextBlock>
+                            <TextBlock Text="{Binding SystemInfo.InstructionSet}"></TextBlock>
+                            <TextBlock Text="{Binding SystemInfo.NumberOfProcessors}"></TextBlock>
+
+                            <TextBlock Text="{Binding SystemInfo.CurrentTime}"></TextBlock>
+                            <TextBlock Text="{Binding SystemInfo.SystemDefaultLocaleId}"></TextBlock>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Available Memory"></TextBlock>
+                            <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Available Virtual"></TextBlock>
+                            <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Page Size"></TextBlock>
+                            <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Page File Size"></TextBlock>
+                            <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Total Memory"></TextBlock>
+                            <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Total Virtual"></TextBlock>
+                            <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Charging"></TextBlock>
+                            <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Full Battery Lifetime"></TextBlock>
+                            <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Battery %"></TextBlock>
+                        </StackPanel>
+                        <StackPanel Grid.Column="3">
+                            <TextBlock Text="{Binding SystemInfo.AvailPhys}"></TextBlock>
+                            <TextBlock Text="{Binding SystemInfo.AvailVirtual}"></TextBlock>
+
+                            <TextBlock Text="{Binding SystemInfo.PageSize}"></TextBlock>
+                            <TextBlock Text="{Binding SystemInfo.TotalPageFile}"></TextBlock>
+                            <TextBlock Text="{Binding SystemInfo.TotalPhys}"></TextBlock>
+                            <TextBlock Text="{Binding SystemInfo.TotalVirtual}"></TextBlock>
+
+                            <TextBlock Text="{Binding SystemInfo.ACLineStatus}"></TextBlock>
+                            <TextBlock Text="{Binding SystemInfo.BatteryFullLifetime}"></TextBlock>
+                            <TextBlock Text="{Binding SystemInfo.BatteryLifePercent}"></TextBlock>
+
+                        </StackPanel>
+                    </Grid>
+                                          
+                    </Expander>
                 </Grid>
             </TabItem>
             <TabItem Header="Install / Update" IsEnabled="{Binding Connected}">
@@ -40,7 +107,7 @@
                     <TextBlock Margin="6,11,349,243">Installed Apps</TextBlock>
                     <Button Content="Uninstall" Height="23" HorizontalAlignment="Left" Margin="358,103,0,0" Name="btnUninstall" VerticalAlignment="Top" Width="75" Click="btnUninstall_Click" Canvas.Left="40" Canvas.Top="139" />
                     
-                    <ListBox Height="241" HorizontalAlignment="Left" Margin="6,32,0,0" Name="lstInstalledApps" VerticalAlignment="Top" Width="242" SelectionChanged="lstInstalledApps_SelectionChanged" ItemsSource="{Binding InstalledApplications}">
+                    <ListBox Height="233" HorizontalAlignment="Left" Margin="6,32,0,0" Name="lstInstalledApps" VerticalAlignment="Top" Width="242" SelectionChanged="lstInstalledApps_SelectionChanged" ItemsSource="{Binding InstalledApplications}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel>
