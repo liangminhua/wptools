@@ -17,6 +17,7 @@ using WindowsPhone.Tools;
 using System.IO;
 using Microsoft.Win32;
 using System.Threading;
+using System.Diagnostics;
 
 namespace WindowsPhoneToolbox
 {
@@ -158,6 +159,8 @@ namespace WindowsPhoneToolbox
 
             if (item != null)
                 item.Update();
+
+            stackFileProperties.DataContext = item.RemoteFile;
         }
 
         private static int _doubleClickCount = 0;
@@ -177,11 +180,115 @@ namespace WindowsPhoneToolbox
                     string localFilePath = item.Get(path);
 
                     System.Diagnostics.Debug.WriteLine(path);
+
+                    // double click should launch the file
+                    ProcessStartInfo info = new ProcessStartInfo(localFilePath);
+                    info.UseShellExecute = true;
+                    info.Verb = "open";
+
+                    try
+                    {
+                        Process preview = new Process();
+                        preview.StartInfo = info;
+
+                        preview.Exited += (exitSender, exitE) => { File.Delete(localFilePath); };
+
+                        preview.Start();
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine(ex);
+                    }
                 }
 
                 e.Handled = true;
             }
         }
+
+        private void btnGet_Click(object sender, RoutedEventArgs e)
+        {
+            RemoteAppIsoStoreItem item = treeIsoStore.SelectedItem as RemoteAppIsoStoreItem;
+
+            // not interesting 
+            if (item == null)
+                return;
+
+            System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
+
+            dialog.Description = "Select the destination folder for the downloaded files:";
+
+            dialog.ShowDialog();
+
+            if (string.IsNullOrEmpty(dialog.SelectedPath))
+                return;
+
+            item.Get(dialog.SelectedPath);
+        }
+
+        private void btnPutDirectory_Click(object sender, RoutedEventArgs e)
+        {
+            RemoteAppIsoStoreItem item = treeIsoStore.SelectedItem as RemoteAppIsoStoreItem;
+
+            // nowhere to put this
+            if (item == null)
+                return;
+
+            System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
+
+            dialog.Description = "Select the folder for to send to the device:";
+
+            dialog.ShowDialog();
+
+            if (string.IsNullOrEmpty(dialog.SelectedPath))
+                return;
+
+            item.Put(dialog.SelectedPath);
+
+        }
+        
+        private void btnPutFile_Click(object sender, RoutedEventArgs e)
+        {
+            RemoteAppIsoStoreItem item = treeIsoStore.SelectedItem as RemoteAppIsoStoreItem;
+
+            // nowhere to put this
+            if (item == null)
+                return;
+
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Multiselect = true;
+            dialog.ShowDialog();
+
+            foreach (string filename in dialog.FileNames)
+            {
+                item.Put(filename);
+            }
+        }
+
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            RemoteAppIsoStoreItem item = treeIsoStore.SelectedItem as RemoteAppIsoStoreItem;
+
+            if (item == null)
+                return;
+
+            if (item.IsApplication)
+            {
+                if (MessageBox.Show("Are you sure you want to delete the IsolatedStorage for this application?\nIt will be reverted to a default state",
+                    "Delete Isolated Storage?",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question) == MessageBoxResult.No
+                 )
+                    return;
+            }
+
+            item.Delete();
+
+            if (item.IsApplication)
+                item.Update(force: true);
+            else
+                item.Parent.Update(force: true);
+        }
+
 
         /// <summary>
         /// There has to be a better way to do this.
@@ -224,6 +331,5 @@ namespace WindowsPhoneToolbox
         }
 
         #endregion
-
     }
 }
