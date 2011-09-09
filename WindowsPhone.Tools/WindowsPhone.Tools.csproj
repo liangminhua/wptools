@@ -47,6 +47,7 @@
     <Compile Include="ConnectionManager.cs" />
     <Compile Include="CoreConExtensions.cs" />
     <Compile Include="Exceptions.cs" />
+    <Compile Include="PathHelper.cs" />
     <Compile Include="PersistedData.cs" />
     <Compile Include="RemoteApplicationEx.cs" />
     <Compile Include="WindowsPhoneDevice.cs" />
