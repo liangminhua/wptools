@@ -82,7 +82,7 @@ namespace WindowsPhone.Tools
 
             // "\\Applications\\Data\\8531f2be-f4c3-4822-9fa6-bcc70c9d50a8\\Data\\IsolatedStore\\\\Shared"
 
-            _path = name.Substring(name.IndexOf("IsolatedStore\\") + "IsolatedStore\\".Length);
+            _path = RemoteFile.GetRelativePath();
 
             if (RemoteFile.IsDirectory())
             {
@@ -95,17 +95,98 @@ namespace WindowsPhone.Tools
         /// Copies the remote item to the path specified. If this is a directory then it 
         /// will recursively copy it down.
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="path">Returns the full local path (i.e. localPath + [file/dir]name)</param>
         public string Get(string localPath)
         {
             RemoteIsolatedStorageFile remoteIso = _app.GetIsolatedStore();
 
             string fullLocalPath = Path.Combine(localPath, Path.GetFileName(Name));
 
-            // TODO: finish this :)
-            remoteIso.ReceiveFile(_path, fullLocalPath, true);
+            if (IsApplication || RemoteFile.IsDirectory())
+            {
+                Directory.CreateDirectory(fullLocalPath);
 
+                // make sure we know about all of our children
+                Update();
+
+                foreach (RemoteAppIsoStoreItem item in Children)
+                {
+                    item.Get(fullLocalPath);
+                }
+
+            }
+            else
+            {
+
+                remoteIso.ReceiveFile(_path, fullLocalPath, true);
+            }
+                
             return fullLocalPath;
+        }
+
+        public void Put(string localFile, string relativeDirectory = "", bool overwrite = false)
+        {
+            RemoteIsolatedStorageFile remoteIso = _app.GetIsolatedStore();
+
+            FileAttributes attrib = File.GetAttributes(localFile);
+
+            if ((attrib & FileAttributes.Directory) == FileAttributes.Directory)
+            {
+                string newRelativeDirectory = Path.Combine(relativeDirectory, PathHelper.GetLastDirectory(localFile));
+                List<string> files = new List<string>(Directory.GetFiles(localFile));
+
+                files.AddRange(Directory.GetDirectories(localFile));
+                
+                // create the directory on the device
+                remoteIso.CreateDirectory(newRelativeDirectory);
+
+                foreach (string file in files)
+                {
+                    Put(file, newRelativeDirectory, overwrite);
+                }
+
+            }
+            else
+            {
+                string deviceFilename = Path.Combine(relativeDirectory, Path.GetFileName(localFile));
+
+                if (overwrite || !remoteIso.FileExists(deviceFilename))
+                {
+                    remoteIso.SendFile(localFile, deviceFilename, createNew: true);
+                }
+            }
+        }
+
+        public void Delete()
+        {
+            RemoteIsolatedStorageFile remoteIso = _app.GetIsolatedStore();
+
+            if (IsApplication)
+            {
+                // delete everything under this application
+                Update();
+
+                foreach (RemoteAppIsoStoreItem item in Children)
+                {
+                    item.Delete();
+                }
+
+                // leave things in a clean state with the default directories. If the user
+                // really wants to kill these they can delete them individually
+                string shared = Path.Combine(_path, "Shared");
+
+                remoteIso.CreateDirectory(shared);
+                remoteIso.CreateDirectory(Path.Combine(shared, "Transfers"));
+                remoteIso.CreateDirectory(Path.Combine(shared, "ShellContent"));
+            } 
+            else if (RemoteFile.IsDirectory())
+            {
+                remoteIso.DeleteDirectory(_path);
+            }
+            else
+            {
+                remoteIso.DeleteFile(_path);
+            }
         }
 
         /// <summary>
@@ -119,10 +200,10 @@ namespace WindowsPhone.Tools
         /// <summary>
         /// Call when you are ready to pull down the data associated with this object
         /// </summary>
-        public void Update()
+        public void Update(bool force = false)
         {
 
-            if (_updated || (RemoteFile != null && !RemoteFile.IsDirectory())) 
+            if ((_updated && !force) || (RemoteFile != null && !RemoteFile.IsDirectory())) 
             {
                 return;
             }
