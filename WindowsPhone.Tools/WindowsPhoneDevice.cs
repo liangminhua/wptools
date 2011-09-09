@@ -79,6 +79,21 @@ namespace WindowsPhone.Tools
             }
         }
 
+        private SystemInfo _systemInfo;
+        public SystemInfo SystemInfo
+        {
+            get { return _systemInfo; }
+            set
+            {
+                if (_systemInfo != value)
+                {
+                    _systemInfo = value;
+
+                    NotifyPropertyChanged("SystemInfo");
+                }
+            }
+        }
+
         private bool _connected;
         public bool Connected
         {
@@ -141,13 +156,25 @@ namespace WindowsPhone.Tools
 
         #endregion
 
+        private Device _connectedDevice = null;
+
         public bool Connect()
         {
             if (CurrentDevice != null)
             {
+                // we're already connected to this device! :)
+                if (CurrentDevice == _connectedDevice)
+                    return true;
+
                 try
                 {
+                    // disconnect the existing device
+                    if (_connectedDevice != null)
+                        _connectedDevice.Disconnect();
+
                     CurrentDevice.Connect();
+
+                    SystemInfo = CurrentDevice.GetSystemInfo();
 
                     StatusMessage = "Connected to " + CurrentDevice.Name + "!";
 
@@ -167,6 +194,8 @@ namespace WindowsPhone.Tools
                     }
 
                     Connected = false;
+                    _connectedDevice = null;
+                    SystemInfo = null;                    
                 }
             }
 
