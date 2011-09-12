@@ -2,7 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:this="clr-namespace:WindowsPhoneToolbox"
-        Title="Windows Phone Toolbox" Height="334" Width="535" ResizeMode="CanMinimize">
+        Title="Windows Phone Toolbox" Height="334" Width="535" ResizeMode="CanMinimize"
+        Icon="wptoolbox.ico">
     
     <Window.Resources>
         <this:FileTypeToIconConverter x:Key="FileTypeToIconConverter"></this:FileTypeToIconConverter>
@@ -31,7 +32,7 @@
 
                     <Expander Header="Device Information" Height="182" HorizontalAlignment="Left" Margin="6,93,0,0" VerticalAlignment="Top" Width="469">
                         
-                        <Grid >
+                        <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="110*"></ColumnDefinition>
                             <ColumnDefinition Width="129*"></ColumnDefinition>
@@ -101,6 +102,10 @@
                     <Button Content="Install" Height="24" HorizontalAlignment="Left" Margin="8,63,0,0" Name="btnInstall" VerticalAlignment="Top" Width="77" Click="btnInstall_Click" />
                     <Button Content="Update" Height="24" HorizontalAlignment="Left" Margin="104,63,0,0" Name="btnUpdate" VerticalAlignment="Top" Width="77" Click="btnUpdate_Click" />
                     <TextBlock Height="23" HorizontalAlignment="Left" Margin="8,15,0,0" Name="textBlock1" VerticalAlignment="Top" Width="340">XAP Path (separate multiple files with a semi-colon (;)s):</TextBlock>
+                    <TextBlock Height="81" HorizontalAlignment="Left" Margin="8,97,0,0" Name="textBlock2" TextWrapping="Wrap" VerticalAlignment="Top" Width="488">
+                        &#8226; Failures are silent - Updating a xap that is not already installed will have no effect<LineBreak/>
+                        &#8226; Installing a xap that already exists will wipe the existing installation and reinstall the xap
+                    </TextBlock>
                 </Grid>
             </TabItem>
             <TabItem Header="Installed Apps" x:Name="tabInstalledApps" IsEnabled="{Binding Device.Connected}">
