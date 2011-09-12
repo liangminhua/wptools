@@ -1,9 +1,9 @@
-﻿<Window x:Class="WindowsPhoneToolbox.MainWindow"
+﻿<Window x:Class="WindowsPhonePowerTools.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:this="clr-namespace:WindowsPhoneToolbox"
+        xmlns:this="clr-namespace:WindowsPhonePowerTools"
         Title="Windows Phone Toolbox" Height="334" Width="535" ResizeMode="CanMinimize"
-        Icon="wptoolbox.ico">
+        Icon="wptools.ico">
     
     <Window.Resources>
         <this:FileTypeToIconConverter x:Key="FileTypeToIconConverter"></this:FileTypeToIconConverter>

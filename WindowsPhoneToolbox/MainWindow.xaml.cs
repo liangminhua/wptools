@@ -19,7 +19,7 @@ using Microsoft.Win32;
 using System.Threading;
 using System.Diagnostics;
 
-namespace WindowsPhoneToolbox
+namespace WindowsPhonePowerTools
 {
     
     /// <summary>

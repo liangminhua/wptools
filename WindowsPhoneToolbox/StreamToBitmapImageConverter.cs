@@ -6,7 +6,7 @@ using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using System.IO;
 
-namespace WindowsPhoneToolbox
+namespace WindowsPhonePowerTools
 {
     class StreamToBitmapImageConverter : IValueConverter
     {

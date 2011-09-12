@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Runtime.InteropServices;
 
-namespace WindowsPhoneToolbox
+namespace WindowsPhonePowerTools
 {
     /// <summary>
     /// Interaction logic for App.xaml

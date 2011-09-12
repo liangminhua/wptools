@@ -8,7 +8,7 @@ using WindowsPhone.Tools;
 using Microsoft.SmartDevice.Connectivity;
 using System.IO;
 
-namespace WindowsPhoneToolbox
+namespace WindowsPhonePowerTools
 {
     class FileTypeToIconConverter : IValueConverter
     {
