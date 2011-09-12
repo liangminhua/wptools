@@ -6,6 +6,7 @@
     
     <Window.Resources>
         <this:FileTypeToIconConverter x:Key="FileTypeToIconConverter"></this:FileTypeToIconConverter>
+        <this:StreamToBitmapImageConverter x:Key="StreamToBitmapImageConverter"></this:StreamToBitmapImageConverter>
 
         <Style x:Key="DeviceInfoHeader" TargetType="TextBlock">
             <Setter Property="Margin" Value="0,0,12,0"></Setter>
@@ -110,7 +111,8 @@
                     <ListBox Height="233" HorizontalAlignment="Left" Margin="6,32,0,0" Name="lstInstalledApps" VerticalAlignment="Top" Width="242" SelectionChanged="lstInstalledApps_SelectionChanged" ItemsSource="{Binding InstalledApplications}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+                                    <Image Height="20" Width="20" Margin="0,0,4,0" Source="{Binding Icon, Converter={StaticResource StreamToBitmapImageConverter}}"></Image>
                                     <TextBlock Text="{Binding Name}"></TextBlock>
                                 </StackPanel>
                             </DataTemplate>
@@ -131,7 +133,7 @@
                         <TreeView.ItemTemplate>
                             <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                                 <StackPanel Orientation="Horizontal">
-                                    <Image Height="16" Width="16" Source="{Binding RemoteFile, Converter={StaticResource FileTypeToIconConverter}}" Margin="0,1,5,3"></Image>
+                                    <Image Height="16" Width="16" Source="{Binding Icon, Converter={StaticResource FileTypeToIconConverter}}" Margin="0,1,5,3"></Image>
                                     <TextBlock Text="{Binding Name}"></TextBlock>
                                 </StackPanel>
                             </HierarchicalDataTemplate>
