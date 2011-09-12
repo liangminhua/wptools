@@ -64,11 +64,9 @@ namespace WindowsPhoneToolbox
 
         private void btnUninstall_Click(object sender, RoutedEventArgs e)
         {
-            RemoteApplicationEx app = lstInstalledApps.SelectedItem as RemoteApplicationEx;
-
-            if (app != null)
+            if (CurSelectedInstalledApp != null)
             {
-                app.RemoteApplication.Uninstall();
+                CurSelectedInstalledApp.RemoteApplication.Uninstall();
 
                 txtAppGuid.Text = "";
 
@@ -328,12 +326,14 @@ namespace WindowsPhoneToolbox
 
         private void btnLaunchApp_Click(object sender, RoutedEventArgs e)
         {
-
+            if (CurSelectedInstalledApp != null)
+                CurSelectedInstalledApp.RemoteApplication.Launch();
         }
 
         private void btnKillApp_Click(object sender, RoutedEventArgs e)
         {
-
+            if (CurSelectedInstalledApp != null)
+                CurSelectedInstalledApp.RemoteApplication.TerminateRunningInstances();
         }
 
         # region INotifyPropertyChanged
