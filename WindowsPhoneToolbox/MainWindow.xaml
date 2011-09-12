@@ -103,7 +103,7 @@
                     <TextBlock Height="23" HorizontalAlignment="Left" Margin="8,15,0,0" Name="textBlock1" VerticalAlignment="Top" Width="340">XAP Path (separate multiple files with a semi-colon (;)s):</TextBlock>
                 </Grid>
             </TabItem>
-            <TabItem Header="Installed Apps" x:Name="tabInstalledApps" IsEnabled="{Binding Connected}">
+            <TabItem Header="Installed Apps" x:Name="tabInstalledApps" IsEnabled="{Binding Device.Connected}">
                 <Canvas>
                     <TextBlock Margin="6,11,349,243">Installed Apps</TextBlock>
                     <ListBox Height="233" HorizontalAlignment="Left" Margin="6,32,0,0" Name="lstInstalledApps" VerticalAlignment="Top" Width="242" ItemsSource="{Binding Device.InstalledApplications}" SelectedItem="{Binding CurSelectedInstalledApp, Mode=TwoWay}">
@@ -125,7 +125,7 @@
                     </GroupBox>
                     <Grid Canvas.Left="274" Canvas.Top="114" />
                     <GroupBox Canvas.Left="254" Canvas.Top="15" Header="Properties" Height="188" Name="groupBox2" Width="246" DataContext="{Binding CurSelectedInstalledApp}">
-                        <StackPanel>
+                        <StackPanel Margin="3,0,0,0">
                             <TextBlock Height="20" Text="Guid:" />
                             <TextBlock Height="22" Name="txtAppGuid" Width="232" Text="{Binding RemoteApplication.ProductID}" />
                         </StackPanel>
