@@ -6,3 +6,4 @@ WindowsPhone.Tools/obj/*
 WindowsPhone.Tools/bin/*
 *.suo
 WindowsPhoneToolbox/bin/*
+WindowsPhoneToolbox/publish/*
