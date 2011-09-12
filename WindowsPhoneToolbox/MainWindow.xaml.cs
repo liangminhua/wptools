@@ -28,30 +28,38 @@ namespace WindowsPhoneToolbox
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
 
+        private RemoteApplicationEx _curSelectedInstalledApp;
+        public RemoteApplicationEx CurSelectedInstalledApp
+        {
+            get { return _curSelectedInstalledApp; }
+            set
+            {
+                if (_curSelectedInstalledApp != value)
+                {
+                    _curSelectedInstalledApp = value;
+
+                    NotifyPropertyChanged("CurSelectedInstalledApp");
+                }
+            }
+        }
+
         private WindowsPhoneDevice _device = new WindowsPhoneDevice();
-        
+        public WindowsPhoneDevice Device
+        {
+            get { return _device; }
+        }
+       
         public MainWindow()
         {
             InitializeComponent();
 
             this.DataContext = _device;
+            tabInstalledApps.DataContext = this;
         }
 
         private void btnConnect_Click(object sender, RoutedEventArgs e)
         {
             _device.Connect();
-        }
-
-        private void lstInstalledApps_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            RemoteApplicationEx app = lstInstalledApps.SelectedItem as RemoteApplicationEx;
-
-            if (app != null)
-            {
-                // TODO: not sure why we're not doing this directly in binding
-                txtAppGuid.Text = app.RemoteApplication.ProductID.ToString();
-                
-            }
         }
 
         private void btnUninstall_Click(object sender, RoutedEventArgs e)
@@ -316,6 +324,16 @@ namespace WindowsPhoneToolbox
 
             }
             
+        }
+
+        private void btnLaunchApp_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnKillApp_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
         # region INotifyPropertyChanged

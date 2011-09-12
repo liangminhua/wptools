@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:this="clr-namespace:WindowsPhoneToolbox"
-        Title="Windows Phone Toolbox" Height="334" Width="506" ResizeMode="CanMinimize">
+        Title="Windows Phone Toolbox" Height="334" Width="535" ResizeMode="CanMinimize">
     
     <Window.Resources>
         <this:FileTypeToIconConverter x:Key="FileTypeToIconConverter"></this:FileTypeToIconConverter>
@@ -15,18 +15,18 @@
     </Window.Resources>
     
     <Grid>
-        <TabControl Height="311" HorizontalAlignment="Left" Name="tabControl1" VerticalAlignment="Top" Width="503">
+        <TabControl Height="311" HorizontalAlignment="Left" Name="tabControl1" VerticalAlignment="Top" Width="531">
             <TabItem Header="Connection">
                 <Grid>
-                    <TextBlock Margin="6,17,417,0" Height="18" VerticalAlignment="Top">Connect to:</TextBlock>
-                    <ComboBox Margin="0,13,33,244" ItemsSource="{Binding Devices}" SelectedItem="{Binding CurrentDevice, Mode=TwoWay}" HorizontalAlignment="Right" Width="378">
+                    <TextBlock Margin="6,17,445,0" Height="18" VerticalAlignment="Top">Connect to:</TextBlock>
+                    <ComboBox Margin="0,13,33,244" ItemsSource="{Binding Devices}" SelectedItem="{Binding CurrentDevice, Mode=TwoWay}" HorizontalAlignment="Right" Width="406">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Name}"></TextBlock>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-                    <TextBlock Text="{Binding StatusMessage}" Margin="202,41,33,199" TextWrapping="Wrap" Foreground="Red"></TextBlock>
+                    <TextBlock Text="{Binding StatusMessage}" Margin="225,41,33,199" TextWrapping="Wrap" Foreground="Red"></TextBlock>
                     <Button x:Name="btnConnect" Content="Connect" Margin="82,41,302,199" Click="btnConnect_Click"></Button>
 
                     <Expander Header="Device Information" Height="182" HorizontalAlignment="Left" Margin="6,93,0,0" VerticalAlignment="Top" Width="469">
@@ -106,9 +106,7 @@
             <TabItem Header="Installed Apps" x:Name="tabInstalledApps" IsEnabled="{Binding Connected}">
                 <Canvas>
                     <TextBlock Margin="6,11,349,243">Installed Apps</TextBlock>
-                    <Button Content="Uninstall" Height="23" HorizontalAlignment="Left" Margin="358,103,0,0" Name="btnUninstall" VerticalAlignment="Top" Width="75" Click="btnUninstall_Click" Canvas.Left="40" Canvas.Top="139" />
-                    
-                    <ListBox Height="233" HorizontalAlignment="Left" Margin="6,32,0,0" Name="lstInstalledApps" VerticalAlignment="Top" Width="242" SelectionChanged="lstInstalledApps_SelectionChanged" ItemsSource="{Binding InstalledApplications}">
+                    <ListBox Height="233" HorizontalAlignment="Left" Margin="6,32,0,0" Name="lstInstalledApps" VerticalAlignment="Top" Width="242" ItemsSource="{Binding Device.InstalledApplications}" SelectedItem="{Binding CurSelectedInstalledApp, Mode=TwoWay}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,3">
@@ -118,13 +116,25 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <TextBlock Canvas.Left="263" Canvas.Top="52" Height="22" Name="txtAppGuid" Width="210" />
-                    <TextBlock Canvas.Left="263" Canvas.Top="34" Height="20" Text="Guid:" Width="193" />
+                    <GroupBox Canvas.Left="254" Canvas.Top="203" Header="Actions" Height="62" Name="groupBox1" Width="246">
+                        <Canvas>
+                            <Button Content="Uninstall" Height="23" Name="btnUninstall" Width="60" Click="btnUninstall_Click" Canvas.Left="7" Canvas.Top="6" />
+                            <Button Content="Launch" Height="23" x:Name="btnLaunchApp" Click="btnLaunchApp_Click" Canvas.Left="89" Canvas.Top="6" Width="60"></Button>
+                            <Button Content="Kill" Height="23" x:Name="btnKillApp" Click="btnKillApp_Click" Canvas.Left="164" Canvas.Top="6" Width="60"></Button>
+                        </Canvas>
+                    </GroupBox>
+                    <Grid Canvas.Left="274" Canvas.Top="114" />
+                    <GroupBox Canvas.Left="254" Canvas.Top="15" Header="Properties" Height="188" Name="groupBox2" Width="246" DataContext="{Binding CurSelectedInstalledApp}">
+                        <StackPanel>
+                            <TextBlock Height="20" Text="Guid:" />
+                            <TextBlock Height="22" Name="txtAppGuid" Width="232" Text="{Binding RemoteApplication.ProductID}" />
+                        </StackPanel>
+                    </GroupBox>
                 </Canvas>
             </TabItem>
             <TabItem Header="File Browser" IsEnabled="{Binding Connected}" >
                 <Canvas>
-                    <TreeView Height="209" Width="362" x:Name="treeIsoStore" SelectedItemChanged="treeIsoStore_SelectedItemChanged" ItemsSource="{Binding RemoteIsoStores}" TreeViewItem.Expanded="treeIsoStore_Expanded">
+                    <TreeView Height="209" Width="391" x:Name="treeIsoStore" SelectedItemChanged="treeIsoStore_SelectedItemChanged" ItemsSource="{Binding RemoteIsoStores}" TreeViewItem.Expanded="treeIsoStore_Expanded">
                         <TreeView.ItemContainerStyle>
                             <Style TargetType="{x:Type TreeViewItem}">
                                 <EventSetter Event="MouseDoubleClick" Handler="treeIsoStore_OnDoubleClick"></EventSetter>
@@ -140,11 +150,11 @@
                         </TreeView.ItemTemplate>
                     </TreeView>
                     <Button Canvas.Left="7" Canvas.Top="215" Content="Get" Height="24" Name="btnGet" Width="77" Click="btnGet_Click" />
-                    <Button Canvas.Left="96" Canvas.Top="215" Content="Put File" Height="24" Name="btnPutFile" Width="77" Click="btnPutFile_Click" />
-                    <Button Canvas.Left="188" Canvas.Top="215" Content="Put Directory" Height="24" Name="btnPutDirectory" Width="85" Click="btnPutDirectory_Click" />
-                    <Button Canvas.Left="285" Canvas.Top="215" Content="Delete" Height="24" Name="btnDelete" Width="77" Click="btnDelete_Click" />
+                    <Button Canvas.Left="108" Canvas.Top="215" Content="Put File" Height="24" Name="btnPutFile" Width="77" Click="btnPutFile_Click" />
+                    <Button Canvas.Left="204" Canvas.Top="215" Content="Put Directory" Height="24" Name="btnPutDirectory" Width="85" Click="btnPutDirectory_Click" />
+                    <Button Canvas.Left="314" Canvas.Top="215" Content="Delete" Height="24" Name="btnDelete" Width="77" Click="btnDelete_Click" />
                     <CheckBox Canvas.Left="7" Canvas.Top="245" Content="Overwrite Existing" Height="16" Name="chkOverwrite" />
-                    <StackPanel x:Name="stackFileProperties" Canvas.Left="368" Canvas.Top="0" Width="111">
+                    <StackPanel x:Name="stackFileProperties" Canvas.Left="397" Canvas.Top="-1" Width="111">
                         <TextBlock Height="19" Text="Created:" />
                         <TextBlock Height="23" Text="{Binding CreationTime}" />
                         <TextBlock Height="19" Text="Attributes:" />
