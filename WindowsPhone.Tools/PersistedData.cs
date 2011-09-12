@@ -31,8 +31,8 @@ namespace WindowsPhone.Tools
 
         private const string PERSISTED_DATA_FILE = "persisted_data";
         
-        private Dictionary<Guid, string> _knownApplications;
-        public Dictionary<Guid, string> KnownApplication
+        private Dictionary<Guid, KnownApplication> _knownApplications;
+        internal Dictionary<Guid, KnownApplication> KnownApplication
         {
             get { return _knownApplications; }
             private set { _knownApplications = value; }
@@ -40,7 +40,7 @@ namespace WindowsPhone.Tools
 
         private PersistedData()
         {
-            KnownApplication = new Dictionary<Guid, string>();
+            KnownApplication = new Dictionary<Guid, KnownApplication>();
         }
 
         private static PersistedData Load()
@@ -81,5 +81,15 @@ namespace WindowsPhone.Tools
             Save();
         }
 
+        internal static void SaveBinaryStream(Stream inStream, string Icon)
+        {
+            using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForAssembly())
+            {
+                using (IsolatedStorageFileStream outStream = store.OpenFile(Icon, FileMode.OpenOrCreate, FileAccess.Write))
+                {
+                    inStream.CopyTo(outStream);
+                }
+            }
+        }
     }
 }
