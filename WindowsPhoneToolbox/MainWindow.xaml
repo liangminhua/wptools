@@ -103,7 +103,7 @@
                     <TextBlock Height="23" HorizontalAlignment="Left" Margin="8,15,0,0" Name="textBlock1" VerticalAlignment="Top" Width="340">XAP Path (separate multiple files with a semi-colon (;)s):</TextBlock>
                 </Grid>
             </TabItem>
-            <TabItem Header="Uninstall" x:Name="tabUninstall" IsEnabled="{Binding Connected}">
+            <TabItem Header="Installed Apps" x:Name="tabInstalledApps" IsEnabled="{Binding Connected}">
                 <Canvas>
                     <TextBlock Margin="6,11,349,243">Installed Apps</TextBlock>
                     <Button Content="Uninstall" Height="23" HorizontalAlignment="Left" Margin="358,103,0,0" Name="btnUninstall" VerticalAlignment="Top" Width="75" Click="btnUninstall_Click" Canvas.Left="40" Canvas.Top="139" />
