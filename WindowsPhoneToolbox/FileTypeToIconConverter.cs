@@ -6,13 +6,14 @@ using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using WindowsPhone.Tools;
 using Microsoft.SmartDevice.Connectivity;
+using System.IO;
 
 namespace WindowsPhoneToolbox
 {
     class FileTypeToIconConverter : IValueConverter
     {
         static BitmapImage imageDir = new BitmapImage(new Uri("images/folder.png", UriKind.RelativeOrAbsolute));
-        static BitmapImage imageApp = new BitmapImage(new Uri("images/WindowsPhoneIcon.png", UriKind.RelativeOrAbsolute));
+        public static readonly BitmapImage imageApp = new BitmapImage(new Uri("images/WindowsPhoneIcon.png", UriKind.RelativeOrAbsolute));
         static BitmapImage imageUnknown = new BitmapImage(new Uri("images/unknown.png", UriKind.RelativeOrAbsolute));
 
         static Dictionary<string, BitmapImage> fileTypeImages = new Dictionary<string, BitmapImage>()
@@ -24,6 +25,18 @@ namespace WindowsPhoneToolbox
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            Stream stream = value as Stream;
+
+            if (stream != null)
+            {
+                BitmapImage img = new BitmapImage();
+                img.BeginInit();
+                img.StreamSource = stream;
+                img.EndInit();
+
+                return img;
+            }
+
             RemoteFileInfo file = value as RemoteFileInfo;
 
             if (file == null)

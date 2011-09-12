@@ -224,7 +224,7 @@ namespace WindowsPhone.Tools
 
             foreach (RemoteApplicationEx app in _installedApplications)
             {
-                xapIsoStores.Add(new RemoteAppIsoStoreItem(_currentDevice, app.RemoteApplication));
+                xapIsoStores.Add(new RemoteAppIsoStoreItem(_currentDevice, app));
             }
 
             RemoteIsoStores = xapIsoStores;

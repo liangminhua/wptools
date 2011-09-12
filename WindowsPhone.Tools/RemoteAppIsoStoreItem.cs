@@ -13,6 +13,7 @@ namespace WindowsPhone.Tools
     {
         private Device _device;
         private RemoteApplication _app;
+        private RemoteApplicationEx _appEx;
 
         public string Name { get; set; }
 
@@ -22,6 +23,21 @@ namespace WindowsPhone.Tools
         public bool IsApplication { get; set; }
 
         public RemoteFileInfo RemoteFile { get; private set; }
+
+        /// <summary>
+        /// The weird and wonderful world of Icons. Will either return a stream with the icon in it
+        /// or will return RemoteFile for you to convert nicely into a generic icon.
+        /// </summary>
+        public object Icon
+        {
+            get
+            {
+                if (IsApplication)
+                    return _appEx.Icon;
+                else
+                    return RemoteFile;
+            }
+        }
 
         private string _path;
 
@@ -47,14 +63,15 @@ namespace WindowsPhone.Tools
         /// </summary>
         /// <param name="device"></param>
         /// <param name="xap"></param>
-        public RemoteAppIsoStoreItem(Microsoft.SmartDevice.Connectivity.Device device, RemoteApplication app)
+        public RemoteAppIsoStoreItem(Microsoft.SmartDevice.Connectivity.Device device, RemoteApplicationEx app)
         {
             this._device = device;
-            this._app = app;
+            this._app    = app.RemoteApplication;
+            this._appEx  = app;
             
             // the public constructor is only used to construct the first level
             // which represents the app itself
-            Name = app.ProductID.ToString();
+            Name = app.RemoteApplication.ProductID.ToString();
 
             _path = "";
 
@@ -69,9 +86,10 @@ namespace WindowsPhone.Tools
         /// </summary>
         /// <param name="app"></param>
         /// <param name="remoteFile"></param>
-        private RemoteAppIsoStoreItem(RemoteApplication app, RemoteFileInfo remoteFile, RemoteAppIsoStoreItem parent)
+        private RemoteAppIsoStoreItem(RemoteApplicationEx app, RemoteFileInfo remoteFile, RemoteAppIsoStoreItem parent)
         {
-            _app = app;
+            _app   = app.RemoteApplication;
+            _appEx = app;
             Parent = parent;
 
             RemoteFile = remoteFile;
@@ -222,7 +240,7 @@ namespace WindowsPhone.Tools
 
                 foreach (RemoteFileInfo remoteFile in remoteFiles)
                 {
-                    Children.Add(new RemoteAppIsoStoreItem(_app, remoteFile, this));
+                    Children.Add(new RemoteAppIsoStoreItem(_appEx, remoteFile, this));
                 }
             }
             catch (FileNotFoundException)
