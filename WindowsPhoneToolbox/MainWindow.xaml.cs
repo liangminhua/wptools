@@ -50,6 +50,7 @@ namespace WindowsPhoneToolbox
             {
                 // TODO: not sure why we're not doing this directly in binding
                 txtAppGuid.Text = app.RemoteApplication.ProductID.ToString();
+                
             }
         }
 
@@ -201,7 +202,6 @@ namespace WindowsPhoneToolbox
                     }
                 }
 
-                e.Handled = true;
             }
         }
 
