@@ -43,6 +43,19 @@ namespace WindowsPhone.Tools
             private set { _name = value; }
         }
 
+        public string _icon;
+        public string Icon
+        {
+            get
+            {
+                if (_icon == null)
+                    InitFromManifest();
+
+                return _icon;
+            }
+            private set { _icon = value; }
+        }
+
         public Xap(string file)
         {
             if (!File.Exists(file))
@@ -53,16 +66,33 @@ namespace WindowsPhone.Tools
 
         private void InitFromManifest()
         {
-            Stream manifestStream = GetFileStreamFromXap("WMAppManifest.xml");
+            using (Stream manifestStream = GetFileStreamFromXap("WMAppManifest.xml"))
+            {
+                KnownApplication persistedAppData = new KnownApplication();
 
-            XPathDocument document   = new XPathDocument(manifestStream);
-            XPathNavigator navigator = document.CreateNavigator().SelectSingleNode("//App");
+                XPathDocument document = new XPathDocument(manifestStream);
+                XPathNavigator navigator = document.CreateNavigator().SelectSingleNode("//App");
 
-            Guid = new Guid(navigator.GetAttribute("ProductID", string.Empty));
-            Name = navigator.GetAttribute("Title", string.Empty);
+                Guid = new Guid(navigator.GetAttribute("ProductID", string.Empty));
+                Name = navigator.GetAttribute("Title", string.Empty);
+                Icon = navigator.SelectSingleNode("//App//IconPath").ToString();
 
-            // add this xap to persisted data
-            PersistedData.Current.KnownApplication[Guid] = Name;
+                if (!string.IsNullOrEmpty(Icon))
+                {
+                    using (Stream iconStream = GetFileStreamFromXap(Icon))
+                    {
+                        // save the image as the guid to maintain uniqueness
+                        PersistedData.SaveBinaryStream(iconStream, Guid.ToString());
+                    }
+
+                    persistedAppData.Icon = Guid.ToString();
+                }
+
+                persistedAppData.Name = Name;
+
+                // add this xap to persisted data
+                PersistedData.Current.KnownApplication[Guid] = persistedAppData;
+            }
         }
 
         private Stream GetFileStreamFromXap(string file)
