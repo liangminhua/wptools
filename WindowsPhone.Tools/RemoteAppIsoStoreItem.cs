@@ -71,7 +71,7 @@ namespace WindowsPhone.Tools
             
             // the public constructor is only used to construct the first level
             // which represents the app itself
-            Name = app.RemoteApplication.ProductID.ToString();
+            Name = app.Name;
 
             _path = "";
 
