@@ -7,3 +7,4 @@ WindowsPhone.Tools/bin/*
 *.suo
 WindowsPhoneToolbox/bin/*
 WindowsPhoneToolbox/publish/*
+*.user

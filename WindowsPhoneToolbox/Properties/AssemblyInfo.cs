@@ -7,11 +7,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Windows Phone Toolbox")]
+[assembly: AssemblyTitle("Windows Phone Power Tools")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Oren Nachman")]
-[assembly: AssemblyProduct("Windows Phone Toolbox")]
+[assembly: AssemblyProduct("Windows Phone Power Tools")]
 [assembly: AssemblyCopyright("Copyright © Oren Nachman 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

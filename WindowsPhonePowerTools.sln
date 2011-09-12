@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsPhoneToolbox", "WindowsPhoneToolbox\WindowsPhoneToolbox.csproj", "{6E7BF7BE-F042-441B-BF4F-807A058CC791}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsPhonePowerTools", "WindowsPhoneToolbox\WindowsPhonePowerTools.csproj", "{6E7BF7BE-F042-441B-BF4F-807A058CC791}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsPhone.Tools", "WindowsPhone.Tools\WindowsPhone.Tools.csproj", "{EAE44D9A-8C45-4A6C-81EB-999F0FF6D237}"
 EndProject
