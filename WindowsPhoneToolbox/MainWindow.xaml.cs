@@ -184,7 +184,7 @@ namespace WindowsPhoneToolbox
                 {
                     string path = System.IO.Path.GetTempPath();
 
-                    string localFilePath = item.Get(path);
+                    string localFilePath = item.Get(path, (chkOverwrite.IsChecked == true ? true : false));
 
                     System.Diagnostics.Debug.WriteLine(path);
 
@@ -228,7 +228,7 @@ namespace WindowsPhoneToolbox
             if (string.IsNullOrEmpty(dialog.SelectedPath))
                 return;
 
-            item.Get(dialog.SelectedPath);
+            item.Get(dialog.SelectedPath, (chkOverwrite.IsChecked == true ? true : false));
         }
 
         private void btnPutDirectory_Click(object sender, RoutedEventArgs e)

@@ -114,7 +114,7 @@ namespace WindowsPhone.Tools
         /// will recursively copy it down.
         /// </summary>
         /// <param name="path">Returns the full local path (i.e. localPath + [file/dir]name)</param>
-        public string Get(string localPath)
+        public string Get(string localPath, bool overwrite)
         {
             RemoteIsolatedStorageFile remoteIso = _app.GetIsolatedStore();
 
@@ -129,14 +129,15 @@ namespace WindowsPhone.Tools
 
                 foreach (RemoteAppIsoStoreItem item in Children)
                 {
-                    item.Get(fullLocalPath);
+                    item.Get(fullLocalPath, overwrite);
                 }
 
             }
             else
             {
 
-                remoteIso.ReceiveFile(_path, fullLocalPath, true);
+                if (overwrite || !File.Exists(fullLocalPath))
+                    remoteIso.ReceiveFile(_path, fullLocalPath, true);
             }
                 
             return fullLocalPath;
