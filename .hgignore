@@ -1,10 +1,10 @@
 syntax: glob
 WindowsPhone.Tools/bin/*
-WindowsPhoneToolbox/obj/*
-WindowsPhoneToolbox/WindowsPhoneToolbox.csproj.user
+WindowsPhonePowerTools/obj/*
+WindowsPhonePowerTools/WindowsPhoneToolbox.csproj.user
 WindowsPhone.Tools/obj/*
 WindowsPhone.Tools/bin/*
 *.suo
-WindowsPhoneToolbox/bin/*
-WindowsPhoneToolbox/publish/*
+WindowsPhonePowerTools/bin/*
+WindowsPhonePowerTools/publish/*
 *.user
