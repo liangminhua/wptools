@@ -94,7 +94,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ImageButton.xaml.cs">
+      <DependentUpon>ImageButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NativeMethods.cs" />
     <Compile Include="StreamToBitmapImageConverter.cs" />
+    <Page Include="ImageButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -188,5 +196,9 @@
     <_DeploymentManifestIconFile Include="wptools.ico">
       <TargetPath>wptools.ico</TargetPath>
     </_DeploymentManifestIconFile>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\exit.png" />
+    <Resource Include="images\exit_highlighted.png" />
   </ItemGroup>
 </Project>
