@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="WindowsPhonePowerTools.DeviceConnectionIndicator"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:this="clr-namespace:WindowsPhonePowerTools"
+             mc:Ignorable="d" 
+             d:DesignHeight="36" d:DesignWidth="150"
+             Name="DeviceConectionIndicatorUserControl"
+             Loaded="UserControl_Loaded">
+    
+    <UserControl.Resources>
+        <this:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"></this:BoolToVisibilityConverter>
+    </UserControl.Resources>
+    
+    <Grid>
+        <StackPanel Orientation="Horizontal">
+            <StackPanel Margin="0,5,0,0" Visibility="{Binding ElementName=DeviceConectionIndicatorUserControl, Path=Connected, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=True}">
+                <TextBlock FontFamily="Segoe WP" FontWeight="Bold" HorizontalAlignment="Right">NO DEVICE</TextBlock>
+                <TextBlock FontFamily="Segoe WP" FontWeight="Bold" FontSize="8" HorizontalAlignment="Right">CLICK TO CONNECT</TextBlock>
+            </StackPanel>
+            <StackPanel Margin="0,5,0,0" Visibility="{Binding ElementName=DeviceConectionIndicatorUserControl, Path=Connected, Converter={StaticResource BoolToVisibilityConverter}}">
+                <TextBlock FontFamily="Segoe WP" FontWeight="Bold" Text="{Binding ElementName=DeviceConectionIndicatorUserControl, Path=DeviceName}"></TextBlock>
+                <TextBlock FontFamily="Segoe WP" FontWeight="Bold" Text="{Binding ElementName=DeviceConectionIndicatorUserControl, Path=DeviceType}"></TextBlock>
+            </StackPanel>
+            <Rectangle Height="36" Width="36" Fill="{Binding ElementName=DeviceConectionIndicatorUserControl, Path=StatusColor}" Margin="6,0,0,0"></Rectangle>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -94,11 +94,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BoolToVisibilityConverter.cs" />
+    <Compile Include="DeviceConnectionIndicator.xaml.cs">
+      <DependentUpon>DeviceConnectionIndicator.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ImageButton.xaml.cs">
       <DependentUpon>ImageButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="NativeMethods.cs" />
     <Compile Include="StreamToBitmapImageConverter.cs" />
+    <Page Include="DeviceConnectionIndicator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ImageButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
