@@ -15,12 +15,12 @@
     
     <Grid>
         <StackPanel Orientation="Horizontal">
-            <StackPanel Margin="0,5,0,0" Visibility="{Binding ElementName=DeviceConectionIndicatorUserControl, Path=Connected, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=True}">
+            <StackPanel Margin="0,5,0,0" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=True}">
                 <TextBlock FontFamily="Segoe WP" FontWeight="Bold" HorizontalAlignment="Right">NO DEVICE</TextBlock>
                 <TextBlock FontFamily="Segoe WP" FontWeight="Bold" FontSize="8" HorizontalAlignment="Right">CLICK TO CONNECT</TextBlock>
             </StackPanel>
-            <StackPanel Margin="0,5,0,0" Visibility="{Binding ElementName=DeviceConectionIndicatorUserControl, Path=Connected, Converter={StaticResource BoolToVisibilityConverter}}">
-                <TextBlock FontFamily="Segoe WP" FontWeight="Bold" Text="{Binding ElementName=DeviceConectionIndicatorUserControl, Path=DeviceName}"></TextBlock>
+            <StackPanel Margin="0,5,0,0" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverter}}">
+                <TextBlock x:Name="forTheBinding" FontFamily="Segoe WP" FontWeight="Bold" Text="{Binding CurrentDevice.Name}"></TextBlock>
                 <TextBlock FontFamily="Segoe WP" FontWeight="Bold" Text="{Binding ElementName=DeviceConectionIndicatorUserControl, Path=DeviceType}"></TextBlock>
             </StackPanel>
             <Rectangle Height="36" Width="36" Fill="{Binding ElementName=DeviceConectionIndicatorUserControl, Path=StatusColor}" Margin="6,0,0,0"></Rectangle>
