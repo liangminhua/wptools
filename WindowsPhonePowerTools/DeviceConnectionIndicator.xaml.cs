@@ -26,6 +26,7 @@ namespace WindowsPhonePowerTools
         #region DataContext sink
 
         private INotifyPropertyChanged _dataContext;
+        private WindowsPhoneDevice _currentDevice;
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
@@ -38,7 +39,9 @@ namespace WindowsPhonePowerTools
                 }
 
                 // remember the new DataContext and register for notifications
-                _dataContext = e.NewValue as INotifyPropertyChanged;
+                _dataContext   = e.NewValue as INotifyPropertyChanged;
+                _currentDevice = _dataContext as WindowsPhoneDevice;
+
                 _dataContext.PropertyChanged += _dataContext_PropertyChanged;
             }
         }
@@ -50,7 +53,18 @@ namespace WindowsPhonePowerTools
             if (device != null)
             {
                 if (e.PropertyName == "Connected")
+                {
                     Connected = device.Connected;
+
+                    if (_currentDevice != null)
+                    {
+                        DeviceType = (_currentDevice.CurrentDevice.IsEmulator() ? "EMULATOR" : "PHONE");
+                    }
+                    else
+                    {
+                        DeviceType = "UNKNOWN";
+                    }
+                }
             }
         }
 
@@ -138,6 +152,21 @@ namespace WindowsPhonePowerTools
                     _statusColor = value;
 
                     NotifyPropertyChanged("StatusColor");
+                }
+            }
+        }
+
+        private string _deviceType;
+        public string DeviceType 
+        {
+            get { return _deviceType; }
+            set
+            {
+                if (_deviceType != value)
+                {
+                    _deviceType = value;
+
+                    NotifyPropertyChanged("DeviceType");
                 }
             }
         }
