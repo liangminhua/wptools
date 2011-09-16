@@ -336,9 +336,7 @@ namespace WindowsPhonePowerTools
             if (CurSelectedInstalledApp != null)
                 CurSelectedInstalledApp.RemoteApplication.TerminateRunningInstances();
         }
-
-       
-
+        
         # region DropShadow
         private void Window_SourceInitialized(object sender, EventArgs e)
         {
