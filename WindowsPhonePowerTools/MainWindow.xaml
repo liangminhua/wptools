@@ -111,7 +111,7 @@
         </ListBox>
 
         <Canvas Grid.Row="2" Grid.ColumnSpan="2">
-            <Canvas x:Name="pivotInstall" IsEnabled="{Binding Connected}" Visibility="Collapsed">
+            <Canvas x:Name="pivotInstall" IsEnabled="{Binding Device.Connected}" Visibility="Collapsed">
                 <Grid>
                     <TextBox Height="22" HorizontalAlignment="Left" Margin="8,35,0,0" Name="txtXapFile" VerticalAlignment="Top" Width="364" />
                     <Button Content="Browse" Height="24" HorizontalAlignment="Left" Margin="378,35,0,0" Name="btnBrowse" VerticalAlignment="Top" Width="77" Click="btnBrowse_Click" />
@@ -153,9 +153,9 @@
                     </GroupBox>
                 </Canvas>
             </Canvas>
-            <Canvas x:Name="pivotFileBrowser" IsEnabled="{Binding Connected}" Visibility="Collapsed">
+            <Canvas x:Name="pivotFileBrowser" IsEnabled="{Binding Device.Connected}" Visibility="Collapsed">
                 <Canvas>
-                    <TreeView Height="209" Width="391" x:Name="treeIsoStore" SelectedItemChanged="treeIsoStore_SelectedItemChanged" ItemsSource="{Binding RemoteIsoStores}" TreeViewItem.Expanded="treeIsoStore_Expanded">
+                    <TreeView Height="209" Width="391" x:Name="treeIsoStore" SelectedItemChanged="treeIsoStore_SelectedItemChanged" ItemsSource="{Binding Device.RemoteIsoStores}" TreeViewItem.Expanded="treeIsoStore_Expanded">
                         <TreeView.ItemContainerStyle>
                             <Style TargetType="{x:Type TreeViewItem}">
                                 <EventSetter Event="MouseDoubleClick" Handler="treeIsoStore_OnDoubleClick"></EventSetter>
