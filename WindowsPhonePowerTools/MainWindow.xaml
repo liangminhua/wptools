@@ -13,6 +13,11 @@
         <this:StreamToBitmapImageConverter x:Key="StreamToBitmapImageConverter"></this:StreamToBitmapImageConverter>
         <this:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"></this:BoolToVisibilityConverter>
 
+        <Style x:Key="MetroSmallHeader" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="10"></Setter>
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+        </Style>
+        
         <Style x:Key="DeviceInfoHeader" TargetType="TextBlock">
             <Setter Property="Margin" Value="0,0,12,0"></Setter>
         </Style>
@@ -130,10 +135,10 @@
                     </TextBlock>
                 </Grid>
             </Canvas>
-            <Canvas x:Name="pivotApps" IsEnabled="{Binding Device.Connected}" Visibility="Collapsed">
+            <Canvas x:Name="pivotApps" IsEnabled="{Binding Device.Connected}" Visibility="Visible">
                 <Canvas>
-                    <TextBlock Margin="6,11,349,243">Installed Apps</TextBlock>
-                    <ListBox Height="233" HorizontalAlignment="Left" Margin="6,32,0,0" Name="lstInstalledApps" VerticalAlignment="Top" Width="242" ItemsSource="{Binding Device.InstalledApplications}" SelectedItem="{Binding CurSelectedInstalledApp, Mode=TwoWay}">
+                    <TextBlock Margin="6,11,349,243" Style="{StaticResource MetroSmallHeader}" Canvas.Top="1">INSTALLED APPS</TextBlock>
+                    <ListBox Height="235" HorizontalAlignment="Left" Margin="6,32,0,0" Name="lstInstalledApps" VerticalAlignment="Top" Width="242" ItemsSource="{Binding Device.InstalledApplications}" SelectedItem="{Binding CurSelectedInstalledApp, Mode=TwoWay}" Canvas.Top="-2">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,3">
@@ -143,23 +148,20 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <GroupBox Canvas.Left="254" Canvas.Top="203" Header="Actions" Height="62" Width="246">
+                    <StackPanel Canvas.Left="260" Canvas.Top="30">
+                        <TextBlock Height="20" Text="GUID" Style="{StaticResource MetroSmallHeader}" />
+                        <TextBlock Height="22" Name="txtAppGuid" Width="232" Text="{Binding RemoteApplication.ProductID}" />
+                    </StackPanel>
+                    <GroupBox Canvas.Left="254" Canvas.Top="203" Header="ACTIONS" FontWeight="Bold" FontSize="10" Height="62" Width="246">
                         <Canvas>
                             <Button Content="Uninstall" Height="23" Name="btnUninstall" Width="65" Click="btnUninstall_Click" Canvas.Left="7" Canvas.Top="6" />
                             <Button Content="Launch" Height="23" x:Name="btnLaunchApp" Click="btnLaunchApp_Click" Canvas.Left="89" Canvas.Top="6" Width="60"></Button>
                             <Button Content="Kill" Height="23" x:Name="btnKillApp" Click="btnKillApp_Click" Canvas.Left="164" Canvas.Top="6" Width="60"></Button>
                         </Canvas>
                     </GroupBox>
-                    <Grid Canvas.Left="274" Canvas.Top="114" />
-                    <GroupBox Canvas.Left="254" Canvas.Top="15" Header="Properties" Height="188" Name="groupBox2" Width="246" DataContext="{Binding CurSelectedInstalledApp}">
-                        <StackPanel Margin="3,0,0,0">
-                            <TextBlock Height="20" Text="Guid:" />
-                            <TextBlock Height="22" Name="txtAppGuid" Width="232" Text="{Binding RemoteApplication.ProductID}" />
-                        </StackPanel>
-                    </GroupBox>
                 </Canvas>
             </Canvas>
-            <Canvas x:Name="pivotFileBrowser" IsEnabled="{Binding Device.Connected}" Visibility="Visible">
+            <Canvas x:Name="pivotFileBrowser" IsEnabled="{Binding Device.Connected}" Visibility="Collapsed">
                 <Canvas>
                     <TreeView Height="209" Width="391" x:Name="treeIsoStore" SelectedItemChanged="treeIsoStore_SelectedItemChanged" ItemsSource="{Binding Device.RemoteIsoStores}" TreeViewItem.Expanded="treeIsoStore_Expanded">
                         <TreeView.ItemContainerStyle>
@@ -176,9 +178,9 @@
                             </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>
                         <TreeView.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="Refresh" x:Name="btnRefresh" Click="btnRefresh_Click" />
-                                </ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Refresh" x:Name="btnRefresh" Click="btnRefresh_Click" />
+                            </ContextMenu>
                         </TreeView.ContextMenu>
                     </TreeView>
                     <Button Canvas.Left="7" Canvas.Top="215" Content="Get" Height="24" Name="btnGet" Width="77" Click="btnGet_Click" />
@@ -187,15 +189,15 @@
                     <Button Canvas.Left="314" Canvas.Top="215" Content="Delete" Height="24" Name="btnDelete" Width="77" Click="btnDelete_Click" />
                     <CheckBox Canvas.Left="7" Canvas.Top="245" Content="Overwrite Existing" Height="16" Name="chkOverwrite" />
                     <StackPanel x:Name="stackFileProperties" Canvas.Left="397" Canvas.Top="-1" Width="130">
-                        <TextBlock Height="19" Text="CREATED" FontWeight="Bold" FontSize="10" />
+                        <TextBlock Height="19" Text="CREATED" Style="{StaticResource MetroSmallHeader}" />
                         <TextBlock Height="23" Text="{Binding CreationTime}" />
-                        <TextBlock Height="19" Text="ATTRIBUTES"  FontWeight="Bold" FontSize="10"/>
+                        <TextBlock Height="19" Text="ATTRIBUTES" Style="{StaticResource MetroSmallHeader}" />
                         <TextBlock Height="23" Text="{Binding FileAttribute}" />
-                        <TextBlock Height="19" Text="LAST ACCESSED"  FontWeight="Bold" FontSize="10"/>
+                        <TextBlock Height="19" Text="LAST ACCESSED" Style="{StaticResource MetroSmallHeader}" />
                         <TextBlock Height="23" Text="{Binding LastWriteTime}" />
-                        <TextBlock Height="19" Text="LAST WRITE"  FontWeight="Bold" FontSize="10"/>
+                        <TextBlock Height="19" Text="LAST WRITE" Style="{StaticResource MetroSmallHeader}" />
                         <TextBlock Height="23" Text="{Binding LastAccessTime}" />
-                        <TextBlock Height="19" Text="SIZE"  FontWeight="Bold" FontSize="10"/>
+                        <TextBlock Height="19" Text="SIZE" Style="{StaticResource MetroSmallHeader}" />
                         <TextBlock Height="23" Text="{Binding Length}" />
                     </StackPanel>
                 </Canvas>
