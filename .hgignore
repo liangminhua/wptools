@@ -10,3 +10,5 @@ WindowsPhonePowerTools/publish/*
 *.user
 MetroUI/bin/*
 MetroUI/obj/*
+MahApps*/bin/*
+MahApps*/obj/*
