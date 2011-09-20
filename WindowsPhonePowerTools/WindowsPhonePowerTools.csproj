@@ -162,6 +162,10 @@
     <Resource Include="images\unknown.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MahApps.Metro\MahApps.Metro.csproj">
+      <Project>{5B1710D2-5DC8-4754-91B2-19165DE49B3D}</Project>
+      <Name>MahApps.Metro</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MetroUI\MetroUI.csproj">
       <Project>{8BE245AB-068B-49B2-8E81-4DCBA65C9317}</Project>
       <Name>MetroUI</Name>
