@@ -8,3 +8,5 @@ WindowsPhone.Tools/bin/*
 WindowsPhonePowerTools/bin/*
 WindowsPhonePowerTools/publish/*
 *.user
+MetroUI/bin/*
+MetroUI/obj/*

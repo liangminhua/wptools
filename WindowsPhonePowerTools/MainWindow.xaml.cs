@@ -44,23 +44,95 @@ namespace WindowsPhonePowerTools
             }
         }
 
-        private WindowsPhoneDevice _device = new WindowsPhoneDevice();
+        private SolidColorBrush _connectedColor = new SolidColorBrush(Colors.Green);
+        private SolidColorBrush _disconnectedColor = new SolidColorBrush(Colors.Red);
+
+        private SolidColorBrush _statusColor;
+        public SolidColorBrush StatusColor
+        {
+            get { return _statusColor; }
+            private set
+            {
+                if (_statusColor != value)
+                {
+                    _statusColor = value;
+
+                    NotifyPropertyChanged("StatusColor");
+                }
+            }
+        }
+
+        private string _deviceType;
+        public string DeviceType
+        {
+            get { return _deviceType; }
+            set
+            {
+                if (_deviceType != value)
+                {
+                    _deviceType = value;
+
+                    NotifyPropertyChanged("DeviceType");
+                }
+            }
+        }
+
+        private WindowsPhoneDevice _device;
         public WindowsPhoneDevice Device
         {
             get { return _device; }
+            set
+            {
+                if (_device != value)
+                {
+                    _device = value;
+
+                    NotifyPropertyChanged("Device");
+                }
+            }
         }
-       
+
+        private Canvas _currentPivotPanel;
+
         public MainWindow()
         {
             InitializeComponent();
 
-            this.DataContext = _device;
-            tabInstalledApps.DataContext = this;
+            Device = new WindowsPhoneDevice();
+
+            Device.PropertyChanged += new PropertyChangedEventHandler(Device_PropertyChanged);
+
+            StatusColor = _disconnectedColor;
+            
+            this.DataContext = this;
+
+            // select the first pivot panel
+            headerInstall.IsSelected = true;
+
+            dialogConnect.Show();
+        }
+
+        void Device_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Connected")
+            {
+                if (_device.Connected)
+                {
+                    StatusColor = _connectedColor;
+                }
+                else
+                {
+                    StatusColor = _disconnectedColor;
+                }
+            }
         }
 
         private void btnConnect_Click(object sender, RoutedEventArgs e)
         {
             _device.Connect();
+
+            if (_device.Connected)
+                dialogConnect.Close();
         }
 
         private void btnUninstall_Click(object sender, RoutedEventArgs e)
@@ -337,6 +409,36 @@ namespace WindowsPhonePowerTools
                 CurSelectedInstalledApp.RemoteApplication.TerminateRunningInstances();
         }
         
+        private void btnIndicator_Click(object sender, RoutedEventArgs e)
+        {
+            dialogConnect.Show();
+        }
+
+        private void headerInstall_Selected(object sender, RoutedEventArgs e)
+        {
+            ShowPivot(pivotInstall);
+        }
+
+        private void headerApps_Selected(object sender, RoutedEventArgs e)
+        {
+            ShowPivot(pivotApps);
+        }
+
+        private void headerFileBrowser_Selected(object sender, RoutedEventArgs e)
+        {
+            ShowPivot(pivotFileBrowser);
+        }
+
+        private void ShowPivot(Canvas panel)
+        {
+            panel.Visibility = System.Windows.Visibility.Visible;
+
+            if (_currentPivotPanel != null)
+                _currentPivotPanel.Visibility = System.Windows.Visibility.Collapsed;
+
+            _currentPivotPanel = panel;
+        }
+        
         # region DropShadow
         private void Window_SourceInitialized(object sender, EventArgs e)
         {
@@ -389,6 +491,5 @@ namespace WindowsPhonePowerTools
         }
 
         #endregion
-
     }
 }

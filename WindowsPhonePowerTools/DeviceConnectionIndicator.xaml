@@ -7,23 +7,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="36" d:DesignWidth="150"
              Name="DeviceConectionIndicatorUserControl"
-             Loaded="UserControl_Loaded">
+             >
     
     <UserControl.Resources>
-        <this:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"></this:BoolToVisibilityConverter>
+        
     </UserControl.Resources>
     
-    <Grid>
-        <StackPanel Orientation="Horizontal">
-            <StackPanel Margin="0,5,0,0" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=True}">
-                <TextBlock FontFamily="Segoe WP" FontWeight="Bold" HorizontalAlignment="Right">NO DEVICE</TextBlock>
-                <TextBlock FontFamily="Segoe WP" FontWeight="Bold" FontSize="8" HorizontalAlignment="Right">CLICK TO CONNECT</TextBlock>
-            </StackPanel>
-            <StackPanel Margin="0,5,0,0" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverter}}">
-                <TextBlock HorizontalAlignment="Right" FontFamily="Segoe WP" FontWeight="Bold" Text="{Binding CurrentDevice.Name}"></TextBlock>
-                <TextBlock HorizontalAlignment="Right" FontFamily="Segoe WP" FontWeight="Bold" Text="{Binding ElementName=DeviceConectionIndicatorUserControl, Path=DeviceType}"></TextBlock>
-            </StackPanel>
-            <Rectangle Height="36" Width="36" Fill="{Binding ElementName=DeviceConectionIndicatorUserControl, Path=StatusColor}" Margin="6,0,0,0"></Rectangle>
-        </StackPanel>
-    </Grid>
+    
 </UserControl>

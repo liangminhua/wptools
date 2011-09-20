@@ -105,6 +105,15 @@ namespace WindowsPhone.Tools
                     _connected = value;
 
                     NotifyPropertyChanged("Connected");
+
+                    if (_currentDevice != null)
+                    {
+                        DeviceType = (_currentDevice.IsEmulator() ? "EMULATOR" : "PHONE");
+                    }
+                    else
+                    {
+                        DeviceType = "UNKNOWN";
+                    }
                 }
             }
         }
@@ -120,6 +129,21 @@ namespace WindowsPhone.Tools
                     _statusMessage = value;
 
                     NotifyPropertyChanged("StatusMessage");
+                }
+            }
+        }
+
+        private string _deviceType;
+        public string DeviceType
+        {
+            get { return _deviceType; }
+            set
+            {
+                if (_deviceType != value)
+                {
+                    _deviceType = value;
+
+                    NotifyPropertyChanged("DeviceType");
                 }
             }
         }

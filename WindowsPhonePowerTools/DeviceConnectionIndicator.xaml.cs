@@ -20,9 +20,9 @@ namespace WindowsPhonePowerTools
     /// <summary>
     /// Interaction logic for DeviceConnectionIndicator.xaml
     /// </summary>
-    public partial class DeviceConnectionIndicator : UserControl, INotifyPropertyChanged
+    public partial class DeviceConnectionIndicator : UserControl//, INotifyPropertyChanged
     {
-
+/*
         #region DataContext sink
 
         private INotifyPropertyChanged _dataContext;
@@ -113,63 +113,8 @@ namespace WindowsPhonePowerTools
 
         #endregion
 
-        
-
         #region Properties
 
-        private bool? _connected;
-        public bool Connected
-        {
-            get { return (_connected == true ? true : false); }
-            set
-            {
-                if (_connected != value)
-                {
-                    _connected = value;
-
-                    NotifyPropertyChanged("Connected");
-
-                    if (_connected == true)
-                    {
-                        StatusColor = ConnectedColor;
-                    }
-                    else
-                    {
-                        StatusColor = DisconnectedColor;
-                    }
-                }
-            }
-        }
-
-        private SolidColorBrush _statusColor;
-        public SolidColorBrush StatusColor
-        {
-            get { return _statusColor; }
-            private set
-            {
-                if (_statusColor != value)
-                {
-                    _statusColor = value;
-
-                    NotifyPropertyChanged("StatusColor");
-                }
-            }
-        }
-
-        private string _deviceType;
-        public string DeviceType 
-        {
-            get { return _deviceType; }
-            set
-            {
-                if (_deviceType != value)
-                {
-                    _deviceType = value;
-
-                    NotifyPropertyChanged("DeviceType");
-                }
-            }
-        }
 
         #endregion
 
@@ -189,7 +134,6 @@ namespace WindowsPhonePowerTools
 
         #endregion
 
-
         # region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -203,6 +147,6 @@ namespace WindowsPhonePowerTools
         }
 
         #endregion
-
+ * */
     }
 }

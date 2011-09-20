@@ -162,6 +162,10 @@
     <Resource Include="images\unknown.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MetroUI\MetroUI.csproj">
+      <Project>{8BE245AB-068B-49B2-8E81-4DCBA65C9317}</Project>
+      <Name>MetroUI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WindowsPhone.Tools\WindowsPhone.Tools.csproj">
       <Project>{EAE44D9A-8C45-4A6C-81EB-999F0FF6D237}</Project>
       <Name>WindowsPhone.Tools</Name>
@@ -208,5 +212,8 @@
   <ItemGroup>
     <Resource Include="images\exit.png" />
     <Resource Include="images\exit_highlighted.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\phone_logo.png" />
   </ItemGroup>
 </Project>
