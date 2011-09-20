@@ -6,7 +6,7 @@
     <!-- Theme Base Colors -->
 
     <!--ACCENT COLORS-->
-    <Color x:Key="HighlightDarkColor">#FF086F9E</Color>
+    <Color x:Key="HighlightDarkColor">#FF5C9EBC</Color>
     <Color x:Key="HighlightLightColor">#FF086F9E</Color>
     <!--80%-->
     <Color x:Key="AccentColor">#CC119EDA</Color>
