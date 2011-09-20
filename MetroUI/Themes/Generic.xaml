@@ -33,12 +33,17 @@
                             <Border.Effect>
                                 <DropShadowEffect ShadowDepth="2" BlurRadius="10"/>
                             </Border.Effect>
-                            <Canvas>
-                                <local:ImageButton Image="/images/exit.png" HoverImage="/images/exit_highlighted.png" Height="8" Width="8" Canvas.Left="381" Canvas.Top="9" x:Name="PART_CloseButton" />
-
-                                <ContentControl Content="{TemplateBinding Content}"/>
-                            </Canvas>
                         </Border>
+                        <!-- not inside the above border since the shadow messes with the exit button -->
+                        <Grid Background="White" Grid.Row="1" Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="13"></RowDefinition>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <local:ImageButton Grid.Row="0" HorizontalAlignment="Right" Image="/images/exit.png" HoverImage="/images/exit_highlighted.png" Height="7" Width="8" Margin="0,3,8,0" x:Name="PART_CloseButton" />
+                                <ContentControl Content="{TemplateBinding Content}" Grid.Row="1"/>
+                            </Grid>
+                        
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

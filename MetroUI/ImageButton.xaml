@@ -10,6 +10,6 @@
              MouseDown="ImageButtonUserControl_MouseDown"
              MouseUp="ImageButtonUserControl_MouseUp">
 
-    <Image Source="{Binding ElementName=ImageButtonUserControl, Path=CurrentImage}"/>
+    <Image Source="{Binding ElementName=ImageButtonUserControl, Path=CurrentImage}" Height="{Binding Source=ImageButtonUserControl, Path=Height}" Width="{Binding Source=ImageButtonUserControl, Path=Width}"/>
 
 </UserControl>

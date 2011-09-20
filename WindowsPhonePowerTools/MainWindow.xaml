@@ -106,7 +106,7 @@
                 <Button Name="btnIndicator" Click="btnIndicator_Click" Style="{StaticResource ConnectionIndicatorStyle}">
                 </Button>
             </Grid>
-            <this:ImageButton Image="/images/exit.png" HoverImage="/images/exit_highlighted.png" Height="8" Width="8" x:Name="btnClose" Click="btnClose_Click"/>
+            <metro:ImageButton Image="/images/exit.png" HoverImage="/images/exit_highlighted.png" Height="7" Width="8" x:Name="btnClose" Click="btnClose_Click"/>
         </StackPanel>
 
         <ListBox Grid.Row="1" Grid.ColumnSpan="2" ItemContainerStyle="{StaticResource PivotHeaders}" BorderThickness="0" Margin="12,0,0,0">
@@ -135,13 +135,13 @@
                     </TextBlock>
                 </Grid>
             </Canvas>
-            <Canvas x:Name="pivotApps" IsEnabled="{Binding Device.Connected}" Visibility="Visible">
+            <Canvas x:Name="pivotApps" IsEnabled="{Binding Device.Connected}" Visibility="Collapsed">
                 <Canvas>
                     <TextBlock Margin="6,11,349,243" Style="{StaticResource MetroSmallHeader}" Canvas.Top="1">INSTALLED APPS</TextBlock>
                     <ListBox Height="235" HorizontalAlignment="Left" Margin="6,32,0,0" Name="lstInstalledApps" VerticalAlignment="Top" Width="242" ItemsSource="{Binding Device.InstalledApplications}" SelectedItem="{Binding CurSelectedInstalledApp, Mode=TwoWay}" Canvas.Top="-2">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+                                <StackPanel Orientation="Horizontal" Margin="0,1.5,0,1.5">
                                     <Image Height="20" Width="20" Margin="0,0,4,0" Source="{Binding Icon, Converter={StaticResource StreamToBitmapImageConverter}}"></Image>
                                     <TextBlock Text="{Binding Name}"></TextBlock>
                                 </StackPanel>
