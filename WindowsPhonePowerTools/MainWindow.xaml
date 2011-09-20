@@ -41,11 +41,17 @@
                             <Canvas Margin="6,0,0,0" Width="36" Height="36">
                                 <Rectangle Height="36" Width="36" Fill="{Binding StatusColor}"></Rectangle>
                                 <Image Source="/images/phone_logo.png" Height="30" Width="18" Canvas.Left="9" Canvas.Top="3"></Image>
+                                <Rectangle Height="36" Width="36" x:Name="rectStatusHighlight" Visibility="Collapsed">
+                                    <Rectangle.Fill>
+                                        <SolidColorBrush Color="Gray" Opacity="0.4"></SolidColorBrush>
+                                    </Rectangle.Fill>
+                                </Rectangle>
                             </Canvas>
                         </StackPanel>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Foreground" Value="#a9a9a9"></Setter>
+                                <Setter TargetName="rectStatusHighlight" Property="Visibility" Value="Visible"></Setter>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -137,9 +143,9 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <GroupBox Canvas.Left="254" Canvas.Top="203" Header="Actions" Height="62" Name="groupBox1" Width="246">
+                    <GroupBox Canvas.Left="254" Canvas.Top="203" Header="Actions" Height="62" Width="246">
                         <Canvas>
-                            <Button Content="Uninstall" Height="23" Name="btnUninstall" Width="60" Click="btnUninstall_Click" Canvas.Left="7" Canvas.Top="6" />
+                            <Button Content="Uninstall" Height="23" Name="btnUninstall" Width="65" Click="btnUninstall_Click" Canvas.Left="7" Canvas.Top="6" />
                             <Button Content="Launch" Height="23" x:Name="btnLaunchApp" Click="btnLaunchApp_Click" Canvas.Left="89" Canvas.Top="6" Width="60"></Button>
                             <Button Content="Kill" Height="23" x:Name="btnKillApp" Click="btnKillApp_Click" Canvas.Left="164" Canvas.Top="6" Width="60"></Button>
                         </Canvas>
@@ -153,7 +159,7 @@
                     </GroupBox>
                 </Canvas>
             </Canvas>
-            <Canvas x:Name="pivotFileBrowser" IsEnabled="{Binding Device.Connected}" Visibility="Collapsed">
+            <Canvas x:Name="pivotFileBrowser" IsEnabled="{Binding Device.Connected}" Visibility="Visible">
                 <Canvas>
                     <TreeView Height="209" Width="391" x:Name="treeIsoStore" SelectedItemChanged="treeIsoStore_SelectedItemChanged" ItemsSource="{Binding Device.RemoteIsoStores}" TreeViewItem.Expanded="treeIsoStore_Expanded">
                         <TreeView.ItemContainerStyle>
@@ -169,29 +175,34 @@
                                 </StackPanel>
                             </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>
+                        <TreeView.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Refresh" x:Name="btnRefresh" Click="btnRefresh_Click" />
+                                </ContextMenu>
+                        </TreeView.ContextMenu>
                     </TreeView>
                     <Button Canvas.Left="7" Canvas.Top="215" Content="Get" Height="24" Name="btnGet" Width="77" Click="btnGet_Click" />
                     <Button Canvas.Left="108" Canvas.Top="215" Content="Put File" Height="24" Name="btnPutFile" Width="77" Click="btnPutFile_Click" />
-                    <Button Canvas.Left="204" Canvas.Top="215" Content="Put Directory" Height="24" Name="btnPutDirectory" Width="85" Click="btnPutDirectory_Click" />
+                    <Button Canvas.Left="204" Canvas.Top="215" Content="Put Directory" Height="24" Name="btnPutDirectory" Width="92" Click="btnPutDirectory_Click" />
                     <Button Canvas.Left="314" Canvas.Top="215" Content="Delete" Height="24" Name="btnDelete" Width="77" Click="btnDelete_Click" />
                     <CheckBox Canvas.Left="7" Canvas.Top="245" Content="Overwrite Existing" Height="16" Name="chkOverwrite" />
-                    <StackPanel x:Name="stackFileProperties" Canvas.Left="397" Canvas.Top="-1" Width="111">
-                        <TextBlock Height="19" Text="Created:" />
+                    <StackPanel x:Name="stackFileProperties" Canvas.Left="397" Canvas.Top="-1" Width="130">
+                        <TextBlock Height="19" Text="CREATED" FontWeight="Bold" FontSize="10" />
                         <TextBlock Height="23" Text="{Binding CreationTime}" />
-                        <TextBlock Height="19" Text="Attributes:" />
+                        <TextBlock Height="19" Text="ATTRIBUTES"  FontWeight="Bold" FontSize="10"/>
                         <TextBlock Height="23" Text="{Binding FileAttribute}" />
-                        <TextBlock Height="19" Text="Last Accessed:" />
+                        <TextBlock Height="19" Text="LAST ACCESSED"  FontWeight="Bold" FontSize="10"/>
                         <TextBlock Height="23" Text="{Binding LastWriteTime}" />
-                        <TextBlock Height="19" Text="Last Write:" />
+                        <TextBlock Height="19" Text="LAST WRITE"  FontWeight="Bold" FontSize="10"/>
                         <TextBlock Height="23" Text="{Binding LastAccessTime}" />
-                        <TextBlock Height="19" Text="Size:" />
+                        <TextBlock Height="19" Text="SIZE"  FontWeight="Bold" FontSize="10"/>
                         <TextBlock Height="23" Text="{Binding Length}" />
                     </StackPanel>
                 </Canvas>
             </Canvas>
         </Canvas>
 
-        <metro:MetroDialog x:Name="dialogConnect" Visibility="Visible" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DataContext="{Binding Device}">
+        <metro:MetroDialog x:Name="dialogConnect" Visibility="Collapsed" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DataContext="{Binding Device}">
             <Canvas>
                 <TextBlock Margin="23,30,428,0" Height="18" VerticalAlignment="Top" Canvas.Left="-5">Connect to:</TextBlock>
                 <ComboBox Canvas.Left="85" Canvas.Top="28" ItemsSource="{Binding Devices}" SelectedItem="{Binding CurrentDevice, Mode=TwoWay}" HorizontalAlignment="Right" Width="293">

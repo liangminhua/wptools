@@ -397,6 +397,12 @@ namespace WindowsPhonePowerTools
             
         }
 
+        private void btnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            if (_device != null)
+                _device.RefreshInstalledApps();
+        }
+
         private void btnLaunchApp_Click(object sender, RoutedEventArgs e)
         {
             if (CurSelectedInstalledApp != null)
@@ -491,5 +497,6 @@ namespace WindowsPhonePowerTools
         }
 
         #endregion
+
     }
 }
