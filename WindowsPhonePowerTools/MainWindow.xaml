@@ -191,7 +191,7 @@
             </Canvas>
         </Canvas>
 
-        <metro:MetroDialog x:Name="dialogConnect" Visibility="Collapsed" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DataContext="{Binding Device}">
+        <metro:MetroDialog x:Name="dialogConnect" Visibility="Visible" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DataContext="{Binding Device}">
             <Grid>
                 <TextBlock Margin="6,30,445,0" Height="18" VerticalAlignment="Top">Connect to:</TextBlock>
                 <ComboBox Margin="0,26,155,230" ItemsSource="{Binding Devices}" SelectedItem="{Binding CurrentDevice, Mode=TwoWay}" HorizontalAlignment="Right" Width="283">
@@ -204,12 +204,12 @@
                 <TextBlock Text="{Binding StatusMessage}" Margin="39,98,173,138" TextWrapping="Wrap" Foreground="Red" Height="43" Width="301"></TextBlock>
                 <Button x:Name="btnConnect" Content="CONNECT" Margin="285,61,155,196" Click="btnConnect_Click" Height="22" Width="73" FontFamily="Segoe WP"></Button>
 
-                <Expander Header="Device Information" Height="114" HorizontalAlignment="Left" Margin="6,161,0,0" VerticalAlignment="Top" Width="469">
+                <Expander Header="DEVICE INFORMATION" Height="200" HorizontalAlignment="Left" Margin="6,80,0,0" VerticalAlignment="Top" Width="469">
 
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="110*"></ColumnDefinition>
-                            <ColumnDefinition Width="129*"></ColumnDefinition>
+                            <ColumnDefinition Width="80*"></ColumnDefinition>
                             <ColumnDefinition Width="125*"></ColumnDefinition>
                             <ColumnDefinition Width="129*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
