@@ -1516,7 +1516,7 @@
                                 <Path Data="M 0,0 L2,0 L 8,6 L8,8" Fill="{DynamicResource WhiteColorBrush}" Margin="1,3,0,0"/>
                             </Grid>
                         </Border>
-                        <Popup x:Name="PART_Popup" IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Placement="Bottom">
+                        <Popup x:Name="PART_Popup" IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Placement="Bottom" MinWidth="{TemplateBinding Width}">
                             <Border Effect="{DynamicResource DropShadowBrush}" x:Name="PopupBorder" BorderThickness="{TemplateBinding BorderThickness}" HorizontalAlignment="Stretch" Height="Auto" BorderBrush="{DynamicResource ComboBoxPopupBrush}" Background="{DynamicResource WhiteBrush}">
                                 <ScrollViewer x:Name="DropDownScrollViewer" BorderThickness="0" Padding="1">
                                     <ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Contained" />
