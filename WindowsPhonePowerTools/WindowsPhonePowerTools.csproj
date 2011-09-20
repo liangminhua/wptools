@@ -213,4 +213,10 @@
   <ItemGroup>
     <Resource Include="images\phone_logo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\success.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\error.png" />
+  </ItemGroup>
 </Project>

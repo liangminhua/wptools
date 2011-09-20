@@ -118,6 +118,21 @@ namespace WindowsPhone.Tools
             }
         }
 
+        private bool _isError;
+        public bool IsError
+        {
+            get { return _isError; }
+            set
+            {
+                if (_isError != value)
+                {
+                    _isError = value;
+
+                    NotifyPropertyChanged("IsError");
+                }
+            }
+        }
+
         private string _statusMessage;
         public string StatusMessage
         {
@@ -203,6 +218,7 @@ namespace WindowsPhone.Tools
                     StatusMessage = "Connected to " + CurrentDevice.Name + "!";
 
                     Connected = true;
+                    IsError = false;
 
                     RefreshInstalledApps();
                 }
@@ -217,9 +233,10 @@ namespace WindowsPhone.Tools
                         StatusMessage = "Connection Error! Message: " + ex.Message;
                     }
 
-                    Connected = false;
+                    IsError          = true;
+                    Connected        = false;
                     _connectedDevice = null;
-                    SystemInfo = null;                    
+                    SystemInfo       = null;                    
                 }
             }
 

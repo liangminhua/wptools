@@ -204,22 +204,30 @@
             </Canvas>
         </Canvas>
 
-        <metro:MetroDialog x:Name="dialogConnect" Visibility="Collapsed" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DataContext="{Binding Device}">
+        <metro:MetroDialog x:Name="dialogConnect" Visibility="Visible" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DataContext="{Binding Device}">
             <Canvas>
-                <TextBlock Margin="23,30,428,0" Height="18" VerticalAlignment="Top" Canvas.Left="-5">Connect to:</TextBlock>
-                <ComboBox Canvas.Left="85" Canvas.Top="28" ItemsSource="{Binding Devices}" SelectedItem="{Binding CurrentDevice, Mode=TwoWay}" HorizontalAlignment="Right" Width="293">
+                <TextBlock Margin="23,30,428,0" Height="18" VerticalAlignment="Top" Canvas.Left="-5" Canvas.Top="-17">Connect to:</TextBlock>
+                <ComboBox Canvas.Left="85" Canvas.Top="12" ItemsSource="{Binding Devices}" SelectedItem="{Binding CurrentDevice, Mode=TwoWay}" HorizontalAlignment="Right" Width="293">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}"></TextBlock>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" Foreground="Red" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=True}" Height="25" Width="282" Canvas.Left="18" Canvas.Top="53"></TextBlock>
-                <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" Foreground="Green" Height="25" Width="282" Canvas.Left="18" Canvas.Top="53" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverter}}"></TextBlock>
-                <Button x:Name="btnConnect" Content="CONNECT" Click="btnConnect_Click" Height="22" Width="73" FontFamily="Segoe WP" Canvas.Left="306" Canvas.Top="53"></Button>
+                <Button x:Name="btnConnect" Content="CONNECT" Click="btnConnect_Click" Height="22" Width="73" FontFamily="Segoe WP" Canvas.Left="306" Canvas.Top="36"></Button>
 
-                <Expander Height="165 " Header="DEVICE INFORMATION" FontWeight="Bold" HorizontalAlignment="Left" Canvas.Top="78" Canvas.Left="19">
-                    <ScrollViewer Height="135" Width="352" FontWeight="Regular" Margin="0,6,0,0">
+                <StackPanel Orientation="Horizontal" Height="44" Width="282" Canvas.Left="18" Canvas.Top="36" Visibility="{Binding IsError, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Image Source="/images/error.png"></Image>
+                    <TextBlock Text="{Binding StatusMessage}" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="Red"></TextBlock>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Height="44" Width="282" Canvas.Left="18" Canvas.Top="36" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Image Source="/images/success.png"></Image>
+                    <TextBlock Text="{Binding StatusMessage}" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="Green" Canvas.Left="18" Canvas.Top="36"></TextBlock>
+                </StackPanel>
+                
+                <Expander Height="145" Header="DEVICE INFORMATION" FontWeight="Bold" HorizontalAlignment="Left" Canvas.Top="86" Canvas.Left="19">
+                    <ScrollViewer Height="118" Width="352" FontWeight="Regular" Margin="0,6,0,0">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -227,20 +235,24 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Platform" />
-                                <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="OS Version Major" />
-                                <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="OS Version Major" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="OS Build No" />
+                                <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="OS Version Major" />
+                                <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="OS Version Major" />
+                                <Separator Margin="-10,0,-10,0" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Architecture" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Instruction Set" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Processors" />
+                                <Separator/>
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Device Time" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Default Locale" />
+                                <Separator/>
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Available Memory" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Available Virtual" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Page Size" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Page File Size" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Total Memory" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Total Virtual" />
+                                <Separator/>
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Charging" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Full Battery Lifetime" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Battery %" />
@@ -250,17 +262,21 @@
                                 <TextBlock Text="{Binding SystemInfo.OSBuildNo}" />
                                 <TextBlock Text="{Binding SystemInfo.OSMajor}" />
                                 <TextBlock Text="{Binding SystemInfo.OSMinor}" />
+                                <Separator/>
                                 <TextBlock Text="{Binding SystemInfo.ProcessorArchitecture}" />
                                 <TextBlock Text="{Binding SystemInfo.InstructionSet}" />
                                 <TextBlock Text="{Binding SystemInfo.NumberOfProcessors}" />
+                                <Separator/>
                                 <TextBlock Text="{Binding SystemInfo.CurrentTime}" />
                                 <TextBlock Text="{Binding SystemInfo.SystemDefaultLocaleId}" />
+                                <Separator/>
                                 <TextBlock Text="{Binding SystemInfo.AvailPhys}" />
                                 <TextBlock Text="{Binding SystemInfo.AvailVirtual}" />
                                 <TextBlock Text="{Binding SystemInfo.PageSize}" />
                                 <TextBlock Text="{Binding SystemInfo.TotalPageFile}" />
                                 <TextBlock Text="{Binding SystemInfo.TotalPhys}" />
                                 <TextBlock Text="{Binding SystemInfo.TotalVirtual}" />
+                                <Separator/>
                                 <TextBlock Text="{Binding SystemInfo.ACLineStatus}" />
                                 <TextBlock Text="{Binding SystemInfo.BatteryFullLifetime}" />
                                 <TextBlock Text="{Binding SystemInfo.BatteryLifePercent}" />
