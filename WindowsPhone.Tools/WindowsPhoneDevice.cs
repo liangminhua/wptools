@@ -15,6 +15,11 @@ namespace WindowsPhone.Tools
         #region Statics
 
         /// <summary>
+        /// Minimum support build is one of the recent Mango previews and upwards (RTM is 7720)
+        /// </summary>
+        public const int MIN_SUPPORTED_BUILD_NUMBER = 7700;
+
+        /// <summary>
         /// Retrieve possible devices from CoreCon
         /// </summary>
         /// <returns></returns>
@@ -215,6 +220,11 @@ namespace WindowsPhone.Tools
 
                     SystemInfo = CurrentDevice.GetSystemInfo();
 
+                    if (SystemInfo.OSBuildNo < MIN_SUPPORTED_BUILD_NUMBER)
+                    {
+                        throw new Exception("Windows Phone Power Tools only support build " + MIN_SUPPORTED_BUILD_NUMBER + " and above. This device is on " + SystemInfo.OSBuildNo + ".");
+                    }
+
                     StatusMessage = "Connected to " + CurrentDevice.Name + "!";
 
                     Connected = true;
@@ -222,19 +232,28 @@ namespace WindowsPhone.Tools
 
                     RefreshInstalledApps();
                 }
-                catch (SmartDeviceException ex)
+                catch (Exception ex)
                 {
-                    if (ex.Message == "0x89731811")
+                    SmartDeviceException smartDeviceEx = ex as SmartDeviceException;
+
+                    if (smartDeviceEx != null)
                     {
-                        StatusMessage = "Connection Error! Zune is either not running or not connected to the device.";
-                    }
-                    else if (ex.Message == "0x89731812")
-                    {
-                        StatusMessage = "Connection Error! Unlock your phone and make sure it is paired with Zune";
+                        if (ex.Message == "0x89731811")
+                        {
+                            StatusMessage = "Connection Error! Zune is either not running or not connected to the device.";
+                        }
+                        else if (ex.Message == "0x89731812")
+                        {
+                            StatusMessage = "Connection Error! Unlock your phone and make sure it is paired with Zune";
+                        }
+                        else
+                        {
+                            StatusMessage = "Connection Error! Message: " + ex.Message;
+                        }
                     }
                     else
                     {
-                        StatusMessage = "Connection Error! Message: " + ex.Message;
+                        StatusMessage = ex.Message;
                     }
 
                     IsError          = true;
