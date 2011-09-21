@@ -228,6 +228,10 @@ namespace WindowsPhone.Tools
                     {
                         StatusMessage = "Connection Error! Zune does not appear to be running";
                     }
+                    else if (ex.Message == "0x89731812")
+                    {
+                        StatusMessage = "Connection Error! Unlock your phone and make sure it is paired with Zune";
+                    }
                     else
                     {
                         StatusMessage = "Connection Error! Message: " + ex.Message;
