@@ -22,7 +22,7 @@ using System.Windows.Interop;
 
 namespace WindowsPhonePowerTools
 {
-    
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -103,7 +103,7 @@ namespace WindowsPhonePowerTools
             Device.PropertyChanged += new PropertyChangedEventHandler(Device_PropertyChanged);
 
             StatusColor = _disconnectedColor;
-            
+
             this.DataContext = this;
 
             // select the first pivot panel
@@ -225,7 +225,7 @@ namespace WindowsPhonePowerTools
             if (dialog.ShowDialog() == true)
             {
                 txtXapFile.Text = "";
- 
+
                 foreach (string file in dialog.FileNames)
                 {
                     txtXapFile.Text += file + "; ";
@@ -237,8 +237,10 @@ namespace WindowsPhonePowerTools
         {
             RemoteAppIsoStoreItem item = treeIsoStore.SelectedItem as RemoteAppIsoStoreItem;
 
-            if (item != null)
-                item.Update();
+            if (item == null)
+                return;
+
+            item.Update();
 
             stackFileProperties.DataContext = item.RemoteFile;
         }
@@ -321,10 +323,12 @@ namespace WindowsPhonePowerTools
             if (string.IsNullOrEmpty(dialog.SelectedPath))
                 return;
 
-            item.Put(dialog.SelectedPath);
+            item.Put(dialog.SelectedPath, chkOverwrite.IsChecked == true);
+
+            item.Update(force: true);
 
         }
-        
+
         private void btnPutFile_Click(object sender, RoutedEventArgs e)
         {
             RemoteAppIsoStoreItem item = treeIsoStore.SelectedItem as RemoteAppIsoStoreItem;
@@ -339,8 +343,10 @@ namespace WindowsPhonePowerTools
 
             foreach (string filename in dialog.FileNames)
             {
-                item.Put(filename);
+                item.Put(filename, chkOverwrite.IsChecked == true);
             }
+
+            item.Update(force: true);
         }
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
@@ -394,7 +400,7 @@ namespace WindowsPhonePowerTools
                 }
 
             }
-            
+
         }
 
         private void btnRefresh_Click(object sender, RoutedEventArgs e)
@@ -414,7 +420,7 @@ namespace WindowsPhonePowerTools
             if (CurSelectedInstalledApp != null)
                 CurSelectedInstalledApp.RemoteApplication.TerminateRunningInstances();
         }
-        
+
         private void btnIndicator_Click(object sender, RoutedEventArgs e)
         {
             dialogConnect.Show();
@@ -444,7 +450,7 @@ namespace WindowsPhonePowerTools
 
             _currentPivotPanel = panel;
         }
-        
+
         # region DropShadow
         private void Window_SourceInitialized(object sender, EventArgs e)
         {

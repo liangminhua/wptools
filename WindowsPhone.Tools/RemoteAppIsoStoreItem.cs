@@ -143,6 +143,19 @@ namespace WindowsPhone.Tools
             return fullLocalPath;
         }
 
+        public void Put(string localFile, bool overwrite = false)
+        {
+            // relative directory is:
+            // "" - if it's an application
+            // _path - if it's a directory (since Path.GetDirectoryName will actually strip out the directory name)
+            // Path.GetDirectoryName(_path) - if it's a file, since this will strip out the file name and leave us with a directory
+            string relativeDirectory = 
+                (RemoteFile == null ? "" : 
+                    (RemoteFile.IsDirectory() ? _path : Path.GetDirectoryName(_path)));
+
+            Put(localFile, relativeDirectory, overwrite);
+        }
+
         public void Put(string localFile, string relativeDirectory = "", bool overwrite = false)
         {
             RemoteIsolatedStorageFile remoteIso = _app.GetIsolatedStore();
@@ -221,9 +234,17 @@ namespace WindowsPhone.Tools
         /// </summary>
         public void Update(bool force = false)
         {
+            if (!force && (_updated || (RemoteFile != null && !RemoteFile.IsDirectory())))
+                return;
 
-            if ((_updated && !force) || (RemoteFile != null && !RemoteFile.IsDirectory())) 
+            // if we are forcing an update then the assumption is that we want an update
+            // of either the current item or its container. If this is not a directory and
+            // we have been forced, force an update on the parent
+            if (force && !IsApplication && !RemoteFile.IsDirectory())
             {
+                if (this.Parent != null)
+                    this.Parent.Update(force: true);
+
                 return;
             }
 
