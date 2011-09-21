@@ -51,7 +51,25 @@ namespace WindowsPhonePowerTools
 
                 if (needGenericMessage)
                 {
-                    MessageBox.Show("Oh oh. Something bad happened, that we didn't anticipate. Please file a bug at http://wptools.codebox.com.\n\n" + (e == null ? "Null Exception. Weird" : e.ToString()), "Unhandled Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+                    string errString;
+
+                    if (e == null || e.Exception == null)
+                    {
+                        errString = "Null Exception";
+                    }
+                    else
+                    {
+                        // Note: only take 1000 characters, otherwise the stack can easily overflow the screen
+                        errString =
+                            "Exception: " + e.Exception.ToString().Substring(0, 1000) + "\n" +
+                            (e.Exception.InnerException != null ? "Inner Exception: " + e.Exception.InnerException.Message : "");
+                    }
+
+                    MessageBox.Show(
+                        "Oh oh. Something bad happened, that we didn't anticipate. Please file a bug at http://wptools.codebox.com.\n\n" + errString,
+                        "Unhandled Exception in Windows Phone Power Tools",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
                 }
 
                 e.Handled = true;
