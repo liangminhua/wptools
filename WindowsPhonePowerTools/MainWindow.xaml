@@ -13,11 +13,28 @@
         <this:StreamToBitmapImageConverter x:Key="StreamToBitmapImageConverter"></this:StreamToBitmapImageConverter>
         <this:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"></this:BoolToVisibilityConverter>
 
+        <Style x:Key="DeviceInformationSeparator" TargetType="Separator">
+            <Setter Property="Margin" Value="-10,3,-10,3"></Setter>
+        </Style>
+        
+        <Style x:Key="MetroLink" TargetType="Hyperlink">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="Gray" />
+                </Trigger>
+            </Style.Triggers>
+            <Setter Property="TextBlock.TextDecorations" Value="{x:Null}"></Setter>
+            <Setter Property="Foreground" Value="Black"></Setter>
+            <Setter Property="FontSize" Value="8"></Setter>
+            <Setter Property="FontFamily" Value="Segoe UI, Verdana"></Setter>
+            <Setter Property="Cursor" Value="Arrow"></Setter>
+        </Style>
+
         <Style x:Key="MetroSmallHeader" TargetType="TextBlock">
             <Setter Property="FontSize" Value="10"></Setter>
             <Setter Property="FontWeight" Value="Bold"></Setter>
         </Style>
-        
+
         <Style x:Key="DeviceInfoHeader" TargetType="TextBlock">
             <Setter Property="Margin" Value="0,0,12,0"></Setter>
         </Style>
@@ -100,6 +117,10 @@
         </Grid.RowDefinitions>
 
         <Rectangle Fill="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" PreviewMouseDown="Rectangle_PreviewMouseDown"></Rectangle>
+
+        <TextBlock Style="{StaticResource MetroSmallHeader}" Margin="0,3,0,0" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right">
+            <Hyperlink Style="{StaticResource MetroLink}" Name="btnAbout" Click="btnAbout_Click">ABOUT</Hyperlink>
+        </TextBlock>
 
         <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Margin="0,0,12,0" VerticalAlignment="Top">
             <Grid Margin="0,0,18,0" x:Name="gridConnectionIndicator">
@@ -225,7 +246,7 @@
                     <Image Source="/images/success.png" Height="21" VerticalAlignment="Top"></Image>
                     <TextBlock Text="{Binding StatusMessage}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="Wrap" Foreground="Green" Canvas.Left="18" Canvas.Top="36"></TextBlock>
                 </StackPanel>
-                
+
                 <Expander Height="145" Header="DEVICE INFORMATION" FontWeight="Bold" HorizontalAlignment="Left" Canvas.Top="86" Canvas.Left="19">
                     <ScrollViewer Height="118" Width="352" FontWeight="Regular" Margin="0,6,0,0">
                         <Grid>
@@ -238,45 +259,45 @@
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="OS Build No" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="OS Version Major" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="OS Version Major" />
-                                <Separator Margin="-10,0,-10,0" />
+                                <Separator Style="{StaticResource DeviceInformationSeparator}" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Architecture" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Instruction Set" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Processors" />
-                                <Separator/>
+                                <Separator Style="{StaticResource DeviceInformationSeparator}" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Device Time" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Default Locale" />
-                                <Separator/>
+                                <Separator Style="{StaticResource DeviceInformationSeparator}" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Available Memory" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Available Virtual" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Page Size" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Page File Size" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Total Memory" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Total Virtual" />
-                                <Separator/>
+                                <Separator Style="{StaticResource DeviceInformationSeparator}" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Charging" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Full Battery Lifetime" />
                                 <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Battery %" />
                             </StackPanel>
                             <StackPanel Grid.Column="1">
-                                <TextBlock Height="18" Text="{Binding CurrentDevice.Platform.Name}" VerticalAlignment="Top" />
+                                <TextBlock Text="{Binding CurrentDevice.Platform.Name}" VerticalAlignment="Top" />
                                 <TextBlock Text="{Binding SystemInfo.OSBuildNo}" />
                                 <TextBlock Text="{Binding SystemInfo.OSMajor}" />
                                 <TextBlock Text="{Binding SystemInfo.OSMinor}" />
-                                <Separator/>
+                                <Separator Style="{StaticResource DeviceInformationSeparator}" />
                                 <TextBlock Text="{Binding SystemInfo.ProcessorArchitecture}" />
                                 <TextBlock Text="{Binding SystemInfo.InstructionSet}" />
                                 <TextBlock Text="{Binding SystemInfo.NumberOfProcessors}" />
-                                <Separator/>
+                                <Separator Style="{StaticResource DeviceInformationSeparator}" />
                                 <TextBlock Text="{Binding SystemInfo.CurrentTime}" />
                                 <TextBlock Text="{Binding SystemInfo.SystemDefaultLocaleId}" />
-                                <Separator/>
+                                <Separator Style="{StaticResource DeviceInformationSeparator}" />
                                 <TextBlock Text="{Binding SystemInfo.AvailPhys}" />
                                 <TextBlock Text="{Binding SystemInfo.AvailVirtual}" />
                                 <TextBlock Text="{Binding SystemInfo.PageSize}" />
                                 <TextBlock Text="{Binding SystemInfo.TotalPageFile}" />
                                 <TextBlock Text="{Binding SystemInfo.TotalPhys}" />
                                 <TextBlock Text="{Binding SystemInfo.TotalVirtual}" />
-                                <Separator/>
+                                <Separator Style="{StaticResource DeviceInformationSeparator}" />
                                 <TextBlock Text="{Binding SystemInfo.ACLineStatus}" />
                                 <TextBlock Text="{Binding SystemInfo.BatteryFullLifetime}" />
                                 <TextBlock Text="{Binding SystemInfo.BatteryLifePercent}" />
@@ -284,6 +305,44 @@
                         </Grid>
                     </ScrollViewer>
                 </Expander>
+            </Canvas>
+        </metro:MetroDialog>
+
+        <metro:MetroDialog x:Name="dialogAbout" Visibility="Collapsed" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Canvas>
+                <StackPanel Orientation="Horizontal" Canvas.Left="20">
+                    <Image Source="wptools.ico"></Image>
+                    <TextBlock VerticalAlignment="Center" FontFamily="Segoe WP" FontSize="25" Margin="0,0,20,0" FontWeight="Thin">Windows Phone Power Tools</TextBlock>
+                </StackPanel>
+
+                <StackPanel Canvas.Left="20" Canvas.Top="40">
+                    <TextBlock>
+                        <Hyperlink>http://wptools.codeplex.com</Hyperlink>
+                    </TextBlock>
+                    <TextBlock FontSize="10">
+                        COPYRIGHT (C) 2011 OREN NACHMAN<LineBreak/>
+                        LICENSED UNDER THE Ms-Pl
+                    </TextBlock>
+                </StackPanel>
+
+                <TextBlock Style="{StaticResource MetroSmallHeader}" Canvas.Left="20" Canvas.Top="90">CHANGELOG</TextBlock>
+                <ScrollViewer Height="125" Width="364" FontWeight="Regular" Margin="0,6,0,0" Canvas.Top="100" Canvas.Left="20">
+
+                    <StackPanel Margin="0,0,5,0">
+                        <Separator Margin="0,5,0,5"></Separator>
+                        
+                        <TextBlock Style="{StaticResource MetroSmallHeader}">VERSION 1.1</TextBlock>
+                        <TextBlock>&#x2022; UI revamp to a Metro style</TextBlock>
+                        <TextBlock TextWrapping="Wrap">&#x2022; FIXED BUG #1: Uploaded files / directories go to the correct location and the view is refreshed after upload</TextBlock>
+                        <TextBlock TextWrapping="Wrap">&#x2022; Added force refresh option to right click menu on file list</TextBlock>
+                        <TextBlock TextWrapping="Wrap">&#x2022; Miscellaneous tweaks to the exception and connection error handling features to provide more descriptive error messages to the user</TextBlock>
+
+                        <Separator Margin="0,5,0,5"/>
+
+                        <TextBlock Style="{StaticResource MetroSmallHeader}">VERSION 1.0</TextBlock>
+                        <TextBlock>&#x2022; Initial release</TextBlock>
+                    </StackPanel>
+                </ScrollViewer>
             </Canvas>
         </metro:MetroDialog>
     </Grid>
