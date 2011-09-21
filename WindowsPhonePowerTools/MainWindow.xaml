@@ -227,7 +227,7 @@
             </Canvas>
         </Canvas>
 
-        <metro:MetroDialog x:Name="dialogConnect" Visibility="Collapsed" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DataContext="{Binding Device}">
+        <metro:MetroDialog x:Name="dialogConnect" Visibility="Visible" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DataContext="{Binding Device}">
             <Canvas>
                 <TextBlock Margin="23,30,428,0" Height="18" VerticalAlignment="Top" Canvas.Left="-5" Canvas.Top="-17">Connect to:</TextBlock>
                 <ComboBox Canvas.Left="85" Canvas.Top="12" ItemsSource="{Binding Devices}" SelectedItem="{Binding CurrentDevice, Mode=TwoWay}" HorizontalAlignment="Right" Width="293">
@@ -239,18 +239,18 @@
                 </ComboBox>
                 <Button x:Name="btnConnect" Content="CONNECT" Click="btnConnect_Click" Height="22" Width="73" FontFamily="Segoe WP" Canvas.Left="306" Canvas.Top="36"></Button>
 
-                <StackPanel Orientation="Horizontal" Height="44" Width="282" Canvas.Left="18" Canvas.Top="36" Visibility="{Binding IsError, Converter={StaticResource BoolToVisibilityConverter}}">
+                <StackPanel Orientation="Horizontal" Height="40" Width="282" Canvas.Left="18" Canvas.Top="36" Visibility="{Binding IsError, Converter={StaticResource BoolToVisibilityConverter}}">
                     <Image Source="/images/error.png" Height="19" VerticalAlignment="Top"></Image>
-                    <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Stretch" TextWrapping="Wrap" Foreground="Red" Width="255" Margin="5,0,0,0"></TextBlock>
+                    <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Stretch" TextWrapping="Wrap" Foreground="Red" Width="255" Margin="8,0,0,0"></TextBlock>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Height="44" Width="282" Canvas.Left="18" Canvas.Top="36" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverter}}">
+                <StackPanel Orientation="Horizontal" Height="40" Width="282" Canvas.Left="18" Canvas.Top="36" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverter}}">
                     <Image Source="/images/success.png" Height="21" VerticalAlignment="Top"></Image>
-                    <TextBlock Text="{Binding StatusMessage}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="Wrap" Foreground="Green" Canvas.Left="18" Canvas.Top="36"></TextBlock>
+                    <TextBlock Text="{Binding StatusMessage}" HorizontalAlignment="Stretch" Margin="8,0,0,0" VerticalAlignment="Stretch" TextWrapping="Wrap" Foreground="Green" Canvas.Left="18" Canvas.Top="36"></TextBlock>
                 </StackPanel>
 
-                <Expander Height="145" Header="DEVICE INFORMATION" FontWeight="Bold" HorizontalAlignment="Left" Canvas.Top="86" Canvas.Left="19">
-                    <ScrollViewer Height="118" Width="352" FontWeight="Regular" Margin="0,6,0,0">
+                <Expander Height="154" Header="DEVICE INFORMATION" FontWeight="Bold" HorizontalAlignment="Left" Canvas.Top="77" Canvas.Left="19">
+                    <ScrollViewer Height="130" Width="352" FontWeight="Regular">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
