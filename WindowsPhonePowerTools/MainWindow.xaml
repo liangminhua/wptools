@@ -340,7 +340,12 @@
                         <Separator Margin="0,5,0,5"/>
 
                         <TextBlock Style="{StaticResource MetroSmallHeader}">VERSION 1.0</TextBlock>
-                        <TextBlock>&#x2022; Initial release</TextBlock>
+                        <TextBlock TextWrapping="Wrap">&#x2022; Initial release</TextBlock>
+                        <TextBlock TextWrapping="Wrap">&#x2022; Update developer xaps</TextBlock>
+                        <TextBlock TextWrapping="Wrap">&#x2022; Install / Update multiple xaps in unison</TextBlock>
+                        <TextBlock TextWrapping="Wrap">&#x2022; Browse the IsolatedStorage structure of your developer xaps</TextBlock>
+                        <TextBlock TextWrapping="Wrap">&#x2022; Download individual files or whole directory structures</TextBlock>
+                        <TextBlock TextWrapping="Wrap">&#x2022; Upload files and directories to your developer xaps - great for snapshotting IsolatedStorage at different times and testing update scenarios</TextBlock>
                     </StackPanel>
                 </ScrollViewer>
             </Canvas>
