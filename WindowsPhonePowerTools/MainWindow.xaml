@@ -181,6 +181,7 @@
                         </Canvas>
                     </GroupBox>
                 </Canvas>
+                <TextBlock Canvas.Left="7" Canvas.Top="280">Note: App names will appear as GUIDs unless they have been installed or updated with this tool</TextBlock>
             </Canvas>
             <Canvas x:Name="pivotFileBrowser" IsEnabled="{Binding Device.Connected}" Visibility="Collapsed">
                 <Canvas>
@@ -222,6 +223,7 @@
                         <TextBlock Height="23" Text="{Binding Length}" />
                     </StackPanel>
                 </Canvas>
+                <TextBlock Canvas.Left="7" Canvas.Top="280">Note: App names will appear as GUIDs unless they have been installed or updated with this tool</TextBlock>
             </Canvas>
         </Canvas>
 
@@ -239,7 +241,7 @@
 
                 <StackPanel Orientation="Horizontal" Height="44" Width="282" Canvas.Left="18" Canvas.Top="36" Visibility="{Binding IsError, Converter={StaticResource BoolToVisibilityConverter}}">
                     <Image Source="/images/error.png" Height="19" VerticalAlignment="Top"></Image>
-                    <TextBlock Text="{Binding StatusMessage}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="Wrap" Foreground="Red"></TextBlock>
+                    <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Stretch" TextWrapping="Wrap" Foreground="Red" Width="255" Margin="5,0,0,0"></TextBlock>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Height="44" Width="282" Canvas.Left="18" Canvas.Top="36" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverter}}">
