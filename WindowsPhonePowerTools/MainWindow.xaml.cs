@@ -426,6 +426,11 @@ namespace WindowsPhonePowerTools
             dialogConnect.Show();
         }
 
+        private void btnAbout_Click(object sender, RoutedEventArgs e)
+        {
+            dialogAbout.Show();
+        }
+
         private void headerInstall_Selected(object sender, RoutedEventArgs e)
         {
             ShowPivot(pivotInstall);
@@ -503,6 +508,5 @@ namespace WindowsPhonePowerTools
         }
 
         #endregion
-
     }
 }
