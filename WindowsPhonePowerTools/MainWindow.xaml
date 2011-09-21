@@ -317,7 +317,7 @@
 
                 <StackPanel Canvas.Left="20" Canvas.Top="40">
                     <TextBlock>
-                        <Hyperlink>http://wptools.codeplex.com</Hyperlink>
+                        <Hyperlink x:Name="linkWebsite" NavigateUri="http://wptools.codeplex.com" Click="linkWebsite_Click">http://wptools.codeplex.com</Hyperlink>
                     </TextBlock>
                     <TextBlock FontSize="10">
                         COPYRIGHT (C) 2011 OREN NACHMAN<LineBreak/>

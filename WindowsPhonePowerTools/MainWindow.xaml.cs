@@ -508,5 +508,15 @@ namespace WindowsPhonePowerTools
         }
 
         #endregion
+
+        private void linkWebsite_Click(object sender, RoutedEventArgs e)
+        {
+            Hyperlink link = sender as Hyperlink;
+
+            if (link != null)
+            {
+                Process.Start(link.NavigateUri.ToString());
+            }
+        }
     }
 }
