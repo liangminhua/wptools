@@ -43,7 +43,6 @@ namespace WindowsPhonePowerTools
                     {
                         needGenericMessage = true;
                     }
-
                 }
                 else
                 {
