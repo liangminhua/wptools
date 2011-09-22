@@ -333,7 +333,7 @@
                     <StackPanel Margin="0,0,5,0">
                         <Separator Margin="0,5,0,5"></Separator>
 
-                        <TextBlock Style="{StaticResource MetroSmallHeader}">VERSION 1.2.1 - 20/9/2011</TextBlock>
+                        <TextBlock Style="{StaticResource MetroSmallHeader}">VERSION 1.2 - 20/9/2011</TextBlock>
                         <TextBlock TextWrapping="Wrap">
                             &#x2022; Added more detailed message in the unexpected unhandled exception message<LineBreak/>
                             &#x2022; Added note about app names that appear as GUIDs<LineBreak/>
