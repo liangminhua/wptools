@@ -19,6 +19,8 @@ using Microsoft.Win32;
 using System.Threading;
 using System.Diagnostics;
 using System.Windows.Interop;
+using System.Security.Principal;
+using System.Reflection;
 
 namespace WindowsPhonePowerTools
 {
@@ -92,6 +94,20 @@ namespace WindowsPhonePowerTools
             }
         }
 
+        private bool? _isElevated = null;
+        public bool IsElevated
+        {
+            get
+            {
+                if (_isElevated == null)
+                {
+                    _isElevated = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+                }
+
+                return (_isElevated == true);
+            }
+        }
+
         private Canvas _currentPivotPanel;
 
         public MainWindow()
@@ -105,6 +121,10 @@ namespace WindowsPhonePowerTools
             StatusColor = _disconnectedColor;
 
             this.DataContext = this;
+
+            // gross, but a nice was to set just this button to bind to us whereas the rest of the
+            // dialog (that contains this button) binds directly to the device it needs
+            stackElevatedButton.DataContext = this;
 
             // select the first pivot panel
             headerInstall.IsSelected = true;
@@ -444,6 +464,26 @@ namespace WindowsPhonePowerTools
         private void headerFileBrowser_Selected(object sender, RoutedEventArgs e)
         {
             ShowPivot(pivotFileBrowser);
+        }
+
+        private void btnLaunchElevated_Click(object sender, RoutedEventArgs e)
+        {
+            ProcessStartInfo processInfo = new ProcessStartInfo(Assembly.GetExecutingAssembly().CodeBase);
+
+            // relaunch with runas to get elevated
+            processInfo.UseShellExecute = true;
+            processInfo.Verb = "runas";
+
+            try
+            {
+                Process.Start(processInfo);
+
+                // only shutdown if we launch successfully
+                Application.Current.Shutdown();
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private void ShowPivot(Canvas panel)

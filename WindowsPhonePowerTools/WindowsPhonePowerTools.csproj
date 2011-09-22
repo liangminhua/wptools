@@ -32,7 +32,7 @@
     <PublisherName>Oren Nachman</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>8</ApplicationRevision>
+    <ApplicationRevision>9</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -99,6 +99,7 @@
       <DependentUpon>DeviceConnectionIndicator.xaml</DependentUpon>
     </Compile>
     <Compile Include="NativeMethods.cs" />
+    <Compile Include="StockIcons.cs" />
     <Compile Include="StreamToBitmapImageConverter.cs" />
     <Page Include="DeviceConnectionIndicator.xaml">
       <SubType>Designer</SubType>

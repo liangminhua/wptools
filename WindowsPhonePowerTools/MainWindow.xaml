@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:this="clr-namespace:WindowsPhonePowerTools"
         xmlns:metro="clr-namespace:MetroUI;assembly=MetroUI"
+        xmlns:stock="clr-namespace:StockIcons"
         Title="Windows Phone Toolbox" Height="378" Width="535" ResizeMode="NoResize" WindowStyle="None"
         Icon="wptools.ico"
         SourceInitialized="Window_SourceInitialized"
@@ -247,6 +248,16 @@
                 <StackPanel Orientation="Horizontal" Height="40" Width="282" Canvas.Left="18" Canvas.Top="36" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverter}}">
                     <Image Source="/images/success.png" Height="21" VerticalAlignment="Top"></Image>
                     <TextBlock Text="{Binding StatusMessage}" HorizontalAlignment="Stretch" Margin="8,0,0,0" VerticalAlignment="Stretch" TextWrapping="Wrap" Foreground="Green" Canvas.Left="18" Canvas.Top="36"></TextBlock>
+                </StackPanel>
+
+                <StackPanel x:Name="stackElevatedButton" Orientation="Horizontal" Canvas.Top="-10" Canvas.Left="292">
+                    <Image Source="{x:Static stock:StockIcons.Shield}" Height="10" Width="10"/>
+                    <TextBlock Style="{StaticResource MetroSmallHeader}" VerticalAlignment="Center" Visibility="{Binding IsElevated, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=True}">
+                        <Hyperlink Style="{StaticResource MetroLink}" Name="btnLaunchElevated" Click="btnLaunchElevated_Click">LAUNCH ELEVATED</Hyperlink>
+                    </TextBlock>
+                    <TextBlock Margin="4,0,0,0" Style="{StaticResource MetroSmallHeader}" FontSize="8" VerticalAlignment="Center" Visibility="{Binding IsElevated, Converter={StaticResource BoolToVisibilityConverter}}" Foreground="Red">
+                        ELEVATED
+                    </TextBlock>
                 </StackPanel>
 
                 <Expander Height="154" Header="DEVICE INFORMATION" FontWeight="Bold" HorizontalAlignment="Left" Canvas.Top="77" Canvas.Left="19">
