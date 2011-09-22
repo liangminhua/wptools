@@ -26,9 +26,16 @@ namespace WindowsPhonePowerTools
             Application.Current.DispatcherUnhandledException -= Current_DispatcherUnhandledException;
         }
 
+        /// <summary>
+        /// It's kind of gross to capture and report these errors here, but since there are multiple places that can trigger
+        /// these exceptions it's kind of nicer than having lots of try/catch. The alternative may be to add try/catches that
+        /// just send the exception to a global responder ("HandleSmartDeviceException") which still centralises things.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            bool needGenericMessage = true;
+            bool needGenericMessage = false;
 
             if (e != null)
             {
@@ -38,6 +45,11 @@ namespace WindowsPhonePowerTools
                     {
                         MessageBox.Show("Oops! Looks like your device is not Developer Unlocked.\n\nUnlock your phone using the \"Windows Phone Developer Registration\" tool and try again",
                             "Phone Developer Locked", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    } else if (e.Exception.Message == "0x81030120") 
+                    {
+                        MessageBox.Show(
+                            "I tried to install / update your xap but your phone rejected it because it uses capabilities that your developer account is not provisioned for (usually ID_CAP_INTEROPSERVICES).\n\nIf you believe that your account should be provisioned for these then please contact AppHub support and try unregistering and reregistering your phone.\n\nIf you believe that this is a bug in the tools, and your XAP should have installed correctly, feel free to log a bug (with a repro xap) at http://wptools.codeplex.com",
+                            "Denied by Developer Unlock", MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
                     else
                     {
