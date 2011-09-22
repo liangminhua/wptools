@@ -344,7 +344,16 @@
                     <StackPanel Margin="0,0,5,0">
                         <Separator Margin="0,5,0,5"></Separator>
 
-                        <TextBlock Style="{StaticResource MetroSmallHeader}">VERSION 1.2 - 20/9/2011</TextBlock>
+                        <TextBlock Style="{StaticResource MetroSmallHeader}" Margin="0,0,0,5">VERSION 1.2.1 - 21/9/2011</TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            &#x2022; User Request: Added option in Connection dialog to elevate current process so that you can use the tools to connect to
+                                     an elevated emulator (usually launched from an elevated VS).<LineBreak/>
+                            &#x2022; Lowered minimum supported build to 7600 to support users who still haven't upgraded to the RC SDK
+                        </TextBlock>
+
+                        <Separator Margin="0,5,0,5"></Separator>
+
+                        <TextBlock Style="{StaticResource MetroSmallHeader}" Margin="0,0,0,5">VERSION 1.2 - 20/9/2011</TextBlock>
                         <TextBlock TextWrapping="Wrap">
                             &#x2022; Added more detailed message in the unexpected unhandled exception message<LineBreak/>
                             &#x2022; Added note about app names that appear as GUIDs<LineBreak/>
@@ -353,7 +362,7 @@
 
                         <Separator Margin="0,5,0,5"></Separator>
 
-                        <TextBlock Style="{StaticResource MetroSmallHeader}">VERSION 1.1 - 19/9/2011</TextBlock>
+                        <TextBlock Style="{StaticResource MetroSmallHeader}" Margin="0,0,0,5">VERSION 1.1 - 19/9/2011</TextBlock>
                         <TextBlock>&#x2022; UI revamp to a Metro style</TextBlock>
                         <TextBlock TextWrapping="Wrap">&#x2022; FIXED BUG #1: Uploaded files / directories go to the correct location and the view is refreshed after upload</TextBlock>
                         <TextBlock TextWrapping="Wrap">&#x2022; Added force refresh option to right click menu on file list</TextBlock>
@@ -361,7 +370,7 @@
 
                         <Separator Margin="0,5,0,5"/>
 
-                        <TextBlock Style="{StaticResource MetroSmallHeader}">VERSION 1.0 - 13/9/2011</TextBlock>
+                        <TextBlock Style="{StaticResource MetroSmallHeader}" Margin="0,0,0,5">VERSION 1.0 - 13/9/2011</TextBlock>
                         <TextBlock TextWrapping="Wrap">&#x2022; Initial release</TextBlock>
                         <TextBlock TextWrapping="Wrap">&#x2022; Update developer xaps</TextBlock>
                         <TextBlock TextWrapping="Wrap">&#x2022; Install / Update multiple xaps in unison</TextBlock>
