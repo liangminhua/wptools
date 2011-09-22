@@ -17,7 +17,7 @@ namespace WindowsPhone.Tools
         /// <summary>
         /// Minimum support build is one of the recent Mango previews and upwards (RTM is 7720)
         /// </summary>
-        public const int MIN_SUPPORTED_BUILD_NUMBER = 7700;
+        public const int MIN_SUPPORTED_BUILD_NUMBER = 7600;
 
         /// <summary>
         /// Retrieve possible devices from CoreCon
