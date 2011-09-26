@@ -29,6 +29,24 @@ namespace WindowsPhone.Tools
         private string _name;
         public string Name
         {
+            set
+            {
+                // make sure that we persist any name changes
+                if (_name != value)
+                {
+                    _name = value;
+
+                    if (!Init(RemoteApplication.ProductID))
+                    {
+                        _knownApplication = new KnownApplication();
+
+                        PersistedData.Current.KnownApplication[RemoteApplication.ProductID] = _knownApplication;
+                    }
+
+                    if (_knownApplication != null)
+                        _knownApplication.Name = value;
+                }
+            }
             get
             {
                 if (_name == null)

@@ -157,7 +157,7 @@
                     </TextBlock>
                 </Grid>
             </Canvas>
-            <Canvas x:Name="pivotApps" IsEnabled="{Binding Device.Connected}" Visibility="Collapsed">
+            <Canvas x:Name="pivotApps" IsEnabled="{Binding Device.Connected}" Visibility="Visible">
                 <Canvas>
                     <TextBlock Margin="6,11,349,243" Style="{StaticResource MetroSmallHeader}" Canvas.Top="1">INSTALLED APPS</TextBlock>
                     <ListBox Height="235" HorizontalAlignment="Left" Margin="6,32,0,0" Name="lstInstalledApps" VerticalAlignment="Top" Width="242" ItemsSource="{Binding Device.InstalledApplications}" SelectedItem="{Binding CurSelectedInstalledApp, Mode=TwoWay}" Canvas.Top="-2">
@@ -173,6 +173,9 @@
                     <StackPanel Canvas.Left="260" Canvas.Top="30">
                         <TextBlock Height="20" Text="GUID" Style="{StaticResource MetroSmallHeader}" />
                         <TextBlock Height="22" Name="txtAppGuid" Width="232" Text="{Binding CurSelectedInstalledApp.RemoteApplication.ProductID}" />
+                        <TextBlock Height="20" Text="NAME" Style="{StaticResource MetroSmallHeader}" />
+                        <TextBox Height="22" Name="txtAppName" Width="232" Text="{Binding CurSelectedInstalledApp.Name, Mode=TwoWay}" />
+                        <TextBlock TextWrapping="Wrap" Width="250">App names cannot be read off the device and are populated when you install an app. You can change an app name by editing it above.</TextBlock>
                     </StackPanel>
                     <GroupBox Canvas.Left="254" Canvas.Top="203" Header="ACTIONS" FontWeight="Bold" FontSize="10" Height="62" Width="246">
                         <Canvas>
@@ -228,7 +231,7 @@
             </Canvas>
         </Canvas>
 
-        <metro:MetroDialog x:Name="dialogConnect" Visibility="Visible" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DataContext="{Binding Device}">
+        <metro:MetroDialog x:Name="dialogConnect" Visibility="Collapsed" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DataContext="{Binding Device}">
             <Canvas>
                 <TextBlock Margin="23,30,428,0" Height="18" VerticalAlignment="Top" Canvas.Left="-5" Canvas.Top="-17">Connect to:</TextBlock>
                 <ComboBox Canvas.Left="85" Canvas.Top="12" ItemsSource="{Binding Devices}" SelectedItem="{Binding CurrentDevice, Mode=TwoWay}" HorizontalAlignment="Right" Width="293">
