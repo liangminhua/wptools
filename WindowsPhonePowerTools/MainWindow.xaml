@@ -157,7 +157,7 @@
                     </TextBlock>
                 </Grid>
             </Canvas>
-            <Canvas x:Name="pivotApps" IsEnabled="{Binding Device.Connected}" Visibility="Visible">
+            <Canvas x:Name="pivotApps" IsEnabled="{Binding Device.Connected}" Visibility="Collapsed">
                 <Canvas>
                     <TextBlock Margin="6,11,349,243" Style="{StaticResource MetroSmallHeader}" Canvas.Top="1">INSTALLED APPS</TextBlock>
                     <ListBox Height="235" HorizontalAlignment="Left" Margin="6,32,0,0" Name="lstInstalledApps" VerticalAlignment="Top" Width="242" ItemsSource="{Binding Device.InstalledApplications}" SelectedItem="{Binding CurSelectedInstalledApp, Mode=TwoWay}" Canvas.Top="-2">
