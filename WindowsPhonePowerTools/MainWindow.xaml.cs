@@ -279,7 +279,9 @@ namespace WindowsPhonePowerTools
                 {
                     string path = System.IO.Path.GetTempPath();
 
-                    string localFilePath = item.Get(path, (chkOverwrite.IsChecked == true ? true : false));
+                    // when double clicking we should always overwrite to make sure we don't get
+                    // stale files
+                    string localFilePath = item.Get(path, true);
 
                     System.Diagnostics.Debug.WriteLine(path);
 
