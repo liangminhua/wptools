@@ -13,6 +13,7 @@ namespace WindowsPhonePowerTools
     /// </summary>
     public partial class App : Application
     {
+        private const int MIN_SEC_BETWEEN_EXCEPTIONS = 5;
 
         public App()
         {
@@ -26,6 +27,9 @@ namespace WindowsPhonePowerTools
             Application.Current.DispatcherUnhandledException -= Current_DispatcherUnhandledException;
         }
 
+        private DateTime _lastException = DateTime.Now;
+        private bool _ignoreExceptions = false;
+
         /// <summary>
         /// It's kind of gross to capture and report these errors here, but since there are multiple places that can trigger
         /// these exceptions it's kind of nicer than having lots of try/catch. The alternative may be to add try/catches that
@@ -36,6 +40,16 @@ namespace WindowsPhonePowerTools
         void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             bool needGenericMessage = false;
+
+            // this flag is set when we're being flooded with exceptions and are exiting, so don't show a message
+            if (_ignoreExceptions)
+                return;
+
+            // if we're being flooded with unhandled exceptions, report the exception and exit
+            if (DateTime.Now.Subtract(_lastException).TotalSeconds < MIN_SEC_BETWEEN_EXCEPTIONS)
+                _ignoreExceptions = true;
+
+            _lastException = DateTime.Now;
 
             if (e != null)
             {
@@ -98,6 +112,10 @@ namespace WindowsPhonePowerTools
                 }
 
                 e.Handled = true;
+
+                // if we're ignoring then we should be exiting
+                if (_ignoreExceptions)
+                    Application.Current.Shutdown(1);
             }
         }
     }
