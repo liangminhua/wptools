@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Runtime.InteropServices;
+using System.Windows.Markup;
 
 namespace WindowsPhonePowerTools
 {
@@ -14,6 +15,7 @@ namespace WindowsPhonePowerTools
     public partial class App : Application
     {
         private const int MIN_SEC_BETWEEN_EXCEPTIONS = 5;
+        private const int EXIT_WITH_ERROR = 1;
 
         public App()
         {
@@ -40,6 +42,10 @@ namespace WindowsPhonePowerTools
         void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             bool needGenericMessage = false;
+
+            // handled from the start so that exceptions that cause us to exit at least don't crash out, but exit when
+            // the user hits "ok"
+            e.Handled = true;
 
             // this flag is set when we're being flooded with exceptions and are exiting, so don't show a message
             if (_ignoreExceptions)
@@ -78,11 +84,23 @@ namespace WindowsPhonePowerTools
                             "Unable to install xap - you've reached the maximum number of developer xaps that you can install. Uninstall a developer app and try again",
                             "Too Many Developer Apps", MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
+                    else if (e.Exception is XamlParseException)
+                    {
+                        MissingMethodException missingEx = e.Exception.InnerException as MissingMethodException;
+
+                        if (missingEx != null)
+                        {
+                            MessageBox.Show("A standard phone communication function is missing from your system (see below for details). Please upgrade your Windows Phone SDK to the latest tools found on http://create.msdn.com and try again.\n\nMessage: " + missingEx.Message + "\n\nStack: " + missingEx.ToString().Substring(0, 1000));
+
+                            // non recoverable error here...
+                            _ignoreExceptions = true;
+                        }
+                    }
                     else
                     {
                         needGenericMessage = true;
                     }
-                }
+                } 
                 else
                 {
                     needGenericMessage = true;
@@ -111,11 +129,9 @@ namespace WindowsPhonePowerTools
                         MessageBoxImage.Error);
                 }
 
-                e.Handled = true;
-
                 // if we're ignoring then we should be exiting
                 if (_ignoreExceptions)
-                    Application.Current.Shutdown(1);
+                    Application.Current.Shutdown(EXIT_WITH_ERROR);
             }
         }
     }
