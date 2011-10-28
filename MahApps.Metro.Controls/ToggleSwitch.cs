@@ -550,21 +550,6 @@ namespace MahApps.Metro.Controls
         private double _checkedTranslation;
 
         /// <summary>
-        /// The drag translation.
-        /// </summary>
-        private double _dragTranslation;
-
-        /// <summary>
-        /// Whether the translation ever changed during the drag.
-        /// </summary>
-        private bool _wasDragged;
-
-        /// <summary>
-        /// Whether the dragging state is current.
-        /// </summary>
-        private bool _isDragging;
-
-        /// <summary>
         /// Initializes a new instance of the ToggleSwitch class.
         /// </summary>
         public ToggleSwitchButton()
@@ -610,12 +595,8 @@ namespace MahApps.Metro.Controls
             {
                 VisualStateManager.GoToState(this, DisabledState, useTransitions);
             }
-
-            if (_isDragging)
-            {
-                VisualStateManager.GoToState(this, DraggingState, useTransitions);
-            }
-            else if (IsChecked == true)
+            
+            if (IsChecked == true)
             {
                 VisualStateManager.GoToState(this, CheckedState, useTransitions);
             }
