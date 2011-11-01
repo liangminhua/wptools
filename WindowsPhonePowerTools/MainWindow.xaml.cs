@@ -265,6 +265,22 @@ namespace WindowsPhonePowerTools
             stackFileProperties.DataContext = item.RemoteFile;
         }
 
+        private void treeIsoStore_Drop(object sender, DragEventArgs e)
+        {
+            RemoteAppIsoStoreItem item = treeIsoStore.SelectedItem as RemoteAppIsoStoreItem;
+            string[] files             = e.Data.GetData("FileDrop") as string[];
+
+            if (item == null || files == null)
+                return;
+
+            foreach (string file in files)
+            {
+                item.Put(file, (bool)chkOverwrite.IsChecked);
+            }
+
+            item.Update(force: true);
+        }
+        
         private static int _doubleClickCount = 0;
 
         private void treeIsoStore_OnDoubleClick(object sender, MouseButtonEventArgs e)
