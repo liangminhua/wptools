@@ -331,7 +331,7 @@
             <Canvas>
                 <StackPanel Orientation="Horizontal" Canvas.Left="20">
                     <Image Source="wptools.ico"></Image>
-                    <TextBlock VerticalAlignment="Center" FontFamily="Segoe WP" FontSize="25" Margin="0,0,20,0" FontWeight="Thin">Windows Phone Power Tools</TextBlock>
+                    <TextBlock VerticalAlignment="Center" FontFamily="Segoe WP" FontSize="25" Margin="10,0,0,0" FontWeight="Thin">Windows Phone Power Tools</TextBlock>
                 </StackPanel>
 
                 <StackPanel Canvas.Left="20" Canvas.Top="40">
@@ -348,6 +348,18 @@
                 <ScrollViewer Height="125" Width="364" FontWeight="Regular" Margin="0,6,0,0" Canvas.Top="100" Canvas.Left="20">
 
                     <StackPanel Margin="0,0,5,0">
+                        <Separator Margin="0,5,0,5"></Separator>
+
+                        <TextBlock Style="{StaticResource MetroSmallHeader}" Margin="0,0,0,5">VERSION 1.4 - 31/10/2011</TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            &#x2022; Added Drag &amp; Drop support, you can now drag files to and from the file browser (for example,
+                            you can drag a file into Explorer to download it to your machine instead of using the buttons, and vice versa)<LineBreak/>
+                            &#x2022; You can even drag &amp; drop between apps in IsolatedStorage (right in the browser)<LineBreak/>
+                            &#x2022; We now use the "openas" verb when double clicking on a file in the file browser, which means that Windows
+                            will prompt you for a program to use to view unrecognised files.<LineBreak/>
+                            &#x2022; New icon.
+                        </TextBlock>
+
                         <Separator Margin="0,5,0,5"></Separator>
 
                         <TextBlock Style="{StaticResource MetroSmallHeader}" Margin="0,0,0,5">VERSION 1.3.3 - 12/10/2011</TextBlock>
