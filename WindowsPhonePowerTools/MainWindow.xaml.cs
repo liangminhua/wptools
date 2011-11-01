@@ -270,7 +270,8 @@ namespace WindowsPhonePowerTools
             RemoteAppIsoStoreItem item = treeIsoStore.SelectedItem as RemoteAppIsoStoreItem;
             string[] files             = e.Data.GetData("FileDrop") as string[];
 
-            if (item == null || files == null)
+            // only allow dropping on Application root level items and directories
+            if (files == null || item == null || (!item.IsApplication && !item.RemoteFile.IsDirectory()))
                 return;
 
             foreach (string file in files)
@@ -280,7 +281,38 @@ namespace WindowsPhonePowerTools
 
             item.Update(force: true);
         }
-        
+
+        private void treeIsoStoreItem_MouseMove(object sender, MouseEventArgs e)
+        {
+            TreeViewItem          treeViewItem = sender as TreeViewItem;
+            RemoteAppIsoStoreItem isoStoreItem = treeViewItem.DataContext as RemoteAppIsoStoreItem;
+
+            if (treeViewItem != null && isoStoreItem != null && e.LeftButton == MouseButtonState.Pressed)
+            {
+                // We're about to enter a drag operation (which is a blocking operation)
+                // but we need to have the files on the local system first.
+                // Unfortunately DoDragDrop assumes that the source data (in our case IsoStore files)
+                // are ready to be copied, which means we need to copy them to the host system before
+                // calling DoDragDrop. Since this can take a while the user can get stuck with the program
+                // seemingly hung while dragging, until the files have copied. If the user doesn't wait the
+                // full amount of time the drag will fail.
+                // An alternative is to download on a background thread, but then if the drop happens before
+                // the files are down, we're stuck.
+                // By the way, neither of the extra events (QueryContinueDrag & GiveFeedback) provide indication
+                // that the drop has occurred.
+
+                string tempDir = FileSystemHelpers.CreateTemporaryDirectory();
+
+                isoStoreItem.Get(tempDir, overwrite:true);
+
+                DataObject dataObject = new DataObject("FileDrop", new string[] { System.IO.Path.Combine(tempDir, isoStoreItem.Name) });
+
+                DragDrop.DoDragDrop(treeViewItem, dataObject, DragDropEffects.Copy);
+
+                Directory.Delete(tempDir, recursive: true);
+            }
+        }
+
         private static int _doubleClickCount = 0;
 
         private void treeIsoStoreItem_OnDoubleClick(object sender, MouseButtonEventArgs e)

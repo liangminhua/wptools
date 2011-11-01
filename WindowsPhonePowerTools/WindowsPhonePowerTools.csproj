@@ -98,6 +98,7 @@
     <Compile Include="DeviceConnectionIndicator.xaml.cs">
       <DependentUpon>DeviceConnectionIndicator.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FileSystemHelpers.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="StockIcons.cs" />
     <Compile Include="StreamToBitmapImageConverter.cs" />
