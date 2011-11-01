@@ -192,9 +192,9 @@
                     <TreeView Height="209" Width="391" x:Name="treeIsoStore" SelectedItemChanged="treeIsoStore_SelectedItemChanged" ItemsSource="{Binding Device.RemoteIsoStores}" TreeViewItem.Expanded="treeIsoStore_Expanded">
                         <TreeView.ItemContainerStyle>
                             <Style TargetType="{x:Type TreeViewItem}">
-                                <EventSetter Event="MouseDoubleClick" Handler="treeIsoStore_OnDoubleClick"></EventSetter>
+                                <EventSetter Event="MouseDoubleClick" Handler="treeIsoStoreItem_OnDoubleClick"></EventSetter>
                                 <Setter Property="AllowDrop" Value="True"></Setter>
-                                <EventSetter Event="Drop" Handler="treeIsoStore_Drop"></EventSetter>
+                                <EventSetter Event="Drop" Handler="treeIsoStoreItem_Drop"></EventSetter>
                             </Style>
                         </TreeView.ItemContainerStyle>
                         <TreeView.ItemTemplate>
