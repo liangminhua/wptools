@@ -108,7 +108,7 @@ namespace WindowsPhonePowerTools
             }
         }
 
-        private Canvas _currentPivotPanel;
+        private UIElement _currentPivotPanel;
 
         public MainWindow()
         {
@@ -536,7 +536,7 @@ namespace WindowsPhonePowerTools
             }
         }
 
-        private void ShowPivot(Canvas panel)
+        private void ShowPivot(UIElement panel)
         {
             panel.Visibility = System.Windows.Visibility.Visible;
 
@@ -547,27 +547,11 @@ namespace WindowsPhonePowerTools
         }
 
         # region DropShadow
+        private WindowShadow _shadow;
+
         private void Window_SourceInitialized(object sender, EventArgs e)
         {
-            // drop window shadow from: http://www.nikosbaxevanis.com/bonus-bits/2010/12/building-a-metro-ui-with-wpf.html
-
-            HwndSource hwndSource = (HwndSource)PresentationSource.FromVisual(this);
-
-            // Returns the HwndSource object for the window
-            // which presents WPF content in a Win32 window.
-            hwndSource.AddHook(new HwndSourceHook(NativeMethods.WindowProc));
-            
-            // http://msdn.microsoft.com/en-us/library/aa969524(VS.85).aspx
-            Int32 DWMWA_NCRENDERING_POLICY = 2;
-
-            NativeMethods.DwmSetWindowAttribute(
-                hwndSource.Handle,
-                DWMWA_NCRENDERING_POLICY,
-                ref DWMWA_NCRENDERING_POLICY,
-                4);
-
-            // http://msdn.microsoft.com/en-us/library/aa969512(VS.85).aspx
-            NativeMethods.ShowShadowUnderWindow(hwndSource.Handle);
+            _shadow = new WindowShadow(this);
         }
         #endregion
 

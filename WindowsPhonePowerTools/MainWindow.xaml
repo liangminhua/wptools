@@ -4,7 +4,7 @@
         xmlns:this="clr-namespace:WindowsPhonePowerTools"
         xmlns:metro="clr-namespace:MetroUI;assembly=MetroUI"
         xmlns:stock="clr-namespace:StockIcons"
-        Title="Windows Phone Toolbox" Height="378" Width="535" MinHeight="378" MinWidth="535" ResizeMode="CanResizeWithGrip" WindowStyle="None" AllowsTransparency="True"
+        Title="Windows Phone Toolbox" Height="400" Width="550" MinHeight="400" MinWidth="550" ResizeMode="CanResizeWithGrip" WindowStyle="None" AllowsTransparency="True"
         Icon="wptools.ico"
         SourceInitialized="Window_SourceInitialized"
         Background="White">
@@ -143,7 +143,7 @@
             <ListBoxItem x:Name="headerFileBrowser" Selected="headerFileBrowser_Selected">file browser</ListBoxItem>
         </ListBox>
 
-        <Canvas Grid.Row="2" Grid.ColumnSpan="2">
+        <Grid Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Canvas x:Name="pivotInstall" IsEnabled="{Binding Device.Connected}" Visibility="Collapsed">
                 <Grid>
                     <TextBox Height="22" HorizontalAlignment="Left" Margin="8,35,0,0" Name="txtXapFile" VerticalAlignment="Top" Width="364" />
@@ -187,52 +187,67 @@
                 </Canvas>
                 <TextBlock Canvas.Left="7" Canvas.Top="280">Note: App names will appear as GUIDs unless they have been installed or updated with this tool</TextBlock>
             </Canvas>
-            <Canvas x:Name="pivotFileBrowser" IsEnabled="{Binding Device.Connected}" Visibility="Collapsed">
-                <Canvas>
-                    <TreeView Height="209" Width="391" x:Name="treeIsoStore" SelectedItemChanged="treeIsoStore_SelectedItemChanged" ItemsSource="{Binding Device.RemoteIsoStores}" TreeViewItem.Expanded="treeIsoStore_Expanded">
-                        <TreeView.ItemContainerStyle>
-                            <Style TargetType="{x:Type TreeViewItem}">
-                                <EventSetter Event="MouseDoubleClick" Handler="treeIsoStoreItem_OnDoubleClick"></EventSetter>
-                                <Setter Property="AllowDrop" Value="True"></Setter>
-                                <EventSetter Event="Drop" Handler="treeIsoStoreItem_Drop"></EventSetter>
-                                <EventSetter Event="MouseMove" Handler="treeIsoStoreItem_MouseMove"></EventSetter>
-                            </Style>
-                        </TreeView.ItemContainerStyle>
-                        <TreeView.ItemTemplate>
-                            <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Height="16" Width="16" Source="{Binding Icon, Converter={StaticResource FileTypeToIconConverter}}" Margin="0,1,5,3"></Image>
-                                    <TextBlock Text="{Binding Name}"></TextBlock>
-                                </StackPanel>
-                            </HierarchicalDataTemplate>
-                        </TreeView.ItemTemplate>
-                        <TreeView.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Refresh" x:Name="btnRefresh" Click="btnRefresh_Click" />
-                            </ContextMenu>
-                        </TreeView.ContextMenu>
-                    </TreeView>
-                    <Button Canvas.Left="7" Canvas.Top="215" Content="Get" Height="24" Name="btnGet" Width="77" Click="btnGet_Click" />
-                    <Button Canvas.Left="108" Canvas.Top="215" Content="Put File" Height="24" Name="btnPutFile" Width="77" Click="btnPutFile_Click" />
-                    <Button Canvas.Left="204" Canvas.Top="215" Content="Put Directory" Height="24" Name="btnPutDirectory" Width="92" Click="btnPutDirectory_Click" />
-                    <Button Canvas.Left="314" Canvas.Top="215" Content="Delete" Height="24" Name="btnDelete" Width="77" Click="btnDelete_Click" />
-                    <CheckBox Canvas.Left="7" Canvas.Top="245" Content="Overwrite Existing" Height="16" Name="chkOverwrite" />
-                    <StackPanel x:Name="stackFileProperties" Canvas.Left="397" Canvas.Top="-1" Width="130">
-                        <TextBlock Height="19" Text="CREATED" Style="{StaticResource MetroSmallHeader}" />
-                        <TextBlock Height="23" Text="{Binding CreationTime}" />
-                        <TextBlock Height="19" Text="ATTRIBUTES" Style="{StaticResource MetroSmallHeader}" />
-                        <TextBlock Height="23" Text="{Binding FileAttribute}" />
-                        <TextBlock Height="19" Text="LAST ACCESSED" Style="{StaticResource MetroSmallHeader}" />
-                        <TextBlock Height="23" Text="{Binding LastWriteTime}" />
-                        <TextBlock Height="19" Text="LAST WRITE" Style="{StaticResource MetroSmallHeader}" />
-                        <TextBlock Height="23" Text="{Binding LastAccessTime}" />
-                        <TextBlock Height="19" Text="SIZE" Style="{StaticResource MetroSmallHeader}" />
-                        <TextBlock Height="23" Text="{Binding Length}" />
-                    </StackPanel>
-                </Canvas>
-                <TextBlock Canvas.Left="7" Canvas.Top="280">Note: App names will appear as GUIDs unless they have been installed or updated with this tool</TextBlock>
-            </Canvas>
-        </Canvas>
+            <Grid x:Name="pivotFileBrowser" IsEnabled="{Binding Device.Connected}" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="5"></RowDefinition>
+                    <RowDefinition Height="280*"></RowDefinition>
+                    <RowDefinition Height="40"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="390*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <TreeView Grid.Row="1" Grid.Column="0" Margin="6,0,10,0" MinHeight="210" MinWidth="365" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="treeIsoStore" SelectedItemChanged="treeIsoStore_SelectedItemChanged" ItemsSource="{Binding Device.RemoteIsoStores}" TreeViewItem.Expanded="treeIsoStore_Expanded">
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="{x:Type TreeViewItem}">
+                            <EventSetter Event="MouseDoubleClick" Handler="treeIsoStoreItem_OnDoubleClick"></EventSetter>
+                            <Setter Property="AllowDrop" Value="True"></Setter>
+                            <EventSetter Event="Drop" Handler="treeIsoStoreItem_Drop"></EventSetter>
+                            <EventSetter Event="MouseMove" Handler="treeIsoStoreItem_MouseMove"></EventSetter>
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Height="16" Width="16" Source="{Binding Icon, Converter={StaticResource FileTypeToIconConverter}}" Margin="0,1,5,3"></Image>
+                                <TextBlock Text="{Binding Name}"></TextBlock>
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                    <TreeView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Refresh" x:Name="btnRefresh" Click="btnRefresh_Click" />
+                        </ContextMenu>
+                    </TreeView.ContextMenu>
+                </TreeView>
+                <StackPanel Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" x:Name="stackFileProperties" Width="145">
+                    <TextBlock Height="19" Text="CREATED" Style="{StaticResource MetroSmallHeader}" />
+                    <TextBlock Height="23" Text="{Binding CreationTime}" />
+                    <TextBlock Height="19" Text="ATTRIBUTES" Style="{StaticResource MetroSmallHeader}" />
+                    <TextBlock Height="23" Text="{Binding FileAttribute}" />
+                    <TextBlock Height="19" Text="LAST ACCESSED" Style="{StaticResource MetroSmallHeader}" />
+                    <TextBlock Height="23" Text="{Binding LastWriteTime}" />
+                    <TextBlock Height="19" Text="LAST WRITE" Style="{StaticResource MetroSmallHeader}" />
+                    <TextBlock Height="23" Text="{Binding LastAccessTime}" />
+                    <TextBlock Height="19" Text="SIZE" Style="{StaticResource MetroSmallHeader}" />
+                    <TextBlock Height="23" Text="{Binding Length}" />
+                </StackPanel>
+                
+                <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,5,0,0">
+                    <Button Content="Get" Height="24" Name="btnGet" Width="77" Click="btnGet_Click" Margin="10,0,10,0" />
+                    <Button Content="Put File" Height="24" Name="btnPutFile" Width="77" Click="btnPutFile_Click" Margin="0,0,10,0" />
+                    <Button Content="Put Directory" Height="24" Name="btnPutDirectory" Width="92" Click="btnPutDirectory_Click" Margin="0,0,10,0" />
+                    <Button Content="Delete" Height="24" Name="btnDelete" Width="77" Click="btnDelete_Click" />
+                </StackPanel>
+                
+                <CheckBox Grid.Row="3" Canvas.Left="7" Margin="5,0,0,0" Content="Overwrite Existing" Height="16" Name="chkOverwrite" />
+
+                <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Margin="5,0,0,0">Note: App names will appear as GUIDs unless they have been installed or updated with this tool</TextBlock>
+            </Grid>
+        </Grid>
 
         <metro:MetroDialog x:Name="dialogConnect" Visibility="Collapsed" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DataContext="{Binding Device}">
             <Canvas>
