@@ -555,9 +555,8 @@ namespace WindowsPhonePowerTools
 
             // Returns the HwndSource object for the window
             // which presents WPF content in a Win32 window.
-            HwndSource.FromHwnd(hwndSource.Handle).AddHook(
-                new HwndSourceHook(NativeMethods.WindowProc));
-
+            hwndSource.AddHook(new HwndSourceHook(NativeMethods.WindowProc));
+            
             // http://msdn.microsoft.com/en-us/library/aa969524(VS.85).aspx
             Int32 DWMWA_NCRENDERING_POLICY = 2;
 
@@ -573,6 +572,7 @@ namespace WindowsPhonePowerTools
         #endregion
 
         #region MetroUI
+
         private void Rectangle_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             DragMove();

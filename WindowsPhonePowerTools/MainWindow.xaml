@@ -4,7 +4,7 @@
         xmlns:this="clr-namespace:WindowsPhonePowerTools"
         xmlns:metro="clr-namespace:MetroUI;assembly=MetroUI"
         xmlns:stock="clr-namespace:StockIcons"
-        Title="Windows Phone Toolbox" Height="378" Width="535" ResizeMode="NoResize" WindowStyle="None"
+        Title="Windows Phone Toolbox" Height="378" Width="535" MinHeight="378" MinWidth="535" ResizeMode="CanResizeWithGrip" WindowStyle="None" AllowsTransparency="True"
         Icon="wptools.ico"
         SourceInitialized="Window_SourceInitialized"
         Background="White">
@@ -17,7 +17,7 @@
         <Style x:Key="DeviceInformationSeparator" TargetType="Separator">
             <Setter Property="Margin" Value="-10,3,-10,3"></Setter>
         </Style>
-        
+
         <Style x:Key="MetroLink" TargetType="Hyperlink">
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
