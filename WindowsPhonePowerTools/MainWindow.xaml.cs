@@ -592,5 +592,36 @@ namespace WindowsPhonePowerTools
                 Process.Start(link.NavigateUri.ToString());
             }
         }
+
+        private void btnMinimize_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = System.Windows.WindowState.Minimized;
+        }
+
+        private void btnMaximise_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = System.Windows.WindowState.Maximized;
+        }
+
+        private void btnRestore_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = System.Windows.WindowState.Normal;
+        }
+
+        protected override void OnStateChanged(EventArgs e)
+        {
+            if (WindowState == System.Windows.WindowState.Maximized)
+            {
+                btnMaximise.Visibility = System.Windows.Visibility.Collapsed;
+                btnRestore.Visibility  = System.Windows.Visibility.Visible;
+            }
+            else
+            {
+                btnMaximise.Visibility = System.Windows.Visibility.Visible;
+                btnRestore.Visibility  = System.Windows.Visibility.Collapsed;
+            }
+
+            base.OnStateChanged(e);
+        }
     }
 }

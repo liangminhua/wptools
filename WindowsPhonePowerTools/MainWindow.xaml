@@ -128,6 +128,9 @@
                 <Button Name="btnIndicator" Click="btnIndicator_Click" Style="{StaticResource ConnectionIndicatorStyle}">
                 </Button>
             </Grid>
+            <metro:ImageButton Image="/images/minimise.png" HoverImage="/images/minimise_highlighted.png" Height="8" Width="7" x:Name="btnMinimize" Click="btnMinimize_Click" Margin="0,0,6,0"/>
+            <metro:ImageButton Image="/images/maximise.png" HoverImage="/images/maximise_highlighted.png" Height="8" Width="9" x:Name="btnMaximise" Click="btnMaximise_Click" Margin="0,0,6,0"/>
+            <metro:ImageButton Image="/images/restore.png" HoverImage="/images/restore_highlighted.png" Height="9" Width="9" x:Name="btnRestore" Click="btnRestore_Click" Visibility="Collapsed" Margin="0,0,6,0"/>
             <metro:ImageButton Image="/images/exit.png" HoverImage="/images/exit_highlighted.png" Height="7" Width="8" x:Name="btnClose" Click="btnClose_Click"/>
         </StackPanel>
 
@@ -363,6 +366,16 @@
                 <ScrollViewer Height="125" Width="364" FontWeight="Regular" Margin="0,6,0,0" Canvas.Top="100" Canvas.Left="20">
 
                     <StackPanel Margin="0,0,5,0">
+
+                        <Separator Margin="0,5,0,5"></Separator>
+
+                        <TextBlock Style="{StaticResource MetroSmallHeader}" Margin="0,0,0,5">VERSION 1.4.5 - 1/11/2011</TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            &#x2022; Window can now be resized, only really useful in the file browser<LineBreak/>
+                            &#x2022; Different shadows. If you're interested in why, read the comment in WindowShadow.cs<LineBreak/>
+                            &#x2022; Fixed a typo. Took longer to write this line.
+                        </TextBlock>
+
                         <Separator Margin="0,5,0,5"></Separator>
 
                         <TextBlock Style="{StaticResource MetroSmallHeader}" Margin="0,0,0,5">VERSION 1.4 - 31/10/2011</TextBlock>
