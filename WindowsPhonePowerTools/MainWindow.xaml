@@ -369,6 +369,13 @@
 
                         <Separator Margin="0,5,0,5"></Separator>
 
+                        <TextBlock Style="{StaticResource MetroSmallHeader}" Margin="0,0,0,5">VERSION 1.4.6 - 1/11/2011</TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            &#x2022; Added Maximise / Minimise / Restore buttons to go along with the window that can be resized
+                        </TextBlock>
+
+                        <Separator Margin="0,5,0,5"></Separator>
+
                         <TextBlock Style="{StaticResource MetroSmallHeader}" Margin="0,0,0,5">VERSION 1.4.5 - 1/11/2011</TextBlock>
                         <TextBlock TextWrapping="Wrap">
                             &#x2022; Window can now be resized, only really useful in the file browser<LineBreak/>
