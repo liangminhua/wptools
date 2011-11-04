@@ -265,7 +265,7 @@ namespace WindowsPhonePowerTools
             stackFileProperties.DataContext = item.RemoteFile;
         }
 
-        private void treeIsoStoreItem_Drop(object sender, DragEventArgs e)
+        private void treeIsoStoreItem_OnDrop(object sender, DragEventArgs e)
         {
             RemoteAppIsoStoreItem item = treeIsoStore.SelectedItem as RemoteAppIsoStoreItem;
             string[] files             = e.Data.GetData("FileDrop") as string[];
@@ -282,7 +282,7 @@ namespace WindowsPhonePowerTools
             item.Update(force: true);
         }
 
-        private void treeIsoStoreItem_MouseMove(object sender, MouseEventArgs e)
+        private void treeIsoStoreItem_OnMouseMove(object sender, MouseEventArgs e)
         {
             TreeViewItem          treeViewItem = sender as TreeViewItem;
             RemoteAppIsoStoreItem isoStoreItem = treeViewItem.DataContext as RemoteAppIsoStoreItem;

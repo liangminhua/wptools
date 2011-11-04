@@ -209,8 +209,8 @@
                             <EventSetter Event="MouseDoubleClick" Handler="treeIsoStoreItem_OnDoubleClick"></EventSetter>
                             <EventSetter Event="KeyUp" Handler="treeIsoStoreItem_OnKeyUp"></EventSetter>
                             <Setter Property="AllowDrop" Value="True"></Setter>
-                            <EventSetter Event="Drop" Handler="treeIsoStoreItem_Drop"></EventSetter>
-                            <EventSetter Event="MouseMove" Handler="treeIsoStoreItem_MouseMove"></EventSetter>
+                            <EventSetter Event="Drop" Handler="treeIsoStoreItem_OnDrop"></EventSetter>
+                            <EventSetter Event="MouseMove" Handler="treeIsoStoreItem_OnMouseMove"></EventSetter>
                         </Style>
                     </TreeView.ItemContainerStyle>
                     <TreeView.ItemTemplate>
