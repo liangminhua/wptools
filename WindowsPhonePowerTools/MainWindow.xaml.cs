@@ -336,7 +336,10 @@ namespace WindowsPhonePowerTools
                     // double click should launch the file
                     ProcessStartInfo info = new ProcessStartInfo(localFilePath);
                     info.UseShellExecute = true;
-                    info.Verb = "openas";
+                    
+                    // decide which verb to use ("open for recognised files, otherwise "openas")
+                    // Note: info.Verbs is determined according to localFilePath
+                    info.Verb = (info.Verbs.Contains("open") ? "open" : "openas");
 
                     try
                     {
