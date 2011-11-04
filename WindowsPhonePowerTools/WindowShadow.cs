@@ -108,7 +108,7 @@ namespace WindowsPhonePowerTools
         /// Creates an empty window.
         /// </summary>
         /// <returns></returns>
-        private static Window CreateTransparentWindow()
+        private Window CreateTransparentWindow()
         {
             Window wnd = new Window();
 
@@ -116,6 +116,7 @@ namespace WindowsPhonePowerTools
             wnd.ShowInTaskbar      = false;
             wnd.WindowStyle        = WindowStyle.None;
             wnd.Background         = null;
+            wnd.Owner              = m_target; // owned windows will not show up in alt+tab
 
             // set initial height to 0 so that the window doesn't "pop in" from a larger size
             wnd.Height = 0;
