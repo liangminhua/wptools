@@ -373,9 +373,9 @@
                         <TextBlock Style="{StaticResource MetroSmallHeader}" Margin="0,0,0,5">VERSION 1.4.7 - 3/11/2011</TextBlock>
                         <TextBlock TextWrapping="Wrap">
                             &#x2022; BUG: Fixed opening a file from File Browser with double click (using "openas" caused only 
-                                     unrecognised files to work, while recognised file types were ignored)
+                                     unrecognised files to work, while recognised file types were ignored)<LineBreak/>
                             &#x2022; You can now navigate the File Browser with the keyboard, hitting Enter will open a file
-                                     similar to double click
+                                     similar to double click<LineBreak/>
                             &#x2022; Shadow windows will no longer appear in Alt+Tab
                         </TextBlock>
 
