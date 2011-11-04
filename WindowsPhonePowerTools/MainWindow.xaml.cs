@@ -313,49 +313,59 @@ namespace WindowsPhonePowerTools
             }
         }
 
+        private void treeIsoStoreItem_OnKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                OpenFileFromIsoStore();
+                e.Handled = true;
+            }
+        }
+
         private static int _doubleClickCount = 0;
 
         private void treeIsoStoreItem_OnDoubleClick(object sender, MouseButtonEventArgs e)
         {
 
             if (++_doubleClickCount % 2 == 0)
+                OpenFileFromIsoStore();
+        }
+
+        private void OpenFileFromIsoStore()
+        {
+            RemoteAppIsoStoreItem item = treeIsoStore.SelectedItem as RemoteAppIsoStoreItem;
+
+            if (item != null && !item.IsApplication && !item.RemoteFile.IsDirectory())
             {
+                string path = System.IO.Path.GetTempPath();
 
-                RemoteAppIsoStoreItem item = treeIsoStore.SelectedItem as RemoteAppIsoStoreItem;
+                // when double clicking we should always overwrite to make sure we don't get
+                // stale files
+                string localFilePath = item.Get(path, true);
 
-                if (item != null && !item.IsApplication && !item.RemoteFile.IsDirectory())
+                System.Diagnostics.Debug.WriteLine(path);
+
+                // double click should launch the file
+                ProcessStartInfo info = new ProcessStartInfo(localFilePath);
+                info.UseShellExecute = true;
+
+                // decide which verb to use ("open for recognised files, otherwise "openas")
+                // Note: info.Verbs is determined according to localFilePath
+                info.Verb = (info.Verbs.Contains("open") ? "open" : "openas");
+
+                try
                 {
-                    string path = System.IO.Path.GetTempPath();
+                    Process preview = new Process();
+                    preview.StartInfo = info;
 
-                    // when double clicking we should always overwrite to make sure we don't get
-                    // stale files
-                    string localFilePath = item.Get(path, true);
+                    preview.Exited += (exitSender, exitE) => { File.Delete(localFilePath); };
 
-                    System.Diagnostics.Debug.WriteLine(path);
-
-                    // double click should launch the file
-                    ProcessStartInfo info = new ProcessStartInfo(localFilePath);
-                    info.UseShellExecute = true;
-                    
-                    // decide which verb to use ("open for recognised files, otherwise "openas")
-                    // Note: info.Verbs is determined according to localFilePath
-                    info.Verb = (info.Verbs.Contains("open") ? "open" : "openas");
-
-                    try
-                    {
-                        Process preview = new Process();
-                        preview.StartInfo = info;
-
-                        preview.Exited += (exitSender, exitE) => { File.Delete(localFilePath); };
-
-                        preview.Start();
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine(ex);
-                    }
+                    preview.Start();
                 }
-
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex);
+                }
             }
         }
 
