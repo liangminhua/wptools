@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using System.Windows.Threading;
 
 namespace WindowsPhonePowerTools
 {
@@ -172,9 +173,9 @@ namespace WindowsPhonePowerTools
             m_wndT.Top    = m_target.Top - m_wndT.Height;
             m_wndT.Width  = m_target.Width;
 
+            m_wndL.Width  = c_edgeWndSize;
             m_wndL.Left   = m_target.Left - m_wndL.Width;
             m_wndL.Top    = m_target.Top;
-            m_wndL.Width  = c_edgeWndSize;
             m_wndL.Height = m_target.Height;
 
             m_wndB.Height = c_edgeWndSize;
