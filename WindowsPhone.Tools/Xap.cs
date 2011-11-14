@@ -81,11 +81,15 @@ namespace WindowsPhone.Tools
                 {
                     using (Stream iconStream = GetFileStreamFromXap(Icon))
                     {
-                        // save the image as the guid to maintain uniqueness
-                        PersistedData.SaveBinaryStream(iconStream, Guid.ToString());
-                    }
+                        // some weird xaps don't have icons, so GetFileStreamFromXap returns a null
+                        if (iconStream != null)
+                        {
+                            // save the image as the guid to maintain uniqueness
+                            PersistedData.SaveBinaryStream(iconStream, Guid.ToString());
 
-                    persistedAppData.Icon = Guid.ToString();
+                            persistedAppData.Icon = Guid.ToString();
+                        }
+                    }
                 }
 
                 persistedAppData.Name = Name;
