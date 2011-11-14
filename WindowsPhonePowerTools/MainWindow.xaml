@@ -367,6 +367,13 @@
                 <ScrollViewer Height="125" Width="364" FontWeight="Regular" Margin="0,6,0,0" Canvas.Top="100" Canvas.Left="20">
 
                     <StackPanel Margin="0,0,5,0">
+                        <Separator Margin="0,5,0,5"></Separator>
+
+                        <TextBlock Style="{StaticResource MetroSmallHeader}" Margin="0,0,0,5">VERSION 1.4.8 - 13/11/2011</TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            &#x2022; BUG #12: Fixed NullReferenceException on xaps that claim that have icons, but don't actually have the icon in the xap<LineBreak/>
+                            &#x2022; BUG: Fixed a bug affecting the initial positioning of the left shadow<LineBreak/>
+                        </TextBlock>
 
                         <Separator Margin="0,5,0,5"></Separator>
 
