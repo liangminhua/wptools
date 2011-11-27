@@ -224,7 +224,10 @@ namespace StockIcons
         protected internal static BitmapSource GetBitmapSource(StockIconIdentifier identifier, StockIconOptions flags)
         {
             BitmapSource bitmapSource = (BitmapSource)InteropHelper.MakeImage(identifier, StockIconOptions.Handle | flags);
-            bitmapSource.Freeze();
+
+            if (bitmapSource != null)
+                bitmapSource.Freeze();
+
             return bitmapSource;
         }
     }
@@ -349,16 +352,23 @@ namespace StockIcons
 
         internal static ImageSource MakeImage(StockIconIdentifier identifier, StockIconOptions flags)
         {
-            IntPtr iconHandle = GetIcon(identifier, flags);
-            ImageSource imageSource;
+            ImageSource imageSource = null;
+            IntPtr iconHandle = IntPtr.Zero;
+
             try
             {
+                iconHandle = GetIcon(identifier, flags);
                 imageSource = InteropImaging.CreateBitmapSourceFromHIcon(iconHandle, Int32Rect.Empty, null);
+            }
+            catch
+            {
+                // ignore exception (this will throw on Windows XP which doesn't have an SHGetStockIconInfo)
             }
             finally
             {
                 DestroyIcon(iconHandle);
             }
+
             return imageSource;
         }
 
