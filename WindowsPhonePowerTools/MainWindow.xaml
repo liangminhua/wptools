@@ -369,6 +369,13 @@
                     <StackPanel Margin="0,0,5,0">
                         <Separator Margin="0,5,0,5"></Separator>
 
+                        <TextBlock Style="{StaticResource MetroSmallHeader}" Margin="0,0,0,5">VERSION 1.4.9.1 - 7/12/2011</TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            &#x2022; Minor bug fix: BUG 14: any mouse button click, except left click, on the window drag area would cause a crash
+                        </TextBlock>
+                        
+                        <Separator Margin="0,5,0,5"></Separator>
+
                         <TextBlock Style="{StaticResource MetroSmallHeader}" Margin="0,0,0,5">VERSION 1.4.9 - 27/11/2011</TextBlock>
                         <TextBlock TextWrapping="Wrap">
                             &#x2022; Support Windows XP (requested by Sergoreg, Thanks!)
