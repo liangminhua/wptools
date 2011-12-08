@@ -572,7 +572,9 @@ namespace WindowsPhonePowerTools
 
         private void Rectangle_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            DragMove();
+            // BUG 14: Only call DragMove if the left button (the primary one) is pressed
+            if (e.LeftButton == MouseButtonState.Pressed)
+                DragMove();
         }
 
         private void btnClose_Click(object sender, RoutedEventArgs e)
