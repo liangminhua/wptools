@@ -42,29 +42,31 @@ namespace WindowsPhonePowerTools
 
             if (isoStoreItem != null)
             {
+                if (isoStoreItem.IsApplication)
+                    return imageApp;
+
                 RemoteFileInfo file = isoStoreItem.RemoteFile;
 
-                if (file == null)
+                if (file != null)
                 {
-                    return imageApp;
-                }
-                else if (file.IsDirectory())
-                {
-                    if (isoStoreItem.Opened)
+                    if (file.IsDirectory())
                     {
-                        return imageOpenDir;
+                        if (isoStoreItem.Opened)
+                        {
+                            return imageOpenDir;
+                        }
+                        else
+                        {
+                            return imageDir;
+                        }
                     }
                     else
                     {
-                        return imageDir;
-                    }
-                }
-                else
-                {
-                    BitmapImage img;
+                        BitmapImage img;
 
-                    if (fileTypeImages.TryGetValue(file.GetExtension(), out img))
-                        return img;
+                        if (fileTypeImages.TryGetValue(file.GetExtension(), out img))
+                            return img;
+                    }
                 }
             }
 
