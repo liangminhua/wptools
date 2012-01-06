@@ -10,7 +10,6 @@ namespace WindowsPhone.Tools
 {
     public class RemoteApplicationEx
     {
-
         public RemoteApplication RemoteApplication { get; private set; }
 
         bool inited = false;
