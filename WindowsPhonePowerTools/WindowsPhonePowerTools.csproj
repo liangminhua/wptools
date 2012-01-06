@@ -240,4 +240,7 @@
     <Resource Include="images\restore.png" />
     <Resource Include="images\restore_highlighted.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\folder_open.png" />
+  </ItemGroup>
 </Project>

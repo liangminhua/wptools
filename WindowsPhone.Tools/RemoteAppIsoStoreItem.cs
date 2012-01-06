@@ -18,6 +18,11 @@ namespace WindowsPhone.Tools
         public string Name { get; set; }
 
         /// <summary>
+        /// Wheteher or not this item has been expanded
+        /// </summary>
+        public bool Opened { get; private set; }
+
+        /// <summary>
         /// Is this item the top level application object
         /// </summary>
         public bool IsApplication { get; set; }
@@ -26,16 +31,21 @@ namespace WindowsPhone.Tools
 
         /// <summary>
         /// The weird and wonderful world of Icons. Will either return a stream with the icon in it
-        /// or will return RemoteFile for you to convert nicely into a generic icon.
+        /// or will return this object for you to convert nicely into a generic icon.
         /// </summary>
         public object Icon
         {
             get
             {
-                if (IsApplication)
+                if (IsApplication && _appEx.Icon != null)
                     return _appEx.Icon;
                 else
-                    return RemoteFile;
+                    return this;
+            }
+            set
+            {
+                // ignore the set value, it is only here to refresh the icon
+                NotifyPropertyChanged("Icon");
             }
         }
 
@@ -55,8 +65,6 @@ namespace WindowsPhone.Tools
             get { return _parent; }
             private set { _parent = value; }
         }
-
-        private bool _updated = false;
 
         /// <summary>
         /// Construct a new toplevel IsoStore representation for this xap
@@ -234,7 +242,7 @@ namespace WindowsPhone.Tools
         /// </summary>
         public void Update(bool force = false)
         {
-            if (!force && (_updated || (RemoteFile != null && !RemoteFile.IsDirectory())))
+            if (!force && (Opened || (RemoteFile != null && !RemoteFile.IsDirectory())))
                 return;
 
             // if we are forcing an update then the assumption is that we want an update
@@ -250,7 +258,8 @@ namespace WindowsPhone.Tools
 
             Children.Clear();
 
-            _updated = true;
+            //Opened = true;
+            Opened = true;
 
             RemoteIsolatedStorageFile remoteIso = _app.GetIsolatedStore();
 

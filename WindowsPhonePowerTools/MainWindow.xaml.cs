@@ -481,9 +481,13 @@ namespace WindowsPhonePowerTools
                 {
                     fake.Parent.Update();
                 }
-
             }
 
+            RemoteAppIsoStoreItem isoStoreItem = treeIsoStore.SelectedItem as RemoteAppIsoStoreItem;
+
+            // refresh the icon on item expansion
+            if (isoStoreItem != null && isoStoreItem.Opened)
+                isoStoreItem.Icon = null;
         }
 
         private void btnRefresh_Click(object sender, RoutedEventArgs e)
@@ -637,6 +641,11 @@ namespace WindowsPhonePowerTools
             }
 
             base.OnStateChanged(e);
+        }
+
+        private void treeIsoStore_Collapsed(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

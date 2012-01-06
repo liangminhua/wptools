@@ -13,6 +13,7 @@ namespace WindowsPhonePowerTools
     class FileTypeToIconConverter : IValueConverter
     {
         static BitmapImage imageDir = new BitmapImage(new Uri("images/folder.png", UriKind.RelativeOrAbsolute));
+        public static BitmapImage imageOpenDir = new BitmapImage(new Uri("images/folder_open.png", UriKind.RelativeOrAbsolute));
         public static readonly BitmapImage imageApp = new BitmapImage(new Uri("images/WindowsPhoneIcon.png", UriKind.RelativeOrAbsolute));
         static BitmapImage imageUnknown = new BitmapImage(new Uri("images/unknown.png", UriKind.RelativeOrAbsolute));
 
@@ -37,22 +38,34 @@ namespace WindowsPhonePowerTools
                 return img;
             }
 
-            RemoteFileInfo file = value as RemoteFileInfo;
+            RemoteAppIsoStoreItem isoStoreItem = value as RemoteAppIsoStoreItem;
 
-            if (file == null)
+            if (isoStoreItem != null)
             {
-                return imageApp;
-            }
-            else if (file.IsDirectory())
-            {
-                return imageDir;
-            }
-            else
-            {
-                BitmapImage img;
+                RemoteFileInfo file = isoStoreItem.RemoteFile;
 
-                if (fileTypeImages.TryGetValue(file.GetExtension(), out img))
-                    return img;
+                if (file == null)
+                {
+                    return imageApp;
+                }
+                else if (file.IsDirectory())
+                {
+                    if (isoStoreItem.Opened)
+                    {
+                        return imageOpenDir;
+                    }
+                    else
+                    {
+                        return imageDir;
+                    }
+                }
+                else
+                {
+                    BitmapImage img;
+
+                    if (fileTypeImages.TryGetValue(file.GetExtension(), out img))
+                        return img;
+                }
             }
 
             return imageUnknown;
