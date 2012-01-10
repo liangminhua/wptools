@@ -322,13 +322,20 @@ namespace WindowsPhonePowerTools
             }
         }
 
-        private static int _doubleClickCount = 0;
+        private static DateTime _lastDoubleClick = DateTime.Now;
 
         private void treeIsoStoreItem_OnDoubleClick(object sender, MouseButtonEventArgs e)
         {
-
-            if (++_doubleClickCount % 2 == 0)
+            // for some unknown reason OnDoubleClick gets called twice (and we don't want to
+            // set handled since we want it to bubble).
+            // Unfortunately some systems call this 4 times, to work around this we take a
+            // timestamp for filtering
+            if (DateTime.Now.Subtract(_lastDoubleClick).TotalMilliseconds > 500)
+            {
                 OpenFileFromIsoStore();
+
+                _lastDoubleClick = DateTime.Now;
+            }
         }
 
         private void OpenFileFromIsoStore()
