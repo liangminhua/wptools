@@ -21,7 +21,7 @@ namespace WindowsPhonePowerTools
         {
             {"png", new BitmapImage(new Uri("images/png.png", UriKind.RelativeOrAbsolute))},
             {"jpg", new BitmapImage(new Uri("images/jpeg.png", UriKind.RelativeOrAbsolute))},
-            {"jpeg", new BitmapImage(new Uri("images/jpeg.png", UriKind.RelativeOrAbsolute))}, //TODO: hmm...
+            {"jpeg", new BitmapImage(new Uri("images/jpeg.png", UriKind.RelativeOrAbsolute))},
         };
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
