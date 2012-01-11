@@ -12,8 +12,9 @@ namespace WindowsPhone.Tools
     public class RemoteAppIsoStoreItem : INotifyPropertyChanged
     {
         private Device _device;
-        private RemoteApplication _app;
         private RemoteApplicationEx _appEx;
+
+        public RemoteApplication RemoteApp { get; private set; }
 
         public string Name { get; set; }
 
@@ -74,8 +75,9 @@ namespace WindowsPhone.Tools
         public RemoteAppIsoStoreItem(Microsoft.SmartDevice.Connectivity.Device device, RemoteApplicationEx app)
         {
             this._device = device;
-            this._app    = app.RemoteApplication;
             this._appEx  = app;
+            
+            this.RemoteApp = app.RemoteApplication;
             
             // the public constructor is only used to construct the first level
             // which represents the app itself
@@ -96,7 +98,8 @@ namespace WindowsPhone.Tools
         /// <param name="remoteFile"></param>
         private RemoteAppIsoStoreItem(RemoteApplicationEx app, RemoteFileInfo remoteFile, RemoteAppIsoStoreItem parent)
         {
-            _app   = app.RemoteApplication;
+            RemoteApp = app.RemoteApplication;
+
             _appEx = app;
             Parent = parent;
 
@@ -124,7 +127,7 @@ namespace WindowsPhone.Tools
         /// <param name="path">Returns the full local path (i.e. localPath + [file/dir]name)</param>
         public string Get(string localPath, bool overwrite)
         {
-            RemoteIsolatedStorageFile remoteIso = _app.GetIsolatedStore();
+            RemoteIsolatedStorageFile remoteIso = RemoteApp.GetIsolatedStore();
 
             string fullLocalPath = Path.Combine(localPath, Path.GetFileName(Name));
 
@@ -166,7 +169,7 @@ namespace WindowsPhone.Tools
 
         public void Put(string localFile, string relativeDirectory = "", bool overwrite = false)
         {
-            RemoteIsolatedStorageFile remoteIso = _app.GetIsolatedStore();
+            RemoteIsolatedStorageFile remoteIso = RemoteApp.GetIsolatedStore();
 
             FileAttributes attrib = File.GetAttributes(localFile);
 
@@ -184,7 +187,6 @@ namespace WindowsPhone.Tools
                 {
                     Put(file, newRelativeDirectory, overwrite);
                 }
-
             }
             else
             {
@@ -199,7 +201,7 @@ namespace WindowsPhone.Tools
 
         public void Delete()
         {
-            RemoteIsolatedStorageFile remoteIso = _app.GetIsolatedStore();
+            RemoteIsolatedStorageFile remoteIso = RemoteApp.GetIsolatedStore();
 
             if (IsApplication)
             {
@@ -261,7 +263,7 @@ namespace WindowsPhone.Tools
             //Opened = true;
             Opened = true;
 
-            RemoteIsolatedStorageFile remoteIso = _app.GetIsolatedStore();
+            RemoteIsolatedStorageFile remoteIso = RemoteApp.GetIsolatedStore();
 
             List<RemoteFileInfo> remoteFiles;
 

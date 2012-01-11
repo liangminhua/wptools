@@ -654,5 +654,44 @@ namespace WindowsPhonePowerTools
         {
 
         }
+
+        private void btnLaunchMenu_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem contextMenuItem = (MenuItem)sender;
+            ContextMenu contextMenu  = (ContextMenu)contextMenuItem.Parent;
+            
+            FrameworkElement element = contextMenu.PlacementTarget as FrameworkElement;
+
+            if (element != null)
+            {
+                FrameworkElement elemParent = element.TemplatedParent as FrameworkElement;
+
+                if (elemParent != null)
+                {
+                    TreeViewItem item = elemParent.TemplatedParent as TreeViewItem;
+               
+                    if (item != null) 
+                    {
+                        RemoteAppIsoStoreItem isoStoreItem = item.DataContext as RemoteAppIsoStoreItem;
+
+                        while (isoStoreItem != null && isoStoreItem.IsApplication == false)
+                        {
+                            isoStoreItem = isoStoreItem.Parent;
+                        }
+
+                        if (isoStoreItem != null)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Launching: " + isoStoreItem.RemoteApp.ProductID);
+                            isoStoreItem.RemoteApp.Launch();
+                        }
+                    }
+                }
+            }
+
+            if (contextMenu.PlacementTarget.GetType() == typeof(TreeViewItem))
+            {
+                TreeViewItem originatingTreeViewItem = (TreeViewItem)contextMenu.PlacementTarget;
+            }
+        }
     }
 }
