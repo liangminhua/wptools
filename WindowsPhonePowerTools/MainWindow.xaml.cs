@@ -30,6 +30,20 @@ namespace WindowsPhonePowerTools
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        private string _errorString;
+        public string ErrorString
+        {
+            get { return _errorString; }
+            set
+            {
+                if (_errorString != value)
+                {
+                    _errorString = value;
+
+                    NotifyPropertyChanged("ErrorString");
+                }
+            }
+        }
 
         private RemoteApplicationEx _curSelectedInstalledApp;
         public RemoteApplicationEx CurSelectedInstalledApp
@@ -218,7 +232,17 @@ namespace WindowsPhonePowerTools
                     existingInstall.Uninstall();
                 }
 
-                _device.CurrentDevice.InstallApplication(xap.Guid, Guid.Empty, "genre", "noicon", xap.FilePath);
+                try
+                {
+                    throw new OutOfMemoryException("fsdfdsf df dsf df d fds fsdf");
+                    _device.CurrentDevice.InstallApplication(xap.Guid, Guid.Empty, "genre", "noicon", xap.FilePath);
+
+                }
+                catch (OutOfMemoryException ex)
+                {
+                    ShowError("You've run out of space on your device! Please try again (this can sometimes be a device API issue) and if the error persists remove some apps and then try again.\n\nRaw Error: " + ex.Message);
+                    break;
+                }
             }
 
             _device.RefreshInstalledApps();
@@ -692,6 +716,18 @@ namespace WindowsPhonePowerTools
             {
                 TreeViewItem originatingTreeViewItem = (TreeViewItem)contextMenu.PlacementTarget;
             }
+        }
+
+        private void ShowError(string error)
+        {
+            ErrorString = error;
+            dialogError.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void btnDismissErrorDialog_Click(object sender, RoutedEventArgs e)
+        {
+            dialogError.Visibility = System.Windows.Visibility.Collapsed;
+            ErrorString = "";
         }
     }
 }
