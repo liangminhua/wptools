@@ -30,6 +30,8 @@ namespace WindowsPhonePowerTools
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        public static MainWindow Current { get; private set; }
+
         private string _errorString;
         public string ErrorString
         {
@@ -128,6 +130,8 @@ namespace WindowsPhonePowerTools
         {
             InitializeComponent();
 
+            Current = this;
+            
             Device = new WindowsPhoneDevice();
 
             Device.PropertyChanged += new PropertyChangedEventHandler(Device_PropertyChanged);
@@ -234,9 +238,7 @@ namespace WindowsPhonePowerTools
 
                 try
                 {
-                    throw new OutOfMemoryException("fsdfdsf df dsf df d fds fsdf");
                     _device.CurrentDevice.InstallApplication(xap.Guid, Guid.Empty, "genre", "noicon", xap.FilePath);
-
                 }
                 catch (OutOfMemoryException ex)
                 {
@@ -718,7 +720,7 @@ namespace WindowsPhonePowerTools
             }
         }
 
-        private void ShowError(string error)
+        public void ShowError(string error)
         {
             ErrorString = error;
             dialogError.Visibility = System.Windows.Visibility.Visible;

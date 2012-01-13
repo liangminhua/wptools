@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Runtime.InteropServices;
 using System.Windows.Markup;
+using Microsoft.SmartDevice.Connectivity;
 
 namespace WindowsPhonePowerTools
 {
@@ -94,6 +95,23 @@ namespace WindowsPhonePowerTools
 
                             // non recoverable error here...
                             _ignoreExceptions = true;
+                        }
+                    }
+                    else if (e.Exception is DeviceNotConnectedException)
+                    {
+                        try
+                        {
+                            WindowsPhonePowerTools.MainWindow.Current.Device.Connect();
+                        } catch {}
+
+                        if (WindowsPhonePowerTools.MainWindow.Current.Device.Connected)
+                        {
+                            WindowsPhonePowerTools.MainWindow.Current.ShowError("Your device disconnected, but fear not, we've reconnected it for you!\n\nRetry whatever it was you were doing and you should have more luck...");
+                        }
+                        else
+                        {
+                            WindowsPhonePowerTools.MainWindow.Current.ShowError("Your device disconnected, we tried to reconnect, but we were out of luck :(\n\nReconnect your device and try again");
+                            WindowsPhonePowerTools.MainWindow.Current.Device = null;
                         }
                     }
                     else
