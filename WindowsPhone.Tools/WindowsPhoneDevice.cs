@@ -72,7 +72,25 @@ namespace WindowsPhone.Tools
         private Device _currentDevice;
         public Device CurrentDevice
         {
-            get { return _currentDevice; }
+            get {
+                // attempt to reconnect the device if we previously connected it and
+                // it is not longer connected
+                if (_currentDevice != null && Connected && !_currentDevice.IsConnected())
+                {
+                    // attempt to reconnect
+                    Connect();
+
+                    // still not connected?
+                    if (!_currentDevice.IsConnected())
+                    {
+                        CurrentDevice = null;
+
+                        throw new DeviceNotConnectedException(StatusMessage);
+                    }
+                }
+
+                return _currentDevice; 
+            }
             set
             {
                 if (_currentDevice != value)
@@ -204,10 +222,13 @@ namespace WindowsPhone.Tools
 
         public bool Connect()
         {
-            if (CurrentDevice != null)
+            // do not use CurrentDevice here (rather, use _currentDevice) because CurrentDevice.Get() 
+            // can call back into Connect
+
+            if (_currentDevice != null)
             {
                 // we're already connected to this device! :)
-                if (CurrentDevice == _connectedDevice)
+                if (_currentDevice == _connectedDevice && _connectedDevice.IsConnected())
                     return true;
 
                 try
@@ -216,16 +237,16 @@ namespace WindowsPhone.Tools
                     if (_connectedDevice != null)
                         _connectedDevice.Disconnect();
 
-                    CurrentDevice.Connect();
+                    _currentDevice.Connect();
 
-                    SystemInfo = CurrentDevice.GetSystemInfo();
+                    SystemInfo = _currentDevice.GetSystemInfo();
 
                     if (SystemInfo.OSBuildNo < MIN_SUPPORTED_BUILD_NUMBER)
                     {
                         throw new Exception("Windows Phone Power Tools only support build " + MIN_SUPPORTED_BUILD_NUMBER + " and above. This device is on " + SystemInfo.OSBuildNo + ".");
                     }
 
-                    StatusMessage = "Connected to " + CurrentDevice.Name + "!";
+                    StatusMessage = "Connected to " + _currentDevice.Name + "!";
 
                     Connected = true;
                     IsError = false;
@@ -288,7 +309,7 @@ namespace WindowsPhone.Tools
 
             foreach (RemoteApplicationEx app in _installedApplications)
             {
-                xapIsoStores.Add(new RemoteAppIsoStoreItem(_currentDevice, app));
+                xapIsoStores.Add(new RemoteAppIsoStoreItem(CurrentDevice, app));
             }
 
             RemoteIsoStores = xapIsoStores;
