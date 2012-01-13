@@ -360,7 +360,7 @@
             </Canvas>
         </metro:MetroDialog>
 
-        <metro:MetroDialog x:Name="dialogAbout" Visibility="Visible" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <metro:MetroDialog x:Name="dialogAbout" Visibility="Collapsed" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Canvas>
                 <StackPanel Orientation="Horizontal" Canvas.Left="20">
                     <Image Source="wptools.ico"></Image>
