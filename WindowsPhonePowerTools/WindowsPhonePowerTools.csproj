@@ -220,9 +220,6 @@
     <Resource Include="images\success.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="images\error.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="images\shadow\ACTIVESHADOWBOTTOM.PNG" />
     <Resource Include="images\shadow\ACTIVESHADOWLEFT.PNG" />
     <Resource Include="images\shadow\ACTIVESHADOWRIGHT.PNG" />
@@ -242,5 +239,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="images\folder_open.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\error.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\connected.png" />
   </ItemGroup>
 </Project>
