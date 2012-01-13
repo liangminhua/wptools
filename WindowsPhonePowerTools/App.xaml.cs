@@ -43,6 +43,7 @@ namespace WindowsPhonePowerTools
         void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             bool needGenericMessage = false;
+            WindowsPhonePowerTools.MainWindow mainWindow = WindowsPhonePowerTools.MainWindow.Current;
 
             // handled from the start so that exceptions that cause us to exit at least don't crash out, but exit when
             // the user hits "ok"
@@ -99,19 +100,16 @@ namespace WindowsPhonePowerTools
                     }
                     else if (e.Exception is DeviceNotConnectedException)
                     {
-                        try
-                        {
-                            WindowsPhonePowerTools.MainWindow.Current.Device.Connect();
-                        } catch {}
+                        mainWindow.ShowError("Your device disconnected, we tried to reconnect, but we were out of luck :(\n\nReconnect your device and try again");
+                        mainWindow.Device.Connected = false;
+                    }
+                    else if (e.Exception is RemoteIsolatedStorageException)
+                    {
+                        mainWindow.ShowError("Oops! We ran into a problem navigating the device's file system. You may need to reconnect your device.\n\nRaw Error: " + e.Exception.Message);
 
-                        if (WindowsPhonePowerTools.MainWindow.Current.Device.Connected)
+                        if (e.Exception.Message.ToLower() == "device not connected")
                         {
-                            WindowsPhonePowerTools.MainWindow.Current.ShowError("Your device disconnected, but fear not, we've reconnected it for you!\n\nRetry whatever it was you were doing and you should have more luck...");
-                        }
-                        else
-                        {
-                            WindowsPhonePowerTools.MainWindow.Current.ShowError("Your device disconnected, we tried to reconnect, but we were out of luck :(\n\nReconnect your device and try again");
-                            WindowsPhonePowerTools.MainWindow.Current.Device = null;
+                            mainWindow.Device.Connected = false;
                         }
                     }
                     else
