@@ -258,6 +258,15 @@
             </Grid>
         </Grid>
 
+        <metro:MetroDialog x:Name="dialogError" Visibility="Collapsed" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Canvas>
+                <Image Source="/images/error.png" Height="48" Width="48" Canvas.Left="5"></Image>
+                <TextBlock FontSize="20" FontWeight="Bold" Canvas.Left="54" Canvas.Top="12">Oh Oh! An error has occurred</TextBlock>
+                <TextBlock Canvas.Left="16" Canvas.Top="55" Height="144" Width="370" Text="{Binding ErrorString}" FontSize="16" TextWrapping="Wrap"></TextBlock>
+                <Button x:Name="btnDismissErrorDialog" Content="OK" Click="btnDismissErrorDialog_Click" Height="22" Width="73" FontFamily="Segoe WP" Canvas.Left="311" Canvas.Top="206"></Button>
+            </Canvas>
+        </metro:MetroDialog>
+
         <metro:MetroDialog x:Name="dialogConnect" Visibility="Collapsed" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DataContext="{Binding Device}">
             <Canvas>
                 <TextBlock Margin="23,30,428,0" Height="18" VerticalAlignment="Top" Canvas.Left="-5" Canvas.Top="-17">Connect to:</TextBlock>
