@@ -267,7 +267,7 @@
             </Canvas>
         </metro:MetroDialog>
 
-        <metro:MetroDialog x:Name="dialogConnect" Visibility="Visible" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DataContext="{Binding Device}">
+        <metro:MetroDialog x:Name="dialogConnect" Visibility="Collapsed" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DataContext="{Binding Device}">
             <Canvas>
                 <TextBlock Margin="23,30,428,0" Height="18" VerticalAlignment="Top" Canvas.Left="-5" Canvas.Top="-17">Connect to:</TextBlock>
                 <ComboBox Canvas.Left="85" Canvas.Top="12" ItemsSource="{Binding Devices}" SelectedItem="{Binding CurrentDevice, Mode=TwoWay}" HorizontalAlignment="Right" Width="293">
@@ -360,7 +360,7 @@
             </Canvas>
         </metro:MetroDialog>
 
-        <metro:MetroDialog x:Name="dialogAbout" Visibility="Collapsed" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <metro:MetroDialog x:Name="dialogAbout" Visibility="Visible" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Canvas>
                 <StackPanel Orientation="Horizontal" Canvas.Left="20">
                     <Image Source="wptools.ico"></Image>
@@ -383,11 +383,24 @@
                     <StackPanel Margin="0,0,5,0">
                         <Separator Margin="0,5,0,5"></Separator>
 
+                        <TextBlock Style="{StaticResource MetroSmallHeader}" Margin="0,0,0,5">VERSION 1.5 - 12/1/2012</TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            &#x2022; More metro style icons around the app including the file list, error dialog and connection dialog<LineBreak/>
+                            &#x2022; &#x2022; Credit for some of the metro style icons go to <Hyperlink NavigateUri="http://templarian.com/project_windows_phone_icons/">templarian</Hyperlink><LineBreak/>
+                            &#x2022; New metro style error dialog. All errors that are in message boxes will slowly move to this<LineBreak/>
+                            &#x2022; FEATURE REQUEST 17: If you disconnect from your device / the emulator while using the app we will attempt to reconnect (thanks Peli!)
+                            &#x2022; &#x2022; Since we use the device in so many places, we currently do not attempt to retry the current action. This may come in the future via a device object wrapper.<LineBreak/>
+                            &#x2022; BUG: On some systems, double clicking on a file in the isostore explorer would launch the file twice<LineBreak/>
+                            &#x2022; BUG 16: We now catch CoreCon's OOM when attempting to install too many xaps or when trying to install a xap to a full device and display a friendly message (thanks Peli!)<LineBreak/>
+                        </TextBlock>
+
+                        <Separator Margin="0,5,0,5"></Separator>
+
                         <TextBlock Style="{StaticResource MetroSmallHeader}" Margin="0,0,0,5">VERSION 1.4.9.1 - 7/12/2011</TextBlock>
                         <TextBlock TextWrapping="Wrap">
                             &#x2022; Minor bug fix: BUG 14: any mouse button click, except left click, on the window drag area would cause a crash (Thanks Doug!)
                         </TextBlock>
-                        
+
                         <Separator Margin="0,5,0,5"></Separator>
 
                         <TextBlock Style="{StaticResource MetroSmallHeader}" Margin="0,0,0,5">VERSION 1.4.9 - 27/11/2011</TextBlock>
