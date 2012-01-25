@@ -110,9 +110,10 @@ namespace Microsoft.Test.CommandLineParsing
         /// a property name that does not exist or a value that cannot be converted from a string.
         /// </returns>
         /// <exception cref="System.ArgumentException">Thrown when one of the key/value strings cannot be parsed into a property.</exception>
-        public static void ParseArguments(this object valueToPopulate, IEnumerable<string> args)
+        public static void ParseArguments(this object valueToPopulate, IEnumerable<string> args, CommandLineDictionary commandLineDictionary = null)
         {
-            CommandLineDictionary commandLineDictionary = CommandLineDictionary.FromArguments(args);
+            if (commandLineDictionary == null)
+                commandLineDictionary = CommandLineDictionary.FromArguments(args);
 
             PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(valueToPopulate);
 
