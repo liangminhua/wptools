@@ -36,7 +36,8 @@ namespace WindowsPhonePowerTools
         /// <summary>
         /// It's kind of gross to capture and report these errors here, but since there are multiple places that can trigger
         /// these exceptions it's kind of nicer than having lots of try/catch. The alternative may be to add try/catches that
-        /// just send the exception to a global responder ("HandleSmartDeviceException") which still centralises things.
+        /// just send the exception to a global responder ("HandleSmartDeviceException") which still centralises things, but
+        /// would probably be best since it wouldn't trigger the global exception handler.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

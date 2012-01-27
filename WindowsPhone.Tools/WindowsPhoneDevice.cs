@@ -267,6 +267,10 @@ namespace WindowsPhone.Tools
                         {
                             StatusMessage = "Connection Error! Unlock your phone and make sure it is paired with Zune";
                         }
+                        else if (ex.Message == "0x89740005")
+                        {
+                            StatusMessage = "Developer unlock has expired. Lock and re-unlock your phone using the SDK registration tool";
+                        }
                         else
                         {
                             StatusMessage = "Connection Error! Message: " + ex.Message;
