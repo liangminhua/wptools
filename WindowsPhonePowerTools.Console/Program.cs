@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Test.CommandLineParsing;
+using WindowsPhone.Tools;
+using Microsoft.SmartDevice.Connectivity;
+using System.Collections.ObjectModel;
+using System.IO;
 
 namespace WindowsPhonePowerTools.Console
 {
@@ -20,6 +24,7 @@ namespace WindowsPhonePowerTools.Console
         }
 
         private static Arguments _args;
+        private static WindowsPhoneDevice _device;
 
         static int Main(string[] args)
         {
@@ -44,45 +49,124 @@ namespace WindowsPhonePowerTools.Console
             if (string.IsNullOrEmpty(_args.App) && string.IsNullOrEmpty(_args.Xap))
                 return Usage("Must specify one of either -app or -xap");
 
-            if (!string.IsNullOrEmpty(_args.App) && !string.IsNullOrEmpty(_args.App))
+            if (!string.IsNullOrEmpty(_args.App) && !string.IsNullOrEmpty(_args.Xap))
                 return Usage("Confused me, you have. Should I use -app or -xap?");
 
             if (!_args.Install && !_args.Update && !_args.Launch)
                 return Usage("Yawn. You haven't asked me to install, update or launch the app, so what do you want me to do?");
 
-            if (!Connect())
+            if (!Connect(_args.Target))
                 return 1;
 
+            if (!string.IsNullOrEmpty(_args.Xap))
+                _args.Xap = _args.Xap.Replace('=', ':');
+
             if (_args.Install)
-                Install();
+                Install(_args.Xap);
 
             if (_args.Update)
-                Update();
+                Update(_args.Xap);
 
             if (_args.Launch)
-                Launch();
+                Launch(new Guid(_args.App));
 
             return 0;
         }
 
-        private static bool Connect()
+        private static bool Connect(string target)
         {
-            throw new NotImplementedException();
+            bool wantEmulator = false;
+            bool isEmulator = false;
+
+            //foreach (Device
+            if (target == "xde" || target == "emulator")
+            {
+                wantEmulator = true;
+            }
+            else if (target == "phone" || target == "device")
+            {
+                wantEmulator = false;
+            }
+            else
+            {
+                throw new ConsoleMessageException("Invalid device target (" + target + ")");
+            }
+
+            List<Device> devices = WindowsPhoneDevice.GetDevices();
+
+            foreach (Device d in devices)
+            {
+                isEmulator = d.IsEmulator();
+
+                if ((wantEmulator && isEmulator) || (!wantEmulator && !isEmulator))
+                {
+                    _device = new WindowsPhoneDevice();
+                    _device.CurrentDevice = d;
+                    
+                    break;
+                }
+            }
+
+            _device.Connect();
+
+            return true;
         }
 
-        private static void Install()
+        private static void Install(string xapFile)
         {
-            throw new NotImplementedException();
+            Xap xap = new Xap(xapFile);
+            RemoteApplicationEx app = GetApp(xap.Guid);
+
+            // first uninstall any existing instances
+            if (app != null)
+            {
+                app.RemoteApplication.Uninstall();
+            }
+
+            _device.CurrentDevice.InstallApplication(xap.Guid, Guid.Empty, "genre", "noicon", xapFile);
         }
 
-        private static void Update()
+        private static void Update(string xap)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(xap) || !File.Exists(xap))
+                throw new ConsoleMessageException("Must specify a valid xap with -update");
+
+            RemoteApplicationEx app = GetApp(xap);
+
+            app.RemoteApplication.UpdateApplication("genre", "noicon", xap);
         }
 
-        private static void Launch()
+        private static RemoteApplicationEx GetApp(Guid guid)
         {
-            throw new NotImplementedException();
+            // we'll need to find the app first
+            Collection<RemoteApplicationEx> apps = _device.InstalledApplications;
+
+            foreach (RemoteApplicationEx app in apps)
+            {
+                if (app.RemoteApplication.ProductID == guid)
+                {
+                    return app;
+                }
+            }
+
+            return null;
+        }
+
+        private static RemoteApplicationEx GetApp(string xapFile)
+        {
+            Xap xap = new Xap(xapFile);
+
+            return GetApp(xap.Guid);
+        }
+
+        private static void Launch(Guid guid)
+        {
+            RemoteApplicationEx app = GetApp(guid);
+
+            if (app == null)
+                throw new ConsoleMessageException("Unable to find app with guid: " + guid);
+
+            app.RemoteApplication.Launch();
         }
 
         private static int Usage(string error = null)
