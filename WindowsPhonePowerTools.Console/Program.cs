@@ -18,9 +18,14 @@ namespace WindowsPhonePowerTools.Console
             public string App { get; set; }
             public string Xap { get; set; }
             public bool Install { get; set; }
+            public bool UnInstall { get; set; }
             public bool Update { get; set; }
             public bool Launch { get; set; }
             public bool Usage { get; set; }
+            public string Get { get; set; }
+            public string Put { get; set; }
+            public bool Directories { get; set; }
+            public bool To { get; set; }
         }
 
         private static Arguments _args;
@@ -52,9 +57,26 @@ namespace WindowsPhonePowerTools.Console
             if (!string.IsNullOrEmpty(_args.App) && !string.IsNullOrEmpty(_args.Xap))
                 return Usage("Confused me, you have. Should I use -app or -xap?");
 
-            if (!_args.Install && !_args.Update && !_args.Launch)
+            if (!_args.Install && !_args.Update && !_args.Launch && !_args.UnInstall && string.IsNullOrEmpty(_args.Get) && string.IsNullOrEmpty(_args.Put))
                 return Usage("Yawn. You haven't asked me to install, update or launch the app, so what do you want me to do?");
 
+            int rv = 0;
+
+            try
+            {
+                rv = DoWork();
+            }
+            catch (ConsoleMessageException e)
+            {
+                System.Console.Error.WriteLine(e.Message);
+                rv = 1;
+            }
+
+            return rv;
+        }
+
+        private static int DoWork()
+        {
             if (!Connect(_args.Target))
                 return 1;
 
@@ -62,15 +84,82 @@ namespace WindowsPhonePowerTools.Console
                 _args.Xap = _args.Xap.Replace('=', ':');
 
             if (_args.Install)
+            {
                 Install(_args.Xap);
-
-            if (_args.Update)
+            }
+            else if (_args.Update)
+            {
                 Update(_args.Xap);
+            }
+            else if (_args.UnInstall)
+            {
+                if (!string.IsNullOrEmpty(_args.App))
+                {
+                    UnInstall(new Guid(_args.App));
+                }
+                else
+                {
+                    UnInstall(_args.Xap);
+                }
+            }
 
             if (_args.Launch)
-                Launch(new Guid(_args.App));
+            {
+                if (!string.IsNullOrEmpty(_args.App))
+                {
+                    Launch(new Guid(_args.App));
+                }
+                else
+                {
+                    Launch(_args.Xap);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(_args.Get))
+            {
+                if (!string.IsNullOrEmpty(_args.App))
+                {
+                    GetFiles(new Guid(_args.App), _args.Get, _args.To, _args.Directories);
+                }
+                else
+                {
+                    GetFiles(_args.Xap, _args.Get, _args.To, _args.Directories);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(_args.Put))
+            {
+                if (!string.IsNullOrEmpty(_args.App))
+                {
+                    PutFiles(new Guid(_args.App), _args.Put, _args.To, _args.Directories);
+                }
+                else
+                {
+                    PutFiles(_args.Xap, _args.Put, _args.To, _args.Directories);
+                }
+            }
 
             return 0;
+        }
+
+        private static void PutFiles(string p, string p_2, bool p_3, bool p_4)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void PutFiles(Guid guid, string p, bool p_2, bool p_3)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void GetFiles(Guid guid, string p, bool p_2, bool p_3)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void GetFiles(string p, string p_2, bool p_3, bool p_4)
+        {
+            throw new NotImplementedException();
         }
 
         private static bool Connect(string target)
@@ -136,6 +225,23 @@ namespace WindowsPhonePowerTools.Console
             app.RemoteApplication.UpdateApplication("genre", "noicon", xap);
         }
 
+        private static void UnInstall(string xapFile)
+        {
+            Xap xap = new Xap(xapFile);
+
+            UnInstall(xap.Guid);
+        }
+
+        private static void UnInstall(Guid guid)
+        {
+            RemoteApplicationEx app = GetApp(guid);
+
+            if (app == null)
+                throw new ConsoleMessageException("Unable to find installed app with GUID: " + guid);
+
+            app.RemoteApplication.Uninstall();
+        }
+
         private static RemoteApplicationEx GetApp(Guid guid)
         {
             // we'll need to find the app first
@@ -159,6 +265,13 @@ namespace WindowsPhonePowerTools.Console
             return GetApp(xap.Guid);
         }
 
+        private static void Launch(string xapFile)
+        {
+            Xap xap = new Xap(xapFile);
+
+            Launch(xap.Guid);
+        }
+
         private static void Launch(Guid guid)
         {
             RemoteApplicationEx app = GetApp(guid);
@@ -179,6 +292,7 @@ Usage:
     -app
     -xap
     -install
+    -uninstall
     -update
     -launch
     -usage
