@@ -16,7 +16,23 @@ namespace WindowsPhonePowerTools.Console
         {
             public string Target { get; set; }
             public string App { get; set; }
-            public string Xap { get; set; }
+
+            private string _xap;
+            public string Xap
+            {
+                get { return _xap; }
+                set
+                {
+                    if (_xap != value)
+                    {
+                        if (!File.Exists(value))
+                            throw new FileNotFoundException("Could not find file: " + value);
+
+                        _xap = value;
+                    }
+                }
+            }
+
             public bool Install { get; set; }
             public bool UnInstall { get; set; }
             public bool Update { get; set; }
@@ -33,16 +49,16 @@ namespace WindowsPhonePowerTools.Console
 
         static int Main(string[] args)
         {
-            CommandLineDictionary cmdlineDict  = CommandLineDictionary.FromArguments(args, '-', ':');
-            
             _args = new Arguments();
             try
             {
+                CommandLineDictionary cmdlineDict = CommandLineDictionary.FromArguments(args, '-', ':');
+
                 _args.ParseArguments(args, cmdlineDict);
             }
             catch (Exception e)
             {
-                return Usage("Oops. Something bad happened with the parameters that you gave me.\n\nException:\n" + e.ToString());
+                return Usage("Oops. Something bad happened with the parameters that you gave me.\n\n" + e.Message);
             }
 
             if (_args.Usage)
@@ -144,22 +160,22 @@ namespace WindowsPhonePowerTools.Console
 
         private static void PutFiles(string p, string p_2, bool p_3, bool p_4)
         {
-            throw new NotImplementedException();
+            throw new ConsoleMessageException("Use ISETool for Get/Put operations");
         }
 
         private static void PutFiles(Guid guid, string p, bool p_2, bool p_3)
         {
-            throw new NotImplementedException();
+            throw new ConsoleMessageException("Use ISETool for Get/Put operations");
         }
 
         private static void GetFiles(Guid guid, string p, bool p_2, bool p_3)
         {
-            throw new NotImplementedException();
+            throw new ConsoleMessageException("Use ISETool for Get/Put operations");
         }
 
         private static void GetFiles(string p, string p_2, bool p_3, bool p_4)
         {
-            throw new NotImplementedException();
+            throw new ConsoleMessageException("Use ISETool for Get/Put operations");
         }
 
         private static bool Connect(string target)
@@ -287,15 +303,30 @@ namespace WindowsPhonePowerTools.Console
             System.Console.Error.WriteLine(error);
 
             System.Console.WriteLine(@"
+General Usage:
+    WindowsPhonePowerTools.Console -<param>:<value>    
+
 Usage:
-    -target
-    -app
-    -xap
-    -install
-    -uninstall
-    -update
-    -launch
-    -usage
+    -target    : what device to connect to. Supports emulator, xde, 
+                 device or phone
+    -app       : an app guid to interact with
+    -xap       : a xap to interact with. Note that we'll extract the app guid 
+                 from the xap so that you can say something like 
+                 -launch -xap <file> 
+                 instead of having to dig out the guid yourself
+    -install   : installs a xap. Use with -app or -xap
+    -uninstall : uninstalls a xap. Use with -app or -xap
+    -update    : updates a xap. Use with -app or -xap
+    -launch    : launches a xap. Use with -app or -xap
+    -usage     : really?
+
+Note:
+    1. This is extremely rough. On purpose. Feel free to log bugs / feature 
+       requests for future expansion.
+    2. To interact with the Isolated Storage from the command line use 
+       ISETool which comes with the SDK (you'll find it under 
+       Program Files(x86)\Microsoft SDKs\Windows Phone\v7.1\
+           Tools\IsolatedStorageExplorerTool)
 ");
 
             return 1;
