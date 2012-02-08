@@ -383,6 +383,13 @@
                     <StackPanel Margin="0,0,5,0">
                         <Separator Margin="0,5,0,5"></Separator>
 
+                        <TextBlock Style="{StaticResource MetroSmallHeader}" Margin="0,0,0,5">VERSION 1.6 - 7/2/2012</TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            &#x2022; We now automagically retry the last action attempted when a device disconnect is detected (an extension of WI #16)<LineBreak/>
+                            &#x2022; Basic console version of the tools (useful for automation, and Peli) to unblock WI #17<LineBreak/>
+                            &#x2022; Added message for 0x89740005 - device unlock registration expired (WI #19)<LineBreak/>
+                        </TextBlock>
+
                         <TextBlock Style="{StaticResource MetroSmallHeader}" Margin="0,0,0,5">VERSION 1.5 - 12/1/2012</TextBlock>
                         <TextBlock TextWrapping="Wrap">
                             &#x2022; More metro style icons around the app including the file list, error dialog and connection dialog<LineBreak/>
