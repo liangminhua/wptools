@@ -7,6 +7,7 @@ using System.Windows;
 using System.Runtime.InteropServices;
 using System.Windows.Markup;
 using Microsoft.SmartDevice.Connectivity;
+using System.IO;
 
 namespace WindowsPhonePowerTools
 {
@@ -98,6 +99,10 @@ namespace WindowsPhonePowerTools
                             // non recoverable error here...
                             _ignoreExceptions = true;
                         }
+                    }
+                    else if (e.Exception is InvalidDataException)
+                    {
+                        mainWindow.ShowError("We couldn't open the xap file you gave us! It was either invalid or a Marketplace xap, which is not supported via this tool.");
                     }
                     else if (e.Exception is DeviceNotConnectedException)
                     {
