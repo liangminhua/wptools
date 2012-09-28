@@ -52,14 +52,12 @@
     <MetroControls:MetroContentControl>
 
         <MetroUI:NavigationMenu x:Name="navigator">
-            <StackPanel>
-                <MetroUI:NavigationButton Width="200" Text="Install | Update" OnSelectionChanged="NavigationButton_OnSelectionChanged">
-                    <Rectangle Fill="Red" Height="300" Width="342"></Rectangle>
-                </MetroUI:NavigationButton>
-                <MetroUI:NavigationButton Width="200" Text="Dev Apps"  OnSelectionChanged="NavigationButton_OnSelectionChanged"/>
-                <MetroUI:NavigationButton Width="200" Text="Isolated Storage"  OnSelectionChanged="NavigationButton_OnSelectionChanged"/>
-                <MetroUI:NavigationButton Width="200" Text="Profiler"  OnSelectionChanged="NavigationButton_OnSelectionChanged"/>
-            </StackPanel>
+            <MetroUI:NavigationButton Width="200" Text="Install | Update" OnSelectionChanged="NavigationButton_OnSelectionChanged">
+                <Rectangle Fill="Red" Height="300" Width="342"></Rectangle>
+            </MetroUI:NavigationButton>
+            <MetroUI:NavigationButton Width="200" Text="Dev Apps"  OnSelectionChanged="NavigationButton_OnSelectionChanged"/>
+            <MetroUI:NavigationButton Width="200" Text="Isolated Storage"  OnSelectionChanged="NavigationButton_OnSelectionChanged"/>
+            <MetroUI:NavigationButton Width="200" Text="Profiler"  OnSelectionChanged="NavigationButton_OnSelectionChanged"/>
         </MetroUI:NavigationMenu>
 
     </MetroControls:MetroContentControl>

@@ -61,7 +61,7 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
 
-                        <ContentControl Grid.Column="0" Content="{TemplateBinding Content}" />
+                        <StackPanel Grid.Column="0" x:Name="PART_MenuContent" />
 
                         <ContentControl x:Name="PART_PageContent" Grid.Column="1" Content="{TemplateBinding SelectedContent}"></ContentControl>
                     </Grid>

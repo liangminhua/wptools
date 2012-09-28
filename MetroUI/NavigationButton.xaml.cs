@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,6 +46,8 @@ namespace MetroUI
                 {
                     OnSelectionChanged(this, null);
                 }
+
+                UpdateState();
             }
         }
 
@@ -69,6 +72,14 @@ namespace MetroUI
         public NavigationButton()
         {
             InitializeComponent();
+        }
+
+        /// <summary>
+        /// Updates the VSM state of the control
+        /// </summary>
+        private void UpdateState()
+        {
+            VisualStateManager.GoToElementState(button, (IsSelected ? "SelectedNormal" : "Normal"), true);
         }
 
         private void parens_MouseEvent(object sender, MouseEventArgs e)
