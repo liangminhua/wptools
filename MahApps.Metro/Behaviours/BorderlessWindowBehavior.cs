@@ -1,234 +1,19 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Interactivity;
 using System.Windows.Interop;
+using System.Windows.Media;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Native;
 
 namespace MahApps.Metro.Behaviours
 {
-
-    /// <summary>
-    /// http://gallery.expression.microsoft.com/ZuneWindowBehavior/
-    /// Published: 10/18/2010
-    /// Created by: jmorrill
-    /// Supporting Url: http://jmorrill.hjtcentral.com
-    /// Tags: Behavior, WPF, Zune
-    /// License Information: 
-    /// This contribution is licensed to you under Creative Commons by its owner, not Microsoft. Microsoft does not guarantee the contribution or purport to grant rights to it.
-    /// </summary>
-    /// 
     public class BorderlessWindowBehavior : Behavior<Window>
     {
-        #region NativeStuffs
-        [StructLayout(LayoutKind.Sequential)]
-        public struct MARGINS
-        {
-            public int leftWidth;
-            public int rightWidth;
-            public int topHeight;
-            public int bottomHeight;
-        }
-
-        [DllImport("dwmapi.dll")]
-        private static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref MARGINS pMarInset);
-
-        /// <summary>
-        /// POINT aka POINTAPI
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public struct POINT
-        {
-            /// <summary>
-            /// x coordinate of point.
-            /// </summary>
-            public int x;
-            /// <summary>
-            /// y coordinate of point.
-            /// </summary>
-            public int y;
-
-            /// <summary>
-            /// Construct a point of coordinates (x,y).
-            /// </summary>
-            public POINT(int x, int y)
-            {
-                this.x = x;
-                this.y = y;
-            }
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct MINMAXINFO
-        {
-            public POINT ptReserved;
-            public POINT ptMaxSize;
-            public POINT ptMaxPosition;
-            public POINT ptMinTrackSize;
-            public POINT ptMaxTrackSize;
-        };
-
-        /// <summary>
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-        public class MONITORINFO
-        {
-            /// <summary>
-            /// </summary>            
-            public int cbSize = Marshal.SizeOf(typeof(MONITORINFO));
-
-            /// <summary>
-            /// </summary>            
-            public RECT rcMonitor = new RECT();
-
-            /// <summary>
-            /// </summary>            
-            public RECT rcWork = new RECT();
-
-            /// <summary>
-            /// </summary>            
-            public int dwFlags = 0;
-        }
-
-
-        /// <summary> Win32 </summary>
-        [StructLayout(LayoutKind.Sequential, Pack = 0)]
-        public struct RECT
-        {
-            /// <summary> Win32 </summary>
-            public int left;
-            /// <summary> Win32 </summary>
-            public int top;
-            /// <summary> Win32 </summary>
-            public int right;
-            /// <summary> Win32 </summary>
-            public int bottom;
-
-            /// <summary> Win32 </summary>
-            public static readonly RECT Empty = new RECT();
-
-            /// <summary> Win32 </summary>
-            public int Width
-            {
-                get { return Math.Abs(right - left); }  // Abs needed for BIDI OS
-            }
-            /// <summary> Win32 </summary>
-            public int Height
-            {
-                get { return bottom - top; }
-            }
-
-            /// <summary> Win32 </summary>
-            public RECT(int left, int top, int right, int bottom)
-            {
-                this.left = left;
-                this.top = top;
-                this.right = right;
-                this.bottom = bottom;
-            }
-
-
-            /// <summary> Win32 </summary>
-            public RECT(RECT rcSrc)
-            {
-                this.left = rcSrc.left;
-                this.top = rcSrc.top;
-                this.right = rcSrc.right;
-                this.bottom = rcSrc.bottom;
-            }
-
-            /// <summary> Win32 </summary>
-            public bool IsEmpty
-            {
-                get
-                {
-                    // BUGBUG : On Bidi OS (hebrew arabic) left > right
-                    return left >= right || top >= bottom;
-                }
-            }
-            /// <summary> Return a user friendly representation of this struct </summary>
-            public override string ToString()
-            {
-                if (this == RECT.Empty) { return "RECT {Empty}"; }
-                return "RECT { left : " + left + " / top : " + top + " / right : " + right + " / bottom : " + bottom + " }";
-            }
-
-            /// <summary> Determine if 2 RECT are equal (deep compare) </summary>
-            public override bool Equals(object obj)
-            {
-                if (!(obj is Rect)) { return false; }
-                return (this == (RECT)obj);
-            }
-
-            /// <summary>Return the HashCode for this struct (not garanteed to be unique)</summary>
-            public override int GetHashCode()
-            {
-                return left.GetHashCode() + top.GetHashCode() + right.GetHashCode() + bottom.GetHashCode();
-            }
-
-
-            /// <summary> Determine if 2 RECT are equal (deep compare)</summary>
-            public static bool operator ==(RECT rect1, RECT rect2)
-            {
-                return (rect1.left == rect2.left && rect1.top == rect2.top && rect1.right == rect2.right && rect1.bottom == rect2.bottom);
-            }
-
-            /// <summary> Determine if 2 RECT are different(deep compare)</summary>
-            public static bool operator !=(RECT rect1, RECT rect2)
-            {
-                return !(rect1 == rect2);
-            }
-
-
-        }
-
-        [DllImport("user32")]
-        internal static extern bool GetMonitorInfo(IntPtr hMonitor, MONITORINFO lpmi);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [DllImport("User32")]
-        internal static extern IntPtr MonitorFromWindow(IntPtr handle, int flags);
-
-        private static void WmGetMinMaxInfo(System.IntPtr hwnd, System.IntPtr lParam)
-        {
-
-            MINMAXINFO mmi = (MINMAXINFO)Marshal.PtrToStructure(lParam, typeof(MINMAXINFO));
-
-            // Adjust the maximized size and position to fit the work area of the correct monitor
-            int MONITOR_DEFAULTTONEAREST = 0x00000002;
-            System.IntPtr monitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
-
-            if (monitor != System.IntPtr.Zero)
-            {
-
-                MONITORINFO monitorInfo = new MONITORINFO();
-                GetMonitorInfo(monitor, monitorInfo);
-                RECT rcWorkArea = monitorInfo.rcWork;
-                RECT rcMonitorArea = monitorInfo.rcMonitor;
-                mmi.ptMaxPosition.x = Math.Abs(rcWorkArea.left - rcMonitorArea.left);
-                mmi.ptMaxPosition.y = Math.Abs(rcWorkArea.top - rcMonitorArea.top);
-                mmi.ptMaxSize.x = Math.Abs(rcWorkArea.right - rcWorkArea.left);
-                mmi.ptMaxSize.y = Math.Abs(rcWorkArea.bottom - rcWorkArea.top);
-            }
-
-            Marshal.StructureToPtr(mmi, lParam, true);
-        }
-
-        [DllImport("user32.dll")]
-        public static extern IntPtr DefWindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam);
-
-        #endregion
-
-        private const int WM_NCCALCSIZE = 0x83;
-        private const int WM_NCPAINT = 0x85;
-        private const int WM_NCACTIVATE = 0x86;
-        private const int WM_GETMINMAXINFO = 0x24;
-
-        private HwndSource m_hwndSource;
-        private IntPtr m_hwnd;
-
         public static DependencyProperty ResizeWithGripProperty = DependencyProperty.Register("ResizeWithGrip", typeof(bool), typeof(BorderlessWindowBehavior), new PropertyMetadata(true));
+        public static DependencyProperty AutoSizeToContentProperty = DependencyProperty.Register("AutoSizeToContent", typeof(bool), typeof(BorderlessWindowBehavior), new PropertyMetadata(false));
 
         public bool ResizeWithGrip
         {
@@ -236,17 +21,145 @@ namespace MahApps.Metro.Behaviours
             set { SetValue(ResizeWithGripProperty, value); }
         }
 
+        public bool AutoSizeToContent
+        {
+            get { return (bool)GetValue(AutoSizeToContentProperty); }
+            set { SetValue(AutoSizeToContentProperty, value); }
+        }
+
+        public Border Border { get; set; }
+
+        private HwndSource _mHWNDSource;
+        private IntPtr _mHWND;
+
+        private static IntPtr SetClassLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong)
+        {
+            if (IntPtr.Size > 4)
+                return UnsafeNativeMethods.SetClassLongPtr64(hWnd, nIndex, dwNewLong);
+
+            return new IntPtr(UnsafeNativeMethods.SetClassLongPtr32(hWnd, nIndex, unchecked((uint)dwNewLong.ToInt32())));
+        }
+
+        private static void WmGetMinMaxInfo(IntPtr hwnd, IntPtr lParam)
+        {
+            var mmi = (MINMAXINFO)Marshal.PtrToStructure(lParam, typeof(MINMAXINFO));
+
+            // Adjust the maximized size and position to fit the work area of the correct monitor
+            IntPtr monitor = UnsafeNativeMethods.MonitorFromWindow(hwnd, Constants.MONITOR_DEFAULTTONEAREST);
+
+            if (monitor != IntPtr.Zero)
+            {
+                var monitorInfo = new MONITORINFO();
+                UnsafeNativeMethods.GetMonitorInfo(monitor, monitorInfo);
+                RECT rcWorkArea = monitorInfo.rcWork;
+                RECT rcMonitorArea = monitorInfo.rcMonitor;
+                mmi.ptMaxPosition.X = Math.Abs(rcWorkArea.left - rcMonitorArea.left);
+                mmi.ptMaxPosition.Y = Math.Abs(rcWorkArea.top - rcMonitorArea.top);
+                mmi.ptMaxSize.X = Math.Abs(rcWorkArea.right - rcWorkArea.left);
+                mmi.ptMaxSize.Y = Math.Abs(rcWorkArea.bottom - rcWorkArea.top);
+            }
+
+            Marshal.StructureToPtr(mmi, lParam, true);
+        }
+
         protected override void OnAttached()
         {
-            if (AssociatedObject.IsInitialized)
+            if (PresentationSource.FromVisual(AssociatedObject) != null)
                 AddHwndHook();
             else
                 AssociatedObject.SourceInitialized += AssociatedObject_SourceInitialized;
 
             AssociatedObject.WindowStyle = WindowStyle.None;
-            AssociatedObject.ResizeMode = ResizeWithGrip ? ResizeMode.CanResizeWithGrip : ResizeMode.CanResize;
+            AssociatedObject.StateChanged += AssociatedObjectStateChanged;
+
+            if (AssociatedObject is MetroWindow)
+            {
+                var window = ((MetroWindow)AssociatedObject);
+                //MetroWindow already has a border we can use
+                AssociatedObject.Loaded += (s, e) =>
+                                               {
+                                                   var ancestors = window.GetPart<Border>("PART_Border");
+                                                   Border = ancestors;
+                                                   if (ShouldHaveBorder())
+                                                       AddBorder();
+                                               };
+
+                switch (AssociatedObject.ResizeMode)
+                {
+                    case ResizeMode.NoResize:
+                        window.ShowMaxRestoreButton = false;
+                        window.ShowMinButton = false;
+                        ResizeWithGrip = false;
+                        break;
+                    case ResizeMode.CanMinimize:
+                        window.ShowMaxRestoreButton = false;
+                        ResizeWithGrip = false;
+                        break;
+                    case ResizeMode.CanResize:
+                        ResizeWithGrip = false;
+                        break;
+                    case ResizeMode.CanResizeWithGrip:
+                        ResizeWithGrip = true;
+                        break;
+                }
+            }
+            else
+            {
+                //Other windows may not, easiest to just inject one!
+                var content = (UIElement)AssociatedObject.Content;
+                AssociatedObject.Content = null;
+
+                Border = new Border
+                            {
+                                Child = content,
+                                BorderBrush = new SolidColorBrush(Colors.Black)
+                            };
+
+                AssociatedObject.Content = Border;
+            }
+
+            if (ResizeWithGrip)
+                AssociatedObject.ResizeMode = ResizeMode.CanResizeWithGrip;
+
+            if (AutoSizeToContent)
+                AssociatedObject.Loaded += (s, e) =>
+                                               {
+                                                   //Temp fix, thanks @lynnx
+                                                   AssociatedObject.SizeToContent = SizeToContent.Height;
+                                                   AssociatedObject.SizeToContent = AutoSizeToContent
+                                                                                        ? SizeToContent.WidthAndHeight
+                                                                                        : SizeToContent.Manual;
+                                               };
+
+
 
             base.OnAttached();
+        }
+
+        private void AssociatedObjectStateChanged(object sender, EventArgs e)
+        {
+            if (AssociatedObject.WindowState == WindowState.Maximized)
+            {
+                HandleMaximize();
+            }
+        }
+
+        private bool HandleMaximize()
+        {
+            bool retVal = false;
+            IntPtr monitor = UnsafeNativeMethods.MonitorFromWindow(_mHWND, Constants.MONITOR_DEFAULTTONEAREST);
+            if (monitor != IntPtr.Zero)
+            {
+                var monitorInfo = new MONITORINFO();
+                UnsafeNativeMethods.GetMonitorInfo(monitor, monitorInfo);
+                var x = monitorInfo.rcWork.left;
+                var y = monitorInfo.rcWork.top;
+                var cx = Math.Abs(monitorInfo.rcWork.right - x);
+                var cy = Math.Abs(monitorInfo.rcWork.bottom - y);
+                UnsafeNativeMethods.SetWindowPos(_mHWND, new IntPtr(-2), x, y, cx, cy, 0x0040);
+                retVal = true;
+            }
+            return retVal;
         }
 
         protected override void OnDetaching()
@@ -257,20 +170,70 @@ namespace MahApps.Metro.Behaviours
 
         private void AddHwndHook()
         {
-            m_hwndSource = HwndSource.FromVisual(AssociatedObject) as HwndSource;
-            m_hwndSource.AddHook(HwndHook);
-            m_hwnd = new WindowInteropHelper(AssociatedObject).Handle;
+            _mHWNDSource = PresentationSource.FromVisual(AssociatedObject) as HwndSource;
+            if (_mHWNDSource != null)
+                _mHWNDSource.AddHook(HwndHook);
+
+            _mHWND = new WindowInteropHelper(AssociatedObject).Handle;
         }
 
         private void RemoveHwndHook()
         {
             AssociatedObject.SourceInitialized -= AssociatedObject_SourceInitialized;
-            m_hwndSource.RemoveHook(HwndHook);
+            _mHWNDSource.RemoveHook(HwndHook);
         }
 
         private void AssociatedObject_SourceInitialized(object sender, EventArgs e)
         {
             AddHwndHook();
+            SetDefaultBackgroundColor();
+        }
+
+        private bool ShouldHaveBorder()
+        {
+            if (Environment.OSVersion.Version.Major < 6)
+                return true;
+
+            if (!UnsafeNativeMethods.DwmIsCompositionEnabled())
+                return true;
+
+            return false;
+        }
+
+        readonly SolidColorBrush _borderColour = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#808080"));
+
+        private void AddBorder()
+        {
+            if (Border == null)
+                return;
+
+            Border.BorderThickness = new Thickness(1);
+            Border.BorderBrush = _borderColour;
+        }
+
+        private void RemoveBorder()
+        {
+            if (Border == null)
+                return;
+
+            Border.BorderThickness = new Thickness(0);
+            Border.BorderBrush = null;
+        }
+
+        private void SetDefaultBackgroundColor()
+        {
+            var bgSolidColorBrush = AssociatedObject.Background as SolidColorBrush;
+
+            if (bgSolidColorBrush != null)
+            {
+                var rgb = bgSolidColorBrush.Color.R | (bgSolidColorBrush.Color.G << 8) | (bgSolidColorBrush.Color.B << 16);
+
+                // set the default background color of the window -> this avoids the black stripes when resizing
+                var hBrushOld = SetClassLong(_mHWND, Constants.GCLP_HBRBACKGROUND, UnsafeNativeMethods.CreateSolidBrush(rgb));
+
+                if (hBrushOld != IntPtr.Zero)
+                    UnsafeNativeMethods.DeleteObject(hBrushOld);
+            }
         }
 
         private IntPtr HwndHook(IntPtr hWnd, int message, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -278,35 +241,143 @@ namespace MahApps.Metro.Behaviours
             IntPtr returnval = IntPtr.Zero;
             switch (message)
             {
-                case WM_NCCALCSIZE:
+                case Constants.WM_NCCALCSIZE:
                     /* Hides the border */
                     handled = true;
                     break;
-                case WM_NCPAINT:
+                case Constants.WM_NCPAINT:
                     {
-                        if (Environment.OSVersion.Version.Major >= 6)
+                        if (!ShouldHaveBorder())
                         {
+                            var val = 2;
+                            UnsafeNativeMethods.DwmSetWindowAttribute(_mHWND, 2, ref val, 4);
                             var m = new MARGINS { bottomHeight = 1, leftWidth = 1, rightWidth = 1, topHeight = 1 };
-                            DwmExtendFrameIntoClientArea(m_hwnd, ref m);
+                            UnsafeNativeMethods.DwmExtendFrameIntoClientArea(_mHWND, ref m);
+
+                            if (Border != null)
+                                Border.BorderThickness = new Thickness(0);
+                        }
+                        else
+                        {
+                            AddBorder();
                         }
                         handled = true;
                     }
                     break;
-                case WM_NCACTIVATE:
+                case Constants.WM_NCACTIVATE:
                     {
                         /* As per http://msdn.microsoft.com/en-us/library/ms632633(VS.85).aspx , "-1" lParam
                          * "does not repaint the nonclient area to reflect the state change." */
-                        returnval = DefWindowProc(hWnd, message, wParam, new IntPtr(-1));
+                        returnval = UnsafeNativeMethods.DefWindowProc(hWnd, message, wParam, new IntPtr(-1));
+
+                        if (!ShouldHaveBorder())
+
+                            if (wParam == IntPtr.Zero)
+                                AddBorder();
+                            else
+                                RemoveBorder();
+
                         handled = true;
                     }
                     break;
-                case WM_GETMINMAXINFO:
-                    /* From Lester's Blog (thanks @aeoth):  
-                     * http://blogs.msdn.com/b/llobo/archive/2006/08/01/maximizing-window-_2800_with-windowstyle_3d00_none_2900_-considering-taskbar.aspx */
+                case Constants.WM_GETMINMAXINFO:
+                    /* http://blogs.msdn.com/b/llobo/archive/2006/08/01/maximizing-window-_2800_with-windowstyle_3d00_none_2900_-considering-taskbar.aspx */
                     WmGetMinMaxInfo(hWnd, lParam);
-                    handled = true;
+
+                    /* Setting handled to false enables the application to process it's own Min/Max requirements,
+                     * as mentioned by jason.bullard (comment from September 22, 2011) on http://gallery.expression.microsoft.com/ZuneWindowBehavior/ */
+                    handled = false;
+                    break;
+                case Constants.WM_NCHITTEST:
+
+                    // don't process the message on windows that can't be resized
+                    var resizeMode = AssociatedObject.ResizeMode;
+                    if (resizeMode == ResizeMode.CanMinimize || resizeMode == ResizeMode.NoResize)
+                        break;
+
+                    // get X & Y out of the message                   
+                    var screenPoint = new Point(UnsafeNativeMethods.GET_X_LPARAM(lParam), UnsafeNativeMethods.GET_Y_LPARAM(lParam));
+
+                    // convert to window coordinates
+                    var windowPoint = AssociatedObject.PointFromScreen(screenPoint);
+                    var windowSize = AssociatedObject.RenderSize;
+                    var windowRect = new Rect(windowSize);
+                    windowRect.Inflate(-6, -6);
+
+                    // don't process the message if the mouse is outside the 6px resize border
+                    if (windowRect.Contains(windowPoint))
+                        break;
+
+                    var windowHeight = (int)windowSize.Height;
+                    var windowWidth = (int)windowSize.Width;
+
+                    // create the rectangles where resize arrows are shown
+                    var topLeft = new Rect(0, 0, 6, 6);
+                    var top = new Rect(6, 0, windowWidth - 12, 6);
+                    var topRight = new Rect(windowWidth - 6, 0, 6, 6);
+
+                    var left = new Rect(0, 6, 6, windowHeight - 12);
+                    var right = new Rect(windowWidth - 6, 6, 6, windowHeight - 12);
+
+                    var bottomLeft = new Rect(0, windowHeight - 6, 6, 6);
+                    var bottom = new Rect(6, windowHeight - 6, windowWidth - 12, 6);
+                    var bottomRight = new Rect(windowWidth - 6, windowHeight - 6, 6, 6);
+
+                    // check if the mouse is within one of the rectangles
+                    if (topLeft.Contains(windowPoint))
+                        returnval = (IntPtr)Constants.HTTOPLEFT;
+                    else if (top.Contains(windowPoint))
+                        returnval = (IntPtr)Constants.HTTOP;
+                    else if (topRight.Contains(windowPoint))
+                        returnval = (IntPtr)Constants.HTTOPRIGHT;
+                    else if (left.Contains(windowPoint))
+                        returnval = (IntPtr)Constants.HTLEFT;
+                    else if (right.Contains(windowPoint))
+                        returnval = (IntPtr)Constants.HTRIGHT;
+                    else if (bottomLeft.Contains(windowPoint))
+                        returnval = (IntPtr)Constants.HTBOTTOMLEFT;
+                    else if (bottom.Contains(windowPoint))
+                        returnval = (IntPtr)Constants.HTBOTTOM;
+                    else if (bottomRight.Contains(windowPoint))
+                        returnval = (IntPtr)Constants.HTBOTTOMRIGHT;
+
+                    if (returnval != IntPtr.Zero)
+                        handled = true;
+
+                    break;
+
+                case Constants.WM_INITMENU:
+                    var window = AssociatedObject as MetroWindow;
+
+                    if (window != null)
+                    {
+                        if (!window.ShowMaxRestoreButton)
+                            UnsafeNativeMethods.EnableMenuItem(UnsafeNativeMethods.GetSystemMenu(hWnd, false), Constants.SC_MAXIMIZE, Constants.MF_GRAYED | Constants.MF_BYCOMMAND);
+                        else
+                            if (window.WindowState == WindowState.Maximized)
+                            {
+                                UnsafeNativeMethods.EnableMenuItem(UnsafeNativeMethods.GetSystemMenu(hWnd, false), Constants.SC_MAXIMIZE, Constants.MF_GRAYED | Constants.MF_BYCOMMAND);
+                                UnsafeNativeMethods.EnableMenuItem(UnsafeNativeMethods.GetSystemMenu(hWnd, false), Constants.SC_RESTORE, Constants.MF_ENABLED | Constants.MF_BYCOMMAND);
+                                UnsafeNativeMethods.EnableMenuItem(UnsafeNativeMethods.GetSystemMenu(hWnd, false), Constants.SC_MOVE, Constants.MF_GRAYED | Constants.MF_BYCOMMAND);
+                            }
+                            else
+                            {
+                                UnsafeNativeMethods.EnableMenuItem(UnsafeNativeMethods.GetSystemMenu(hWnd, false), Constants.SC_MAXIMIZE, Constants.MF_ENABLED | Constants.MF_BYCOMMAND);
+                                UnsafeNativeMethods.EnableMenuItem(UnsafeNativeMethods.GetSystemMenu(hWnd, false), Constants.SC_RESTORE, Constants.MF_GRAYED | Constants.MF_BYCOMMAND);
+                                UnsafeNativeMethods.EnableMenuItem(UnsafeNativeMethods.GetSystemMenu(hWnd, false), Constants.SC_MOVE, Constants.MF_ENABLED | Constants.MF_BYCOMMAND);
+                            }
+
+                        if (!window.ShowMinButton)
+                            UnsafeNativeMethods.EnableMenuItem(UnsafeNativeMethods.GetSystemMenu(hWnd, false), Constants.SC_MINIMIZE, Constants.MF_GRAYED | Constants.MF_BYCOMMAND);
+
+                        if (AssociatedObject.ResizeMode == ResizeMode.NoResize || window.WindowState == WindowState.Maximized)
+                            UnsafeNativeMethods.EnableMenuItem(UnsafeNativeMethods.GetSystemMenu(hWnd, false), Constants.SC_SIZE, Constants.MF_GRAYED | Constants.MF_BYCOMMAND);
+                    }
                     break;
             }
+
+
+
 
             return returnval;
         }

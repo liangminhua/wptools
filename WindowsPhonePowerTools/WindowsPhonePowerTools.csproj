@@ -102,6 +102,9 @@
       <DependentUpon>DeviceConnectionIndicator.xaml</DependentUpon>
     </Compile>
     <Compile Include="FileSystemHelpers.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NativeMethods.cs" />
     <Compile Include="StockIcons.cs" />
     <Compile Include="StreamToBitmapImageConverter.cs" />
@@ -111,6 +114,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="OldMainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -119,8 +126,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="FileTypeToIconConverter.cs" />
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="OldMainWindow.xaml.cs">
+      <DependentUpon>OldMainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -163,7 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MahApps.Metro\MahApps.Metro.csproj">
-      <Project>{5B1710D2-5DC8-4754-91B2-19165DE49B3D}</Project>
+      <Project>{5b1710d2-5dc8-4754-91b2-19165de49b3d}</Project>
       <Name>MahApps.Metro</Name>
     </ProjectReference>
     <ProjectReference Include="..\MetroUI\MetroUI.csproj">

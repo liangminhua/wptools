@@ -4,17 +4,29 @@ using System.Windows.Data;
 
 namespace MahApps.Metro.Converters
 {
-    public class ToUpperConverter : IValueConverter
+    public class ToUpperConverter : MarkupConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        protected override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is string)
-                return ((string)value).ToUpper();
-
-            return value;
+            var val = value as string;
+            return val != null ? val.ToUpper() : value;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        protected override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return Binding.DoNothing;
+        }
+    }
+
+    public class ToLowerConverter : MarkupConverter
+    {
+        protected override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var val = value as string;
+            return val != null ? val.ToLower() : value;
+        }
+
+        protected override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return Binding.DoNothing;
         }

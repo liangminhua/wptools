@@ -45,7 +45,7 @@ namespace WindowsPhonePowerTools
         void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             bool needGenericMessage = false;
-            WindowsPhonePowerTools.MainWindow mainWindow = WindowsPhonePowerTools.MainWindow.Current;
+            WindowsPhonePowerTools.OldMainWindow mainWindow = WindowsPhonePowerTools.OldMainWindow.Current;
 
             // handled from the start so that exceptions that cause us to exit at least don't crash out, but exit when
             // the user hits "ok"

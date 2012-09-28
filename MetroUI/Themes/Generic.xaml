@@ -9,7 +9,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:MetroDialog}">
 
-                    <Grid >
+                    <Grid>
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -50,4 +50,24 @@
         </Setter>
     </Style>
 
+    <Style TargetType="{x:Type local:NavigationMenu}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:NavigationMenu}">
+                    <Grid>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="300"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <ContentControl Grid.Column="0" Content="{TemplateBinding Content}" />
+
+                        <ContentControl x:Name="PART_PageContent" Grid.Column="1" Content="{TemplateBinding SelectedContent}"></ContentControl>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
 </ResourceDictionary>
