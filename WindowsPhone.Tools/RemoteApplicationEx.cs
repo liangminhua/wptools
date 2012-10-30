@@ -5,12 +5,13 @@ using System.Text;
 using Microsoft.SmartDevice.Connectivity;
 using System.IO;
 using System.IO.IsolatedStorage;
+using Microsoft.SmartDevice.Connectivity.Interface;
 
 namespace WindowsPhone.Tools
 {
     public class RemoteApplicationEx
     {
-        public RemoteApplication RemoteApplication { get; private set; }
+        public IRemoteApplication RemoteApplication { get; private set; }
 
         bool inited = false;
         private KnownApplication _knownApplication;
@@ -103,7 +104,7 @@ namespace WindowsPhone.Tools
             }
         }
 
-        public RemoteApplicationEx(RemoteApplication remoteApplication)
+        public RemoteApplicationEx(IRemoteApplication remoteApplication)
         {
             RemoteApplication = remoteApplication;
         }

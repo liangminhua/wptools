@@ -7,6 +7,7 @@ using WindowsPhone.Tools;
 using Microsoft.SmartDevice.Connectivity;
 using System.Collections.ObjectModel;
 using System.IO;
+using Microsoft.SmartDevice.MultiTargeting.Connectivity;
 
 namespace WindowsPhonePowerTools.Console
 {
@@ -197,16 +198,16 @@ namespace WindowsPhonePowerTools.Console
                 throw new ConsoleMessageException("Invalid device target (" + target + ")");
             }
 
-            List<Device> devices = WindowsPhoneDevice.GetDevices();
+            var devices = WindowsPhoneDevice.GetDevices();
 
-            foreach (Device d in devices)
+            foreach (ConnectableDevice d in devices)
             {
                 isEmulator = d.IsEmulator();
 
                 if ((wantEmulator && isEmulator) || (!wantEmulator && !isEmulator))
                 {
                     _device = new WindowsPhoneDevice();
-                    _device.CurrentDevice = d;
+                    _device.CurrentConnectableDevice = d;
                     
                     break;
                 }

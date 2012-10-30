@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using Microsoft.SmartDevice.Connectivity;
 using System.IO;
+using Microsoft.SmartDevice.Connectivity.Interface;
+using System.Reflection;
+using Microsoft.SmartDevice.Connectivity.Wrapper;
 
 namespace WindowsPhone.Tools
 {
@@ -12,15 +15,47 @@ namespace WindowsPhone.Tools
         private const string RELATIVE_PATH_SEPARATOR = "IsolatedStore\\";
         private static int RELATIVE_PATH_SEPARATOR_LENGTH   = RELATIVE_PATH_SEPARATOR.Length;
 
-        public static string GetExtension(this RemoteFileInfo fileInfo)
+        // seperator used for everything post Mango
+        // WP8 == WP8+
+        private const string WP8_SEPERATOR = "%FOLDERID_APPID_ISOROOT%\\";
+        
+        // random guid to generate the correct length to cull from the path
+        private static int WP8_PATH_SEPERATOR_LENGTH = "%FOLDERID_APPID_ISOROOT%\\{de8a200e-c004-471b-9566-8af08b8458ee}".Length;
+
+        public static string GetExtension(this IRemoteFileInfo fileInfo)
         {
             return Path.GetExtension(fileInfo.Name);
         }
 
-        public static string GetRelativePath(this RemoteFileInfo fileInfo)
+        public static string GetRelativePath(this IRemoteFileInfo fileInfo)
         {
             string name = fileInfo.Name;
-            return name.Substring(name.IndexOf(RELATIVE_PATH_SEPARATOR) + RELATIVE_PATH_SEPARATOR_LENGTH);
+
+            if (name.Contains(WP8_SEPERATOR))
+            {
+                return name.Substring(WP8_PATH_SEPERATOR_LENGTH);
+            }
+            else
+            {
+                return name.Substring(name.IndexOf(RELATIVE_PATH_SEPARATOR) + RELATIVE_PATH_SEPARATOR_LENGTH);
+            }
+        }
+
+        /// <summary>
+        /// We need access to the actual RemoteIsolatedStorageFile object since the wrapper doesn't expost a DeleteFile method
+        /// so get to it via reflection
+        /// </summary>
+        /// <param name="wrapperRemoteIsoFile"></param>
+        /// <returns></returns>
+        public static RemoteIsolatedStorageFile GetRemoteIsolatedStorageFile(this RemoteIsolatedStorageFileObject wrapperRemoteIsoFile) 
+        {
+            BindingFlags eFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            var fieldInfo = (typeof(RemoteIsolatedStorageFileObject)).GetField("mRemoteIsolatedStorageFile", eFlags);
+
+            if (fieldInfo != null)
+                return fieldInfo.GetValue(wrapperRemoteIsoFile) as RemoteIsolatedStorageFile;
+
+            return null;
         }
 
     }

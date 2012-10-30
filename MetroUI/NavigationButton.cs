@@ -16,11 +16,13 @@ using System.Windows.Shapes;
 
 namespace MetroUI
 {
-    /// <summary>
-    /// Interaction logic for NavigationButton.xaml
-    /// </summary>
-    public partial class NavigationButton : UserControl
+    [TemplatePart(Name = NavigationButton.ElementButtonGrid, Type = typeof(Grid))]
+    [TemplatePart(Name = NavigationButton.ElementButton, Type = typeof(Button))]
+    public class NavigationButton : ContentControl
     {
+        private const string ElementButtonGrid = "PART_ButtonGrid";
+        private const string ElementButton = "PART_Button";
+
         public event EventHandler OnSelectionChanged;
 
         #region Properties
@@ -38,8 +40,8 @@ namespace MetroUI
         public bool IsSelected
         {
             get { return (bool)GetValue(IsSelectedProperty); }
-            set 
-            { 
+            set
+            {
                 SetValue(IsSelectedProperty, value);
 
                 if (OnSelectionChanged != null)
@@ -51,7 +53,7 @@ namespace MetroUI
             }
         }
 
-        public static readonly DependencyProperty SourceProperty = DependencyProperty.Register("Source", typeof(string), typeof(NavigationButton), new PropertyMetadata(default(ImageSource)));
+        public static readonly DependencyProperty SourceProperty = DependencyProperty.Register("Source", typeof(ImageSource), typeof(NavigationButton), new PropertyMetadata(default(ImageSource)));
 
         public ImageSource Source
         {
@@ -69,9 +71,55 @@ namespace MetroUI
 
         #endregion
 
+        static NavigationButton()
+        {
+            // required to override the default styling so that our styles are picked up from generic.xaml
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(NavigationButton), new FrameworkPropertyMetadata(typeof(NavigationButton)));
+        }
+
         public NavigationButton()
         {
-            InitializeComponent();
+        }
+
+        ~NavigationButton()
+        {
+
+            if (_button != null)
+            {
+                try
+                {
+                    _button.Click -= Button_Click;
+                    _gridButton.MouseEnter -= parens_MouseEvent;
+                    _gridButton.MouseLeave -= parens_MouseEvent;
+                }
+                catch { }
+            }
+
+        }
+
+        private Grid _gridButton;
+        private Button _button;
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            
+            _gridButton = GetTemplateChild(ElementButtonGrid) as Grid;
+
+            if (_gridButton == null)
+                throw new MissingMemberException("Expected to find " + ElementButtonGrid);
+
+            _gridButton.MouseEnter += parens_MouseEvent;
+            _gridButton.MouseLeave += parens_MouseEvent;
+
+            _button = GetTemplateChild(ElementButton) as Button;
+
+            if (_button == null)
+                throw new MissingMemberException("Expected to find " + ElementButton);
+
+            _button.Click += Button_Click;
+
+            UpdateState();
         }
 
         /// <summary>
@@ -79,14 +127,16 @@ namespace MetroUI
         /// </summary>
         private void UpdateState()
         {
-            VisualStateManager.GoToElementState(button, (IsSelected ? "SelectedNormal" : "Normal"), true);
+            if (_gridButton != null)
+                VisualStateManager.GoToElementState(_gridButton, (IsSelected ? "SelectedNormal" : "Normal"), true);
         }
 
         private void parens_MouseEvent(object sender, MouseEventArgs e)
         {
+
             string toState = (IsSelected ? "IsSelected" : "");
 
-            if (button.IsMouseOver)
+            if (_gridButton.IsMouseOver || e.LeftButton == MouseButtonState.Pressed)
             {
                 toState += "MouseOver";
             }
@@ -95,12 +145,13 @@ namespace MetroUI
                 toState += "Normal";
             }
 
-            VisualStateManager.GoToElementState(button, toState, true);
+            VisualStateManager.GoToElementState(_gridButton, toState, true);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            IsSelected = !IsSelected;
+            if (!IsSelected)
+                IsSelected = true;
         }
     }
 }

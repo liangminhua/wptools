@@ -45,7 +45,7 @@ namespace WindowsPhonePowerTools
                 if (isoStoreItem.IsApplication)
                     return imageApp;
 
-                RemoteFileInfo file = isoStoreItem.RemoteFile;
+                var file = isoStoreItem.RemoteFile;
 
                 if (file != null)
                 {

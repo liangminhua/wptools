@@ -6,6 +6,9 @@ using Microsoft.SmartDevice.Connectivity;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
+using Microsoft.SmartDevice.MultiTargeting.Connectivity;
+using Microsoft.SmartDevice.Connectivity.Interface;
+using System.Runtime.CompilerServices;
 
 namespace WindowsPhone.Tools
 {
@@ -23,16 +26,15 @@ namespace WindowsPhone.Tools
         /// Retrieve possible devices from CoreCon
         /// </summary>
         /// <returns></returns>
-        public static List<Device> GetDevices()
+        public static List<ConnectableDevice> GetDevices()
         {
-            List<Device> list = new List<Device>();
+            List<ConnectableDevice> list = new List<ConnectableDevice>();
+            
+            MultiTargetingConnectivity multiConnect = new MultiTargetingConnectivity(CultureInfo.InvariantCulture.LCID);
 
-            DatastoreManager manager = new DatastoreManager(CultureInfo.InvariantCulture.LCID);
-
-            foreach (Platform platform in manager.GetPlatforms())
+            foreach (ConnectableDevice device in multiConnect.GetConnectableDevices(false))
             {
-                // Note: CoreCon 10.0 only seems to support Windows Phone so no filtering is required
-                list.AddRange(platform.GetDevices());
+                list.Add(device);
             }
 
             return list;
@@ -42,8 +44,8 @@ namespace WindowsPhone.Tools
 
         #region Properties
 
-        private List<Device> _devices;
-        public List<Device> Devices
+        private List<ConnectableDevice> _devices;
+        public List<ConnectableDevice> Devices
         {
             get
             {
@@ -53,7 +55,7 @@ namespace WindowsPhone.Tools
 
                     // set CurrentDevice to a default
                     if (_devices != null)
-                        CurrentDevice = _devices[0];
+                        CurrentConnectableDevice = _devices[0];
                 }
 
                 return _devices;
@@ -64,15 +66,22 @@ namespace WindowsPhone.Tools
                 {
                     _devices = value;
 
-                    NotifyPropertyChanged("Devices");
+                    NotifyPropertyChanged();
                 }
             }
         }
 
-        private Device _currentDevice;
-        public Device CurrentDevice
+        /// <summary>
+        /// 
+        /// </summary>
+        private IDevice _currentDevice;
+        public IDevice CurrentDevice
         {
             get {
+           
+                /* 
+                 * The new ConnectableDevice model does not support an IsConnected flag, should possibly create a wrapper?
+                 *
                 // attempt to reconnect the device if we previously connected it and
                 // it is not longer connected
                 if (_currentDevice != null && Connected && !_currentDevice.IsConnected())
@@ -89,6 +98,8 @@ namespace WindowsPhone.Tools
                     }
                 }
 
+                 */
+
                 return _currentDevice; 
             }
             set
@@ -97,13 +108,30 @@ namespace WindowsPhone.Tools
                 {
                     _currentDevice = value;
 
-                    NotifyPropertyChanged("CurrentDevice");
+                    NotifyPropertyChanged();
                 }
             }
         }
 
-        private SystemInfo _systemInfo;
-        public SystemInfo SystemInfo
+        private ConnectableDevice _currentConnectableDevice;
+        public ConnectableDevice CurrentConnectableDevice
+        {
+            get
+            {
+                return _currentConnectableDevice;
+            }
+            set
+            {
+                if (_currentConnectableDevice != value)
+                {
+                    _currentConnectableDevice = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private ISystemInfo _systemInfo;
+        public ISystemInfo SystemInfo
         {
             get { return _systemInfo; }
             set
@@ -112,7 +140,7 @@ namespace WindowsPhone.Tools
                 {
                     _systemInfo = value;
 
-                    NotifyPropertyChanged("SystemInfo");
+                    NotifyPropertyChanged();
                 }
             }
         }
@@ -127,11 +155,11 @@ namespace WindowsPhone.Tools
                 {
                     _connected = value;
 
-                    NotifyPropertyChanged("Connected");
+                    NotifyPropertyChanged();
 
                     if (_currentDevice != null)
                     {
-                        DeviceType = (_currentDevice.IsEmulator() ? "EMULATOR" : "PHONE");
+                        DeviceType = (_currentConnectableDevice.IsEmulator() ? "EMULATOR" : "PHONE");
                     }
                     else
                     {
@@ -151,7 +179,7 @@ namespace WindowsPhone.Tools
                 {
                     _isError = value;
 
-                    NotifyPropertyChanged("IsError");
+                    NotifyPropertyChanged();
                 }
             }
         }
@@ -166,7 +194,7 @@ namespace WindowsPhone.Tools
                 {
                     _statusMessage = value;
 
-                    NotifyPropertyChanged("StatusMessage");
+                    NotifyPropertyChanged();
                 }
             }
         }
@@ -181,7 +209,7 @@ namespace WindowsPhone.Tools
                 {
                     _deviceType = value;
 
-                    NotifyPropertyChanged("DeviceType");
+                    NotifyPropertyChanged();
                 }
             }
         }
@@ -196,7 +224,7 @@ namespace WindowsPhone.Tools
                 {
                     _installedApplications = value;
 
-                    NotifyPropertyChanged("InstalledApplications");
+                    NotifyPropertyChanged();
                 }
             }
         }
@@ -211,42 +239,42 @@ namespace WindowsPhone.Tools
                 {
                     _remoteIsoStores = value;
 
-                    NotifyPropertyChanged("RemoteIsoStores");
+                    NotifyPropertyChanged();
                 }
             }
         }
 
         #endregion
 
-        private Device _connectedDevice = null;
+        private ConnectableDevice _connectedDevice = null;
 
         public bool Connect()
         {
             // do not use CurrentDevice here (rather, use _currentDevice) because CurrentDevice.Get() 
             // can call back into Connect
 
-            if (_currentDevice != null)
+            if (CurrentConnectableDevice != null)
             {
                 // we're already connected to this device! :)
-                if (_currentDevice == _connectedDevice && _connectedDevice.IsConnected())
-                    return true;
+                //if (_currentDevice == _connectedDevice/* && _connectedDevice.IsConnected()*/)
+                //    return true;
 
                 try
                 {
                     // disconnect the existing device
-                    if (_connectedDevice != null)
-                        _connectedDevice.Disconnect();
+                    if (CurrentDevice != null)
+                        CurrentDevice.Disconnect();
 
-                    _currentDevice.Connect();
+                    CurrentDevice = CurrentConnectableDevice.Connect();
 
-                    SystemInfo = _currentDevice.GetSystemInfo();
+                    SystemInfo = CurrentDevice.GetSystemInfo();
 
                     if (SystemInfo.OSBuildNo < MIN_SUPPORTED_BUILD_NUMBER)
                     {
                         throw new Exception("Windows Phone Power Tools only support build " + MIN_SUPPORTED_BUILD_NUMBER + " and above. This device is on " + SystemInfo.OSBuildNo + ".");
                     }
 
-                    StatusMessage = "Connected to " + _currentDevice.Name + "!";
+                    StatusMessage = "Currently connected to " + _currentConnectableDevice.Name;
 
                     Connected = true;
                     IsError = false;
@@ -294,12 +322,12 @@ namespace WindowsPhone.Tools
         public void RefreshInstalledApps()
         {
             //RemoteApplicationEx
-
-            Collection<RemoteApplication> installed = CurrentDevice.GetInstalledApplications();
+            
+            Collection<IRemoteApplication> installed = CurrentDevice.GetInstalledApplications();
 
             Collection<RemoteApplicationEx> installedCollection = new Collection<RemoteApplicationEx>();
 
-            foreach (RemoteApplication app in installed)
+            foreach (IRemoteApplication app in installed)
                 installedCollection.Add(new RemoteApplicationEx(app));
 
             InstalledApplications = installedCollection;
@@ -323,11 +351,11 @@ namespace WindowsPhone.Tools
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void NotifyPropertyChanged(String property)
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             if (PropertyChanged != null)
             {
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 

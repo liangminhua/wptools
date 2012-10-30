@@ -1,4 +1,6 @@
-﻿using System;
+﻿extern alias SmartDeviceConnectivityWrapper10;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,15 +8,17 @@ using System.ComponentModel;
 using Microsoft.SmartDevice.Connectivity;
 using System.Collections.ObjectModel;
 using System.IO;
+using Microsoft.SmartDevice.Connectivity.Interface;
+using Microsoft.SmartDevice.Connectivity.Wrapper;
 
 namespace WindowsPhone.Tools
 {
     public class RemoteAppIsoStoreItem : INotifyPropertyChanged
     {
-        private Device _device;
+        private IDevice _device;
         private RemoteApplicationEx _appEx;
 
-        public RemoteApplication RemoteApp { get; private set; }
+        public IRemoteApplication RemoteApp { get; private set; }
 
         public string Name { get; set; }
 
@@ -28,7 +32,7 @@ namespace WindowsPhone.Tools
         /// </summary>
         public bool IsApplication { get; set; }
 
-        public RemoteFileInfo RemoteFile { get; private set; }
+        public IRemoteFileInfo RemoteFile { get; private set; }
 
         /// <summary>
         /// The weird and wonderful world of Icons. Will either return a stream with the icon in it
@@ -72,7 +76,7 @@ namespace WindowsPhone.Tools
         /// </summary>
         /// <param name="device"></param>
         /// <param name="xap"></param>
-        public RemoteAppIsoStoreItem(Microsoft.SmartDevice.Connectivity.Device device, RemoteApplicationEx app)
+        public RemoteAppIsoStoreItem(IDevice device, RemoteApplicationEx app)
         {
             this._device = device;
             this._appEx  = app;
@@ -96,7 +100,7 @@ namespace WindowsPhone.Tools
         /// </summary>
         /// <param name="app"></param>
         /// <param name="remoteFile"></param>
-        private RemoteAppIsoStoreItem(RemoteApplicationEx app, RemoteFileInfo remoteFile, RemoteAppIsoStoreItem parent)
+        private RemoteAppIsoStoreItem(RemoteApplicationEx app, IRemoteFileInfo remoteFile, RemoteAppIsoStoreItem parent)
         {
             RemoteApp = app.RemoteApplication;
 
@@ -110,7 +114,7 @@ namespace WindowsPhone.Tools
             Name = Path.GetFileName(name);
 
             // "\\Applications\\Data\\8531f2be-f4c3-4822-9fa6-bcc70c9d50a8\\Data\\IsolatedStore\\\\Shared"
-
+            
             _path = RemoteFile.GetRelativePath();
 
             if (RemoteFile.IsDirectory())
@@ -127,7 +131,7 @@ namespace WindowsPhone.Tools
         /// <param name="path">Returns the full local path (i.e. localPath + [file/dir]name)</param>
         public string Get(string localPath, bool overwrite)
         {
-            RemoteIsolatedStorageFile remoteIso = RemoteApp.GetIsolatedStore();
+            var remoteIso = RemoteApp.GetIsolatedStore();
 
             string fullLocalPath = Path.Combine(localPath, Path.GetFileName(Name));
 
@@ -169,7 +173,7 @@ namespace WindowsPhone.Tools
 
         public void Put(string localFile, string relativeDirectory = "", bool overwrite = false)
         {
-            RemoteIsolatedStorageFile remoteIso = RemoteApp.GetIsolatedStore();
+            var remoteIso = RemoteApp.GetIsolatedStore();
 
             FileAttributes attrib = File.GetAttributes(localFile);
 
@@ -201,7 +205,7 @@ namespace WindowsPhone.Tools
 
         public void Delete()
         {
-            RemoteIsolatedStorageFile remoteIso = RemoteApp.GetIsolatedStore();
+            var remoteIso = RemoteApp.GetIsolatedStore();
 
             if (IsApplication)
             {
@@ -227,7 +231,24 @@ namespace WindowsPhone.Tools
             }
             else
             {
-                remoteIso.DeleteFile(_path);
+                // really? no delete file??? RemoteIsolatedStorageFile is hidden (internal) within the wrapper
+                // not sure if there is an easy way to get it
+                var remoteFileObject = remoteIso as RemoteIsolatedStorageFileObject;
+
+                if (remoteFileObject != null)
+                {
+                    remoteFileObject.GetRemoteIsolatedStorageFile().DeleteFile(_path);
+                }
+                else
+                {
+                    // try the 10.0 version
+                    var remoteFileObject10 = remoteIso as SmartDeviceConnectivityWrapper10::Microsoft.SmartDevice.Connectivity.Wrapper.RemoteIsolatedStorageFileObject;
+
+                    if (remoteFileObject10 != null) 
+                    {
+                        WindowsPhone.Tools.Legacy10.Utils.DeleteFile(remoteFileObject10, _path);
+                    }
+                }
             }
         }
 
@@ -263,15 +284,15 @@ namespace WindowsPhone.Tools
             //Opened = true;
             Opened = true;
 
-            RemoteIsolatedStorageFile remoteIso = RemoteApp.GetIsolatedStore();
+            var remoteIso = RemoteApp.GetIsolatedStore();
 
-            List<RemoteFileInfo> remoteFiles;
+            List<IRemoteFileInfo> remoteFiles;
 
             try
             {
                 remoteFiles = remoteIso.GetDirectoryListing(_path);
 
-                foreach (RemoteFileInfo remoteFile in remoteFiles)
+                foreach (IRemoteFileInfo remoteFile in remoteFiles)
                 {
                     Children.Add(new RemoteAppIsoStoreItem(_appEx, remoteFile, this));
                 }

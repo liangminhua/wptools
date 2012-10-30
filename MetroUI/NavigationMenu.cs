@@ -83,6 +83,18 @@ namespace MetroUI
                 throw new MissingMemberException("Expected to find template member: " + MenuContent);
 
             AddChildren();
+
+            // select the first child
+            if (Children.Count > 0)
+            {
+                NavigationButton button = Children[0] as NavigationButton;
+
+                if (button != null)
+                {
+                    button.IsSelected = true;
+                    SelectionChanged(Children[0] as NavigationButton);
+                }
+            }
         }
 
         /// <summary>
@@ -113,8 +125,8 @@ namespace MetroUI
 
         public void SelectionChanged(NavigationButton button)
         {
-            // ignore the case where the selection changed to be "not selected"
-            if (button.IsSelected == false)
+            // ignore the case where the selection changed to be "not selected" or is already selected
+            if (button.IsSelected == false || button == _selectedButton)
                 return;
 
             if (_selectedButton != null)

@@ -58,18 +58,12 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NavigationButton.xaml.cs">
-      <DependentUpon>NavigationButton.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="NavigationButton.cs" />
     <Compile Include="NavigationMenu.cs" />
     <Compile Include="RelativeAnimatingContentControl.cs" />
     <Page Include="ImageButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="NavigationButton.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
