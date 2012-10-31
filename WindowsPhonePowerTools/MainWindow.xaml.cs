@@ -35,6 +35,8 @@ namespace WindowsPhonePowerTools
         {
             InitializeComponent();
 
+            Current = this;
+
             Device = new WindowsPhoneDevice();
 
             this.DataContext = this;
@@ -48,6 +50,12 @@ namespace WindowsPhonePowerTools
             if (button != null)
                 navigator.SelectionChanged(button);
         }
+
+        #region Fake Singleton
+
+        public static MainWindow Current { get; private set; }
+
+        #endregion
 
         #region Properties
 
