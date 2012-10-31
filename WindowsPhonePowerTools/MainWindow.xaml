@@ -13,14 +13,14 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MetroUI;component/Themes/Generic.xaml" />
+
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedTabControl.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
-
-                <ResourceDictionary Source="pack://application:,,,/MetroUI;component/Themes/Generic.xaml" />
                 
                 <ResourceDictionary>
 
@@ -240,68 +240,6 @@
                         ELEVATED
                         </TextBlock>
                     </StackPanel>
-
-                    <!--
-                    <Expander Height="154" Header="DEVICE INFORMATION" FontWeight="Bold" HorizontalAlignment="Left" Canvas.Top="77" Canvas.Left="19">
-                    
-                        <ScrollViewer Height="130" Width="352" FontWeight="Regular">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0">
-                                    <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Platform" />
-                                    <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="OS Build No" />
-                                    <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="OS Version Major" />
-                                    <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="OS Version Major" />
-                                    <Separator Style="{StaticResource DeviceInformationSeparator}" />
-                                    <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Architecture" />
-                                    <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Instruction Set" />
-                                    <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Processors" />
-                                    <Separator Style="{StaticResource DeviceInformationSeparator}" />
-                                    <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Device Time" />
-                                    <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Default Locale" />
-                                    <Separator Style="{StaticResource DeviceInformationSeparator}" />
-                                    <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Available Memory" />
-                                    <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Available Virtual" />
-                                    <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Page Size" />
-                                    <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Page File Size" />
-                                    <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Total Memory" />
-                                    <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Total Virtual" />
-                                    <Separator Style="{StaticResource DeviceInformationSeparator}" />
-                                    <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Charging" />
-                                    <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Full Battery Lifetime" />
-                                    <TextBlock Style="{StaticResource DeviceInfoHeader}" Text="Battery %" />
-                                </StackPanel>
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="{Binding CurrentDevice.Platform.Name}" VerticalAlignment="Top" />
-                                    <TextBlock Text="{Binding SystemInfo.OSBuildNo}" />
-                                    <TextBlock Text="{Binding SystemInfo.OSMajor}" />
-                                    <TextBlock Text="{Binding SystemInfo.OSMinor}" />
-                                    <Separator Style="{StaticResource DeviceInformationSeparator}" />
-                                    <TextBlock Text="{Binding SystemInfo.ProcessorArchitecture}" />
-                                    <TextBlock Text="{Binding SystemInfo.InstructionSet}" />
-                                    <TextBlock Text="{Binding SystemInfo.NumberOfProcessors}" />
-                                    <Separator Style="{StaticResource DeviceInformationSeparator}" />
-                                    <TextBlock Text="{Binding SystemInfo.CurrentTime}" />
-                                    <TextBlock Text="{Binding SystemInfo.SystemDefaultLocaleId}" />
-                                    <Separator Style="{StaticResource DeviceInformationSeparator}" />
-                                    <TextBlock Text="{Binding SystemInfo.AvailPhys}" />
-                                    <TextBlock Text="{Binding SystemInfo.AvailVirtual}" />
-                                    <TextBlock Text="{Binding SystemInfo.PageSize}" />
-                                    <TextBlock Text="{Binding SystemInfo.TotalPageFile}" />
-                                    <TextBlock Text="{Binding SystemInfo.TotalPhys}" />
-                                    <TextBlock Text="{Binding SystemInfo.TotalVirtual}" />
-                                    <Separator Style="{StaticResource DeviceInformationSeparator}" />
-                                    <TextBlock Text="{Binding SystemInfo.ACLineStatus}" />
-                                    <TextBlock Text="{Binding SystemInfo.BatteryFullLifetime}" />
-                                    <TextBlock Text="{Binding SystemInfo.BatteryLifePercent}" />
-                                </StackPanel>
-                            </Grid>
-                        </ScrollViewer>
-                    </Expander>
-                    -->
                 </Canvas>
             </MetroUI:MetroDialog>
 
