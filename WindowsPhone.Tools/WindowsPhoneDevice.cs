@@ -246,8 +246,6 @@ namespace WindowsPhone.Tools
 
         #endregion
 
-        private ConnectableDevice _connectedDevice = null;
-
         public bool Connect()
         {
             // do not use CurrentDevice here (rather, use _currentDevice) because CurrentDevice.Get() 
