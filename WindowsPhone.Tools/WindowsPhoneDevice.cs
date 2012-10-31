@@ -309,7 +309,6 @@ namespace WindowsPhone.Tools
 
                     IsError          = true;
                     Connected        = false;
-                    _connectedDevice = null;
                     SystemInfo       = null;                    
                 }
             }
