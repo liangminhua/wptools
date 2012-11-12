@@ -375,21 +375,60 @@ namespace WindowsPhonePowerTools
             stackFileProperties.DataContext = item.RemoteFile;
         }
 
+        #region TreeView DragDrop
+
+        // used to smooth outh multiple Drop callbacks
+        private int _dropCount = 0;
+        private int _lastDropCount = -1;
+
         private void treeIsoStoreItem_OnDrop(object sender, DragEventArgs e)
         {
-            RemoteAppIsoStoreItem item = treeIsoStore.SelectedItem as RemoteAppIsoStoreItem;
-            string[] files = e.Data.GetData("FileDrop") as string[];
+            // sometimes the system sends us multiple OnDrop messages - ignore them when this happens
+            if (_lastDropCount == _dropCount)
+                return;
+
+            _lastDropCount = _dropCount;
+
+            TreeViewItem treeViewItem = sender as TreeViewItem;
+
+            if (treeViewItem == null)
+                return;
+
+            RemoteAppIsoStoreItem targetItem = treeViewItem.Header as RemoteAppIsoStoreItem;
+
+            string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
 
             // only allow dropping on Application root level items and directories
-            if (files == null || item == null || (!item.IsApplication && !item.RemoteFile.IsDirectory()))
+            if (files == null || targetItem == null || (!targetItem.IsApplication && !targetItem.RemoteFile.IsDirectory()))
                 return;
+
+            // prevent an item from being dragged on itself, or onto its parent
+            // (which is essentially the same since dragging a\b onto a will try to replace b in a)
+            RemoteAppIsoStoreItem draggedItem = e.Data.GetData("Random") as RemoteAppIsoStoreItem;
+
+            if (draggedItem == targetItem || draggedItem.Parent == targetItem)
+                return;
+
+            // ensure we're not dragging onto a child of ourselves (which creates funky recursive structures)
+
+            RemoteAppIsoStoreItem parentSearchItem = targetItem;
+
+            while (parentSearchItem.Parent != null)
+            {
+                if (parentSearchItem.Parent == draggedItem)
+                {
+                    return;
+                }
+
+                parentSearchItem = parentSearchItem.Parent;
+            }
 
             foreach (string file in files)
             {
-                item.Put(file, (bool)chkOverwrite.IsChecked);
+                targetItem.Put(file, (bool)chkOverwrite.IsChecked);
             }
 
-            item.Update(force: true);
+            targetItem.Update(force: true);
         }
 
         private void treeIsoStoreItem_OnMouseMove(object sender, MouseEventArgs e)
@@ -415,13 +454,21 @@ namespace WindowsPhonePowerTools
 
                 isoStoreItem.Get(tempDir, overwrite: true);
 
-                DataObject dataObject = new DataObject("FileDrop", new string[] { System.IO.Path.Combine(tempDir, isoStoreItem.Name) });
+                DataObject dataObject = new DataObject();
+
+                dataObject.SetData(DataFormats.FileDrop, new string[] { System.IO.Path.Combine(tempDir, isoStoreItem.Name) });
+                dataObject.SetData("Random", isoStoreItem);
 
                 DragDrop.DoDragDrop(treeViewItem, dataObject, DragDropEffects.Copy);
+
+                // increment the drop counter used to smooth out multiple drops that initiate from one DoDragDrop call
+                _dropCount++;
 
                 Directory.Delete(tempDir, recursive: true);
             }
         }
+
+        #endregion
 
         private void treeIsoStoreItem_OnKeyUp(object sender, KeyEventArgs e)
         {
