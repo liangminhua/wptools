@@ -30,7 +30,7 @@ namespace WindowsPhone.Tools
         {
             List<ConnectableDevice> list = new List<ConnectableDevice>();
             
-            MultiTargetingConnectivity multiConnect = new MultiTargetingConnectivity(CultureInfo.InvariantCulture.LCID);
+            MultiTargetingConnectivity multiConnect = new MultiTargetingConnectivity(CultureInfo.CurrentCulture.LCID);
 
             foreach (ConnectableDevice device in multiConnect.GetConnectableDevices(false))
             {
