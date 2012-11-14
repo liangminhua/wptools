@@ -75,7 +75,7 @@
                             <SolidColorBrush x:Key="BlackBrush" Color="White" />
                         </Rectangle.Resources>
                     </Rectangle>
-                    <TextBlock Text="about" />
+                    <Button Content="about" Click="btnAbout_Click" />
                 </StackPanel>
             </Button>
         </MetroControls:WindowCommands>

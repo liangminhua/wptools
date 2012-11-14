@@ -668,6 +668,12 @@ namespace WindowsPhonePowerTools
             dialogConnect.Close();
         }
 
+        private void btnAbout_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(About.Current.FullVersionString + "\n\nYeah, yeah, I'll bring back the pretty About box in a future version.", "About this awesome tool", MessageBoxButton.OK);
+        }
+        
+
         #endregion
 
         # region INotifyPropertyChanged

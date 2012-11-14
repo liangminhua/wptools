@@ -106,6 +106,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="About.cs" />
     <Compile Include="BoolToVisibilityConverter.cs" />
     <Compile Include="DeviceConnectionIndicator.xaml.cs">
       <DependentUpon>DeviceConnectionIndicator.xaml</DependentUpon>
