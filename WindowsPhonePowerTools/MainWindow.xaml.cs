@@ -40,6 +40,8 @@ namespace WindowsPhonePowerTools
             Device = new WindowsPhoneDevice();
 
             this.DataContext = this;
+
+            Analytics.Instance.Track(Analytics.Categories.PowerTools, "Run Power Tools");
         }
 
         private void NavigationButton_OnSelectionChanged(object sender, EventArgs e)
@@ -143,6 +145,7 @@ namespace WindowsPhonePowerTools
 
         private void btnConnect_Click(object sender, RoutedEventArgs e)
         {
+            Analytics.Instance.Track(Analytics.Categories.PowerTools, "Connect", _device.CurrentConnectableDevice.Name);
             _device.Connect();
 
             if (_device.Connected)
@@ -190,13 +193,18 @@ namespace WindowsPhonePowerTools
                 txtAppGuid.Text = "";
 
                 _device.RefreshInstalledApps();
+
+                Analytics.Instance.Track(Analytics.Categories.App, "Uninstall");
             }
         }
 
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
+
             // RemoveEmptyEntries does not remove an entry that has a space, so don't waste time with it
             string[] files = txtXapFile.Text.Split(';');
+
+            Analytics.Instance.Track(Analytics.Categories.App, "Update", "Count", files.Length);
 
             Xap xap;
             IRemoteApplication existingInstall;
@@ -225,6 +233,8 @@ namespace WindowsPhonePowerTools
         {
             // RemoveEmptyEntries does not remove an entry that has a space, so don't waste time with it
             string[] files = txtXapFile.Text.Split(';');
+
+            Analytics.Instance.Track(Analytics.Categories.App, "Install", "Count", files.Length);
 
             Xap xap;
             IRemoteApplication existingInstall;
@@ -311,13 +321,19 @@ namespace WindowsPhonePowerTools
         private void btnLaunchApp_Click(object sender, RoutedEventArgs e)
         {
             if (CurSelectedInstalledApp != null)
+            {
                 CurSelectedInstalledApp.RemoteApplication.Launch();
+                Analytics.Instance.Track(Analytics.Categories.App, "Launch");
+            }
         }
 
         private void btnKillApp_Click(object sender, RoutedEventArgs e)
         {
             if (CurSelectedInstalledApp != null)
+            {
                 CurSelectedInstalledApp.RemoteApplication.TerminateRunningInstances();
+                Analytics.Instance.Track(Analytics.Categories.App, "Kill");
+            }
         }
 
         #endregion
@@ -350,7 +366,8 @@ namespace WindowsPhonePowerTools
 
                         if (isoStoreItem != null)
                         {
-                            System.Diagnostics.Debug.WriteLine("Launching: " + isoStoreItem.RemoteApp.ProductID);
+                            Analytics.Instance.Track(Analytics.Categories.App, "Launch (IsoStore)");
+
                             isoStoreItem.RemoteApp.Launch();
                         }
                     }
@@ -550,6 +567,8 @@ namespace WindowsPhonePowerTools
             if (string.IsNullOrEmpty(dialog.SelectedPath))
                 return;
 
+            Analytics.Instance.Track(Analytics.Categories.IsoStore, "Get");
+
             item.Get(dialog.SelectedPath, (chkOverwrite.IsChecked == true ? true : false));
         }
 
@@ -570,10 +589,11 @@ namespace WindowsPhonePowerTools
             if (string.IsNullOrEmpty(dialog.SelectedPath))
                 return;
 
+            Analytics.Instance.Track(Analytics.Categories.IsoStore, "Put Directory");
+
             item.Put(dialog.SelectedPath, chkOverwrite.IsChecked == true);
 
             item.Update(force: true);
-
         }
 
         private void btnPutFile_Click(object sender, RoutedEventArgs e)
@@ -587,6 +607,8 @@ namespace WindowsPhonePowerTools
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Multiselect = true;
             dialog.ShowDialog();
+
+            Analytics.Instance.Track(Analytics.Categories.IsoStore, "Put Files", "Count", dialog.FileNames.Length);
 
             foreach (string filename in dialog.FileNames)
             {
@@ -612,6 +634,8 @@ namespace WindowsPhonePowerTools
                  )
                     return;
             }
+
+            Analytics.Instance.Track(Analytics.Categories.IsoStore, "Delete");
 
             item.Delete();
 
