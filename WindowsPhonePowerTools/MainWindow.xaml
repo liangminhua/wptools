@@ -213,7 +213,7 @@
                 </Canvas>
             </MetroUI:MetroDialog>
 
-            <MetroUI:MetroDialog x:Name="dialogConnect" Visibility="Visible" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DataContext="{Binding Device}">
+            <MetroUI:MetroDialog x:Name="dialogConnect" Visibility="Hidden" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DataContext="{Binding Device}">
                 <Canvas>
                     <TextBlock Margin="23,30,428,0" Height="18" VerticalAlignment="Top" Canvas.Left="25" Canvas.Top="15">Connect to:</TextBlock>
                     <ComboBox Canvas.Left="115" Canvas.Top="40" ItemsSource="{Binding Devices}" SelectedItem="{Binding CurrentConnectableDevice, Mode=TwoWay}" HorizontalAlignment="Right" Width="293">

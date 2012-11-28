@@ -42,6 +42,9 @@ namespace WindowsPhonePowerTools
             this.DataContext = this;
 
             Analytics.Instance.Track(Analytics.Categories.PowerTools, "Run Power Tools");
+
+            // show the connect dialog
+            dialogConnect.Show();
         }
 
         private void NavigationButton_OnSelectionChanged(object sender, EventArgs e)
