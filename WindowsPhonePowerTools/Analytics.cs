@@ -21,7 +21,9 @@ namespace WindowsPhonePowerTools
         public enum Categories { PowerTools, Device, App, IsoStore };
 
         private Tracker _tracker;
-        
+
+        private bool _disabled = false;
+
         /// <summary>
         /// A unique ID - while this cannot be used to remotely identify a user it is used to track
         /// the number of unique installations of the phones tools
@@ -30,6 +32,12 @@ namespace WindowsPhonePowerTools
         
         private Analytics()
         {
+            // disable tracking when running a debug build or under debugger
+            if (System.AppDomain.CurrentDomain.FriendlyName.EndsWith("vshost.exe") || System.Diagnostics.Debugger.IsAttached)
+            {
+                _disabled = true;
+            }
+
             _tracker = new Tracker("UA-11132531-2", "wptools.nachmore.com");
 
             if (string.IsNullOrEmpty(Properties.Settings.Default.UniqueId))
@@ -42,10 +50,11 @@ namespace WindowsPhonePowerTools
 
             UniqueId = Properties.Settings.Default.UniqueId;
         }
-
+        
         public void Track(Categories category, string action, string label = null, int value = 0)
         {
-            _tracker.TrackEventAsync(category.ToString(), action, label, value);
+            if (!_disabled)
+                _tracker.TrackEventAsync(category.ToString(), action, label, value);
         }
     }
 }
