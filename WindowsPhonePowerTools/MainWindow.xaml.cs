@@ -371,7 +371,7 @@ namespace WindowsPhonePowerTools
 
                         if (isoStoreItem != null)
                         {
-                            Analytics.Instance.Track(Analytics.Categories.App, "Launch (IsoStore)");
+                            Analytics.Instance.Track(Analytics.Categories.App, "Launch - IsoStore");
 
                             isoStoreItem.RemoteApp.Launch();
                         }

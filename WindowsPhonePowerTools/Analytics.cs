@@ -34,6 +34,9 @@ namespace WindowsPhonePowerTools
 
             if (string.IsNullOrEmpty(Properties.Settings.Default.UniqueId))
             {
+                // assume that this is a new installation
+                Track(Categories.PowerTools, "New Installation");
+
                 Properties.Settings.Default.UniqueId = Guid.NewGuid().ToString();
             }
 
