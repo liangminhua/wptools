@@ -86,19 +86,25 @@
             <MetroUI:NavigationMenu x:Name="navigator">
 
                 <MetroUI:NavigationButton Source="/images/navbuttons/install_update.png" Text="Install | Update" OnSelectionChanged="NavigationButton_OnSelectionChanged" x:Name="btnInstallUpdate">
-                    <Canvas x:Name="pivotInstall" IsEnabled="{Binding Device.Connected}">
+                    <Grid x:Name="pivotInstall" IsEnabled="{Binding Device.Connected}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <Grid>
-                            <TextBox Height="22" HorizontalAlignment="Left" Margin="8,35,0,0" Name="txtXapFile" VerticalAlignment="Top" Width="364" />
-                            <Button Content="Browse" Height="24" HorizontalAlignment="Left" Margin="378,35,0,0" Name="btnBrowse" VerticalAlignment="Top" Width="77" Click="btnBrowse_Click" />
-                            <Button Content="Install" Height="24" HorizontalAlignment="Left" Margin="8,63,0,0" Name="btnInstall" VerticalAlignment="Top" Width="77" Click="btnInstall_Click" />
-                            <Button Content="Update" Height="24" HorizontalAlignment="Left" Margin="104,63,0,0" Name="btnUpdate" VerticalAlignment="Top" Width="77" Click="btnUpdate_Click" />
-                            <TextBlock Height="23" HorizontalAlignment="Left" Margin="8,15,0,0" Name="textBlock1" VerticalAlignment="Top" Width="340">XAP Path (separate multiple files with a semi-colon (;) ):</TextBlock>
-                            <TextBlock Height="81" HorizontalAlignment="Left" Margin="8,97,0,0" Name="textBlock2" TextWrapping="Wrap" VerticalAlignment="Top" Width="488">
+                            <Grid Margin="6,35,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Height="22" Grid.Column="0" Margin="0,0,12,0" Name="txtXapFile" VerticalAlignment="Top" />
+                                <Button Content="Browse" Height="24" HorizontalAlignment="Left" Grid.Column="1" Name="btnBrowse" VerticalAlignment="Top" Width="77" Click="btnBrowse_Click" />
+                            </Grid>
+                            <Button Content="Install" Height="24" HorizontalAlignment="Left" Margin="8,70,0,0" Name="btnInstall" VerticalAlignment="Top" Width="77" Click="btnInstall_Click" />
+                            <Button Content="Update" Height="24" HorizontalAlignment="Left" Margin="104,70,0,0" Name="btnUpdate" VerticalAlignment="Top" Width="77" Click="btnUpdate_Click" />
+                            <TextBlock Height="23" HorizontalAlignment="Left" Margin="8,15,0,0" Name="textBlock1" VerticalAlignment="Top" Width="513">XAP Path (select multiple files by hitting browse, or by separating names with a semi-colon (;) ):</TextBlock>
+                            <TextBlock Height="81" HorizontalAlignment="Left" Margin="8,105,0,0" Name="textBlock2" TextWrapping="Wrap" VerticalAlignment="Top" Width="488">
                         &#8226; Failures are silent - Updating a xap that is not already installed will have no effect<LineBreak/>
                         &#8226; Installing a xap that already exists will wipe the existing installation and reinstall the xap
                             </TextBlock>
                         </Grid>
-                    </Canvas>
+                    </Grid>
                 </MetroUI:NavigationButton>
                 <MetroUI:NavigationButton Source="/images/navbuttons/developer_apps.png" Text="Dev Apps"  OnSelectionChanged="NavigationButton_OnSelectionChanged">
                     <Canvas x:Name="pivotApps" IsEnabled="{Binding Device.Connected}">
