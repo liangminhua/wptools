@@ -82,5 +82,17 @@ namespace WindowsPhonePowerTools.Properties {
                 this["WindowMaximised"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string UniqueId {
+            get {
+                return ((string)(this["UniqueId"]));
+            }
+            set {
+                this["UniqueId"] = value;
+            }
+        }
     }
 }

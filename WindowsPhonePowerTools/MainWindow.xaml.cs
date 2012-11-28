@@ -43,7 +43,7 @@ namespace WindowsPhonePowerTools
 
             this.DataContext = this;
 
-            Analytics.Instance.Track(Analytics.Categories.PowerTools, "Run Power Tools");
+            Analytics.Instance.Track(Analytics.Categories.PowerTools, "Run Power Tools", Analytics.Instance.UniqueId);
 
             // show the connect dialog
             dialogConnect.Show();

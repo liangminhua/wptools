@@ -21,11 +21,23 @@ namespace WindowsPhonePowerTools
         public enum Categories { PowerTools, Device, App, IsoStore };
 
         private Tracker _tracker;
-
+        
+        /// <summary>
+        /// A unique ID - while this cannot be used to remotely identify a user it is used to track
+        /// the number of unique installations of the phones tools
+        /// </summary>
+        public string UniqueId { get; private set; }
+        
         private Analytics()
         {
             _tracker = new Tracker("UA-11132531-2", "wptools.nachmore.com");
 
+            if (string.IsNullOrEmpty(Properties.Settings.Default.UniqueId))
+            {
+                Properties.Settings.Default.UniqueId = Guid.NewGuid().ToString();
+            }
+
+            UniqueId = Properties.Settings.Default.UniqueId;
         }
 
         public void Track(Categories category, string action, string label = null, int value = 0)
