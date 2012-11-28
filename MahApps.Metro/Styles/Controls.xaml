@@ -73,7 +73,9 @@
         </Grid>
     </ControlTemplate>
 
+    <!--
     <Style TargetType="ToolTip" BasedOn="{StaticResource MetroToolTip}" />
+    -->
     <Style TargetType="Button" BasedOn="{StaticResource MetroButton}" />
     <Style TargetType="ToggleButton" BasedOn="{StaticResource MetroToggleButton}" />
     <Style TargetType="TextBox" BasedOn="{StaticResource MetroTextBox}" />
