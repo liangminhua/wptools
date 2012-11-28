@@ -7,6 +7,7 @@
         xmlns:stock="clr-namespace:StockIcons"
         Title="WP POWER TOOLS" Height="300" Width="300" MinHeight="400" MinWidth="750"
         ResizeMode="CanResizeWithGrip"
+        Closing="TheWindow_Closing"
         x:Name="TheWindow"
         Icon="wptools.ico">
 

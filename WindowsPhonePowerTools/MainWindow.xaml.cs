@@ -35,6 +35,8 @@ namespace WindowsPhonePowerTools
         {
             InitializeComponent();
 
+            RestoreWindowSizeAndPos();
+
             Current = this;
 
             Device = new WindowsPhoneDevice();
@@ -699,7 +701,53 @@ namespace WindowsPhonePowerTools
         {
             MessageBox.Show(About.Current.FullVersionString + "\n\nYeah, yeah, I'll bring back the pretty About box in a future version.", "About this awesome tool", MessageBoxButton.OK);
         }
-        
+
+        private void RestoreWindowSizeAndPos()
+        {
+
+            // if WindowHeight > 0 assume that settings have been stored
+            if (Properties.Settings.Default.WindowHeight > 0)
+            {
+                if (Properties.Settings.Default.WindowMaximised)
+                {
+                    this.WindowState = System.Windows.WindowState.Maximized;
+                }
+
+                this.Height = Properties.Settings.Default.WindowHeight;
+                this.Width = Properties.Settings.Default.WindowWidth;
+                this.Left = Properties.Settings.Default.WindowLeft;
+                this.Top = Properties.Settings.Default.WindowTop;
+            }
+
+        }
+
+        private void TheWindow_Closing(object sender, CancelEventArgs e)
+        {
+            if (WindowState == WindowState.Maximized)
+            {
+                // Use the RestoreBounds as the current values will be 0, 0 and the size of the screen
+                
+                Properties.Settings.Default.WindowHeight = RestoreBounds.Height;
+                Properties.Settings.Default.WindowWidth = RestoreBounds.Width;
+
+                Properties.Settings.Default.WindowLeft = RestoreBounds.Left;
+                Properties.Settings.Default.WindowTop = RestoreBounds.Top;
+
+                Properties.Settings.Default.WindowMaximised = true;
+            }
+            else
+            {
+                Properties.Settings.Default.WindowHeight = this.Height;
+                Properties.Settings.Default.WindowWidth = this.Width;
+
+                Properties.Settings.Default.WindowLeft = this.Left;
+                Properties.Settings.Default.WindowTop = this.Top;
+
+                Properties.Settings.Default.WindowMaximised = false;
+           }
+
+            Properties.Settings.Default.Save();
+        }
 
         #endregion
 
@@ -716,6 +764,7 @@ namespace WindowsPhonePowerTools
         }
 
         #endregion
+
 
     }
 }
