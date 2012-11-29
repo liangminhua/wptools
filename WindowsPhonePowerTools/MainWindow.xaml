@@ -103,7 +103,19 @@
                             <TextBlock Height="81" HorizontalAlignment="Left" Margin="8,105,0,0" Name="textBlock2" TextWrapping="Wrap" VerticalAlignment="Top" Width="488">
                         &#8226; Failures are silent - Updating a xap that is not already installed will have no effect<LineBreak/>
                         &#8226; Installing a xap that already exists will wipe the existing installation and reinstall the xap
+                                <LineBreak/><LineBreak/>
+                                You can also add previously used xaps:
                             </TextBlock>
+                            
+                            <Grid Margin="6,175,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <ListBox Grid.Column="0" Margin="0,0,12,0" Name="listPreviousXaps" VerticalAlignment="Top" SelectionMode="Extended" ItemsSource="{Binding PreviousXapPaths}" MouseDoubleClick="listPreviousXaps_MouseDoubleClick"></ListBox>
+                                <Button Content="Add" Height="24" HorizontalAlignment="Left" Grid.Column="1" Name="btnAddPreviousXap" VerticalAlignment="Top" Width="77" Click="btnAddPreviousXap_Click" />
+                            </Grid>
                         </Grid>
                     </Grid>
                 </MetroUI:NavigationButton>

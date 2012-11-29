@@ -45,6 +45,8 @@ namespace WindowsPhonePowerTools
 
             Analytics.Instance.Track(Analytics.Categories.PowerTools, "Run Power Tools", Analytics.Instance.UniqueId);
 
+            LoadPreviousXaps();
+
             // show the connect dialog
             dialogConnect.Show();
         }
@@ -122,6 +124,27 @@ namespace WindowsPhonePowerTools
                 }
 
                 return (_isElevated == true);
+            }
+        }
+
+        // used to determine that there are no previous xaps
+        private static string[] _noXapPathsList = new string[] {"* No previous Xaps *"};
+        private string[] _previouseXapPaths = null;
+        public string[] PreviousXapPaths
+        {
+            get { return _previouseXapPaths; }
+            set
+            {
+                if (_previouseXapPaths != value)
+                {
+                    _previouseXapPaths = value;
+
+                    // I don't like side effects in a property setter, but it seems to make sense to disable the button here
+                    // in the future I could simply hide the listbox when it is empty, which would probably make more sense.
+                    btnAddPreviousXap.IsEnabled = (value != _noXapPathsList);
+                }
+
+                NotifyPropertyChanged();
             }
         }
 
@@ -214,6 +237,8 @@ namespace WindowsPhonePowerTools
             Xap xap;
             IRemoteApplication existingInstall;
 
+            RememberXapPaths(files);
+
             foreach (string file in files)
             {
                 if (string.IsNullOrWhiteSpace(file))
@@ -243,6 +268,8 @@ namespace WindowsPhonePowerTools
 
             Xap xap;
             IRemoteApplication existingInstall;
+
+            RememberXapPaths(files);
 
             foreach (string file in files)
             {
@@ -312,6 +339,35 @@ namespace WindowsPhonePowerTools
                 }
             }
         }
+
+        private void listPreviousXaps_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            AddPreviousXapToInstallTextBox((sender as ListBox).SelectedItem as string);
+        }
+
+        private void AddPreviousXapToInstallTextBox(string file)
+        {
+            AddPreviousXapToInstallTextBox(new List<string>() { file });
+        }
+
+        private void AddPreviousXapToInstallTextBox(System.Collections.IList files)
+        {
+            if (!string.IsNullOrEmpty(txtXapFile.Text) && !txtXapFile.Text.EndsWith(";"))
+            {
+                txtXapFile.Text += ";";
+            }
+
+            foreach (string item in files)
+            {
+                txtXapFile.Text += item + ";";
+            }
+        }
+
+        private void btnAddPreviousXap_Click(object sender, RoutedEventArgs e)
+        {
+            AddPreviousXapToInstallTextBox(listPreviousXaps.SelectedItems);
+        }
+
 
         #endregion
 
@@ -749,6 +805,47 @@ namespace WindowsPhonePowerTools
             Properties.Settings.Default.Save();
         }
 
+
+        private void LoadPreviousXaps()
+        {
+            string[] previousXaps;
+
+            if (Properties.Settings.Default.PreviousXapPaths != null && Properties.Settings.Default.PreviousXapPaths.Count > 0)
+            {
+                previousXaps = new string[Properties.Settings.Default.PreviousXapPaths.Count];
+
+                Properties.Settings.Default.PreviousXapPaths.CopyTo(previousXaps, 0);
+            }
+            else
+            {
+                previousXaps = _noXapPathsList;
+            }
+
+            PreviousXapPaths = previousXaps;
+        }
+
+        private void RememberXapPaths(string[] files)
+        {
+            // StringCollection has an issue with saving, see http://stackoverflow.com/questions/6557338/stringcollection-in-application-settings-doesnt-get-stored
+            // so should never actually be null since we should get the default
+            if (Properties.Settings.Default.PreviousXapPaths == null)
+            {
+                Properties.Settings.Default.PreviousXapPaths = new System.Collections.Specialized.StringCollection();
+            }
+
+            foreach (string file in files)
+            {
+                if (!string.IsNullOrWhiteSpace(file) && !Properties.Settings.Default.PreviousXapPaths.Contains(file))
+                {
+                    Properties.Settings.Default.PreviousXapPaths.Add(file);
+                }
+            }
+
+            Properties.Settings.Default.Save();
+
+            LoadPreviousXaps();
+        }
+
         #endregion
 
         # region INotifyPropertyChanged
@@ -764,7 +861,5 @@ namespace WindowsPhonePowerTools
         }
 
         #endregion
-
-
     }
 }
