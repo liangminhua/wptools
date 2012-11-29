@@ -204,14 +204,6 @@ namespace WindowsPhonePowerTools
 
         #region Install | Update
 
-        // OREN Remove!
-        /*
-        TextBox txtAppGuid = new TextBox();
-        TextBox txtXapFile = new TextBox();
-        TreeView treeIsoStore = new TreeView();
-        StackPanel stackFileProperties = new StackPanel();
-        CheckBox chkOverwrite = new CheckBox();
-        */
         private void btnUninstall_Click(object sender, RoutedEventArgs e)
         {
             if (CurSelectedInstalledApp != null)
