@@ -113,7 +113,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <ListBox Grid.Column="0" Margin="0,0,12,0" Name="listPreviousXaps" VerticalAlignment="Top" SelectionMode="Extended" ItemsSource="{Binding PreviousXapPaths}" MouseDoubleClick="listPreviousXaps_MouseDoubleClick"></ListBox>
+                                <ListBox Grid.Column="0" Margin="0,0,12,12" Name="listPreviousXaps" VerticalAlignment="Top" SelectionMode="Extended" ItemsSource="{Binding PreviousXapPaths}" MouseDoubleClick="listPreviousXaps_MouseDoubleClick"></ListBox>
                                 <Button Content="Add" Height="24" HorizontalAlignment="Left" Grid.Column="1" Name="btnAddPreviousXap" VerticalAlignment="Top" Width="77" Click="btnAddPreviousXap_Click" />
                             </Grid>
                         </Grid>
