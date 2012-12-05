@@ -107,5 +107,17 @@ namespace WindowsPhonePowerTools.Properties {
                 this["PreviousXapPaths"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int MaximumPreviousXaps {
+            get {
+                return ((int)(this["MaximumPreviousXaps"]));
+            }
+            set {
+                this["MaximumPreviousXaps"] = value;
+            }
+        }
     }
 }

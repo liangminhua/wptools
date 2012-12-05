@@ -829,7 +829,22 @@ namespace WindowsPhonePowerTools
             {
                 if (!string.IsNullOrWhiteSpace(file) && !Properties.Settings.Default.PreviousXapPaths.Contains(file))
                 {
-                    Properties.Settings.Default.PreviousXapPaths.Add(file);
+                    // more recent files should be top of the list
+                    Properties.Settings.Default.PreviousXapPaths.Insert(0, file);
+                }
+            }
+
+            // make sure we don't store too many xaps (it doesn't make sense to have a never ending list of xaps)
+            int maxXaps = Properties.Settings.Default.MaximumPreviousXaps;
+
+            if (maxXaps > 0)
+            {
+                List<string> test = new List<string>();
+                
+                // StringCollection doesn't have a RemoveRange, oneday will move to serializing a List<string>
+                while (Properties.Settings.Default.PreviousXapPaths.Count > maxXaps)
+                {
+                    Properties.Settings.Default.PreviousXapPaths.RemoveAt(maxXaps - 1);
                 }
             }
 
