@@ -66,17 +66,15 @@
 
     <MetroControls:MetroWindow.WindowCommands>
         <MetroControls:WindowCommands>
-            <Button Content="connect to a device" Click="btnLaunchConnect_Click" />
-            <Button>
-                <StackPanel Orientation="Horizontal">
-                    <Rectangle Width="20" Height="20">
-                        <Rectangle.Resources>
-                            <SolidColorBrush x:Key="BlackBrush" Color="White" />
-                        </Rectangle.Resources>
-                    </Rectangle>
+            <StackPanel Orientation="Horizontal">
+                <Button BorderThickness="0" Content="connect to a device" Click="btnLaunchConnect_Click" />
+                <Button BorderThickness="0">
                     <Button Content="about" Click="btnAbout_Click" />
-                </StackPanel>
-            </Button>
+                </Button>
+                <Button BorderThickness="0">
+                    <Button Content="settings" Click="btnSettings_Click" />
+                </Button>
+            </StackPanel>
         </MetroControls:WindowCommands>
     </MetroControls:MetroWindow.WindowCommands>
 
@@ -104,7 +102,7 @@
                                 <LineBreak/><LineBreak/>
                                 You can also add previously used xaps:
                             </TextBlock>
-                            
+
                             <Grid Margin="6,175,0,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
@@ -221,6 +219,14 @@
                     <TextBlock FontSize="20" FontWeight="Bold" Canvas.Left="54">Oh Oh! An error has occurred</TextBlock>
                     <TextBlock Canvas.Left="16" Canvas.Top="55" Width="370" Text="{Binding ErrorString}" FontSize="16" TextWrapping="Wrap"></TextBlock>
                     <Button x:Name="btnDismissErrorDialog" Content="OK" Click="btnDismissErrorDialog_Click" Height="22" Width="73" FontFamily="Segoe WP" Canvas.Left="311" Canvas.Top="150"></Button>
+                </Canvas>
+            </MetroUI:MetroDialog>
+
+            <MetroUI:MetroDialog x:Name="dialogSettings" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Canvas>
+                    <TextBlock FontSize="20" FontWeight="Bold" Canvas.Left="54">Oh Oh! An error has occurred</TextBlock>
+                    <TextBlock Canvas.Left="16" Canvas.Top="55" Width="370" Text="{Binding ErrorString}" FontSize="16" TextWrapping="Wrap"></TextBlock>
+                    <Button Style="{StaticResource WindowsMetroButtonStyle}" x:Name="btnCloseSettingsDialog" Content="Cancel" Click="btnCloseConnectDialog_Click"  Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverter}}" Height="22" Width="73" Canvas.Left="250" Canvas.Top="136"></Button>
                 </Canvas>
             </MetroUI:MetroDialog>
 

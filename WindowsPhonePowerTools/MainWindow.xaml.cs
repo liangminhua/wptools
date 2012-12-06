@@ -750,6 +750,16 @@ namespace WindowsPhonePowerTools
             MessageBox.Show(About.Current.FullVersionString + "\n\nYeah, yeah, I'll bring back the pretty About box in a future version.", "About this awesome tool", MessageBoxButton.OK);
         }
 
+        private void btnSettings_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(About.Current.FullVersionString + "\n\nComing soon", "Settings", MessageBoxButton.OK);
+        }
+
+        private void btnCloseSettingsDialog_Click(object sender, RoutedEventArgs e)
+        {
+            dialogSettings.Close();
+        }
+        
         private void RestoreWindowSizeAndPos()
         {
 
