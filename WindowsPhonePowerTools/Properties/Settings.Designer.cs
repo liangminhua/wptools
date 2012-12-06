@@ -119,5 +119,17 @@ namespace WindowsPhonePowerTools.Properties {
                 this["MaximumPreviousXaps"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AlwayElevate {
+            get {
+                return ((bool)(this["AlwayElevate"]));
+            }
+            set {
+                this["AlwayElevate"] = value;
+            }
+        }
     }
 }
