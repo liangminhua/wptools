@@ -45,11 +45,9 @@
                                 <Setter Property="Foreground" Value="Gray" />
                             </Trigger>
                         </Style.Triggers>
-                        <Setter Property="TextBlock.TextDecorations" Value="{x:Null}"></Setter>
                         <Setter Property="Foreground" Value="Black"></Setter>
                         <Setter Property="FontSize" Value="12"></Setter>
                         <Setter Property="FontFamily" Value="Segoe UI, Verdana"></Setter>
-                        <Setter Property="Cursor" Value="Arrow"></Setter>
                     </Style>
 
                     <Style x:Key="DeviceInfoHeader" TargetType="TextBlock">
@@ -257,8 +255,8 @@
                         <TextBlock Style="{StaticResource MetroSmallHeader}" VerticalAlignment="Center" Visibility="{Binding IsElevated, ElementName=TheWindow, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=True}">
                             <Hyperlink Style="{StaticResource MetroLink}" Name="btnLaunchElevated" Click="btnLaunchElevated_Click">LAUNCH ELEVATED</Hyperlink>
                         </TextBlock>
-                        <TextBlock Margin="75,0,0,0" Style="{StaticResource MetroSmallHeader}" FontSize="12" VerticalAlignment="Center" Visibility="{Binding IsElevated, ElementName=TheWindow, Converter={StaticResource BoolToVisibilityConverter}}" Foreground="Red">
-                        ELEVATED
+                        <TextBlock Margin="0,0,0,0" Style="{StaticResource MetroSmallHeader}" FontSize="12" VerticalAlignment="Center" Visibility="{Binding IsElevated, ElementName=TheWindow, Converter={StaticResource BoolToVisibilityConverter}}" Foreground="Red">
+                        RUNNING ELEVATED
                         </TextBlock>
                     </StackPanel>
                 </Canvas>
