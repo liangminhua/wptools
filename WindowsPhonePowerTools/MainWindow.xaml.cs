@@ -442,7 +442,7 @@ namespace WindowsPhonePowerTools
 
             item.Update();
 
-            stackFileProperties.DataContext = item.RemoteFile;
+            stackFileProperties.DataContext = item.RemoteFileInfo;
         }
 
         #region TreeView DragDrop

@@ -41,6 +41,17 @@ namespace WindowsPhone.Tools
             }
         }
 
+        public static RemoteFileInfo GetInternalRemoteFileInfo(this IRemoteFileInfo wrapperRemoteFileInfo)
+        {
+            BindingFlags eFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            var fieldInfo = (typeof(RemoteFileInfoObject)).GetField("mRemoteFileInfo", eFlags);
+            
+            if (fieldInfo != null)
+                return fieldInfo.GetValue(wrapperRemoteFileInfo) as RemoteFileInfo;
+
+            return null;
+        }
+
         /// <summary>
         /// We need access to the actual RemoteIsolatedStorageFile object since the wrapper doesn't expost a DeleteFile method
         /// so get to it via reflection

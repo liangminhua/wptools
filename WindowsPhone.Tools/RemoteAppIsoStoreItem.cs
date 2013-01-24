@@ -33,6 +33,7 @@ namespace WindowsPhone.Tools
         public bool IsApplication { get; set; }
 
         public IRemoteFileInfo RemoteFile { get; private set; }
+        public RemoteFileInfo  RemoteFileInfo { get; private set; }
 
         /// <summary>
         /// The weird and wonderful world of Icons. Will either return a stream with the icon in it
@@ -107,8 +108,9 @@ namespace WindowsPhone.Tools
             _appEx = app;
             Parent = parent;
 
-            RemoteFile = remoteFile;
-            
+            RemoteFile     = remoteFile;
+            RemoteFileInfo = remoteFile.GetInternalRemoteFileInfo();
+
             string name = RemoteFile.Name;
 
             Name = Path.GetFileName(name);
