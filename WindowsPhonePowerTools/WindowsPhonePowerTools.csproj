@@ -34,8 +34,8 @@
     <MinimumRequiredVersion>1.0.0.32</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>38</ApplicationRevision>
-    <ApplicationVersion>2.04.0.%2a</ApplicationVersion>
+    <ApplicationRevision>39</ApplicationRevision>
+    <ApplicationVersion>2.041.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>

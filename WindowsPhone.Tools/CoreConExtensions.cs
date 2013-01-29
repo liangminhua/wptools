@@ -45,9 +45,17 @@ namespace WindowsPhone.Tools
         {
             BindingFlags eFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
             var fieldInfo = (typeof(RemoteFileInfoObject)).GetField("mRemoteFileInfo", eFlags);
-            
+
             if (fieldInfo != null)
-                return fieldInfo.GetValue(wrapperRemoteFileInfo) as RemoteFileInfo;
+            {
+                // An exception will be thrown when referencing CoreCon 10 objects since it won't contain the field on this particular
+                // wrapper object (so fall through and return null)
+                try
+                {
+                    return fieldInfo.GetValue(wrapperRemoteFileInfo) as RemoteFileInfo;
+                }
+                catch { }
+            }
 
             return null;
         }

@@ -33,7 +33,13 @@ namespace WindowsPhone.Tools
         public bool IsApplication { get; set; }
 
         public IRemoteFileInfo RemoteFile { get; private set; }
-        public RemoteFileInfo  RemoteFileInfo { get; private set; }
+
+        /// <summary>
+        /// So, why is this an Object? RemoteFileInfo needs to be polymorphic, accepting
+        /// either a RemoteFileInfo or, when that is not available, an IRemoteFileInfo.
+        /// This makes binding a lot easier (bind to RemoteFileInfo without caring about the type)
+        /// </summary>
+        public object RemoteFileInfo { get; private set; }
 
         /// <summary>
         /// The weird and wonderful world of Icons. Will either return a stream with the icon in it
@@ -109,7 +115,10 @@ namespace WindowsPhone.Tools
             Parent = parent;
 
             RemoteFile     = remoteFile;
-            RemoteFileInfo = remoteFile.GetInternalRemoteFileInfo();
+
+            // if we can't get the internal object, set it back to the default, which is remoteFile itself.
+            // remoteFile only exposes a subset of properties, but these are better than none
+            RemoteFileInfo = (object)remoteFile.GetInternalRemoteFileInfo() ?? (object)remoteFile;
 
             string name = RemoteFile.Name;
 
