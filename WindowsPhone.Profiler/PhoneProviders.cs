@@ -132,10 +132,12 @@ namespace WindowsPhone.Profiler
             standard.KernelFlags["PROC_THREAD"].IsEnabled = true;
             standard.KernelFlags["LOADER"].IsEnabled = true;
             standard.KernelFlags["DISK_IO"].IsEnabled = true;
+            standard.KernelFlags["DISK_IO_INIT"].IsEnabled = true;
             standard.KernelFlags["HARD_FAULTS"].IsEnabled = true;
             standard.KernelFlags["PROFILE"].IsEnabled = true;
             standard.KernelFlags["MEMORY"].IsEnabled = true;
             standard.KernelFlags["CSWITCH"].IsEnabled = true;
+            standard.KernelFlags["DISPATCHER"].IsEnabled = true;
             standard.KernelFlags["INTERRUPT"].IsEnabled = true;
 
             standard.KernelStackFlags["PROC_THREAD"].IsEnabled = true;
