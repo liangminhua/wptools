@@ -27,14 +27,14 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>http://wptools.codeplex.com/releases/clickonce/</InstallUrl>
+    <InstallUrl>https://wptools.codeplex.com/releases/clickonce/</InstallUrl>
     <SupportUrl>http://wptools.codeplex.com</SupportUrl>
     <ProductName>Windows Phone Power Tools</ProductName>
     <PublisherName>Oren Nachman</PublisherName>
     <MinimumRequiredVersion>1.0.0.32</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>40</ApplicationRevision>
+    <ApplicationRevision>42</ApplicationRevision>
     <ApplicationVersion>2.041.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
