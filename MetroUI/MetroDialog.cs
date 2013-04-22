@@ -55,7 +55,7 @@ namespace MetroUI
             Close();
         }
 
-        public void Show()
+        public void Open()
         {
             Visibility = System.Windows.Visibility.Visible;
         }

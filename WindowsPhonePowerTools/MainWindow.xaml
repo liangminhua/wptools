@@ -58,6 +58,9 @@
                         <Setter Property="Margin" Value="-10,3,-10,3"></Setter>
                     </Style>
 
+                    <ControlTemplate x:Key="NoScrollList">
+                        <ItemsPresenter></ItemsPresenter>
+                    </ControlTemplate>
                 </ResourceDictionary>
 
             </ResourceDictionary.MergedDictionaries>
@@ -93,6 +96,7 @@
                                 <TextBox Height="22" Grid.Column="0" Margin="0,0,12,0" Name="txtXapFile" VerticalAlignment="Top" />
                                 <Button Content="Browse" Height="24" HorizontalAlignment="Left" Grid.Column="1" Name="btnBrowse" VerticalAlignment="Top" Width="77" Click="btnBrowse_Click" />
                             </Grid>
+                                                        
                             <Button Content="Install" Height="24" HorizontalAlignment="Left" Margin="8,70,0,0" Name="btnInstall" VerticalAlignment="Top" Width="77" Click="btnInstall_Click" />
                             <Button Content="Update" Height="24" HorizontalAlignment="Left" Margin="104,70,0,0" Name="btnUpdate" VerticalAlignment="Top" Width="77" Click="btnUpdate_Click" />
                             <TextBlock Height="23" HorizontalAlignment="Left" Margin="8,15,0,0" Name="textBlock1" VerticalAlignment="Top" Width="513">XAP Path (select multiple files by hitting browse, or by separating names with a semi-colon (;) ):</TextBlock>
@@ -211,7 +215,167 @@
                         <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Margin="5,0,0,0">Note: App names will appear as GUIDs unless they have been installed or updated with this tool</TextBlock>
                     </Grid>
                 </MetroUI:NavigationButton>
-                <MetroUI:NavigationButton Source="/images/navbuttons/profiler.png" Text="Profiler"  OnSelectionChanged="NavigationButton_OnSelectionChanged"/>
+                <MetroUI:NavigationButton Source="/images/navbuttons/profiler.png" Text="Profiler" OnSelectionChanged="NavigationButton_OnSelectionChanged">
+
+                    <Grid x:Name="gridProfiler" IsEnabled="{Binding Device.Connected}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="70"></RowDefinition>
+                            <RowDefinition Height="280*"></RowDefinition>
+                            <RowDefinition Height="12"></RowDefinition>
+                        </Grid.RowDefinitions>
+
+                        <Button Content="Start" Grid.Row="0" Height="40" Width="70" Margin="400,5,0,0" HorizontalAlignment="Left" VerticalAlignment="top" Click="btnProfilerStart_Click"></Button>
+                        
+                        <Grid Grid.Row="0">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25"></RowDefinition>
+                                <RowDefinition Height="5"></RowDefinition>
+                                <!-- buffer space -->
+                                <RowDefinition Height="25"></RowDefinition>
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="90"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            
+                            <!-- app target -->
+                            <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">App To Profile:</TextBlock>
+                            <Canvas Grid.Row="0" Grid.Column="1">
+                                <!-- combobox template has an issue with being the parent in the grid -->
+                                <ComboBox Width="300" x:Name="cmbProfilerTargetApp" ItemsSource="{Binding Device.InstalledApplications}" SelectedItem="{Binding ProfilerSession.TargetApp, Mode=TwoWay}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Margin="0,1.5,0,1.5">
+                                                <Image Height="20" Width="20" Margin="0,0,4,0" Source="{Binding Icon, Converter={StaticResource StreamToBitmapImageConverter}}"></Image>
+                                                <TextBlock Text="{Binding Name}"></TextBlock>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+
+                            </Canvas>
+
+                            <!-- Presets -->
+                            <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Session:</TextBlock>
+                            <Canvas Grid.Row="2" Grid.Column="1">
+                                <ComboBox Width="300" x:Name="cmbProfilerPredefinedSessions" ItemsSource="{Binding EtwProfiler.PredefinedSessions}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Key}"></TextBlock>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </Canvas>
+                        </Grid>
+
+                        <Expander Grid.Row="1" Header="Advanced">
+                            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="12,12,0,0">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                    <RowDefinition Height="25"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                
+                                <ScrollViewer x:Name="lstAdvancedSession" Grid.Column="0" Grid.Row="0" Margin="0,0,6,012" DataContext="{Binding ProfilerSession}">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Style="{x:Null}" Tag="lstKernelFlags" Content="-" Click="btnCollapseProviderList_Click" VerticalContentAlignment="Top" Margin="0,0,2,0" Padding="0,-4,0,0" Width="12" MaxWidth="12" Height="12" MaxHeight="12"></Button>
+                                            <TextBlock Margin="6,0,0,0" ToolTip="Kernel Event Providers">Kernel Flags</TextBlock>
+                                        </StackPanel>
+                                        <ListBox Template="{StaticResource NoScrollList}" x:Name="lstKernelFlags" ItemsSource="{Binding KernelFlags}" Margin="24,0,0,0" BorderBrush="{x:Null}">
+                                            <ListBox.ItemContainerStyle>
+                                                <Style TargetType="{x:Type ListBoxItem}">
+                                                    <EventSetter Event="MouseDoubleClick" Handler="ProfilerList_DoubleClick" />
+                                                </Style>
+                                            </ListBox.ItemContainerStyle>
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal" ToolTip="{Binding Value.Description}">
+                                                        <CheckBox IsChecked="{Binding Value.IsEnabled}"></CheckBox>
+                                                        <TextBlock Text="{Binding Value.Name}"></TextBlock>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Style="{x:Null}" Tag="lstKernelStackFlags" Content="-" Click="btnCollapseProviderList_Click" VerticalContentAlignment="Top" Margin="0,0,2,0" Padding="0,-4,0,0" Width="12" MaxWidth="12" Height="12" MaxHeight="12"></Button>
+                                            <TextBlock Margin="6,0,0,0" ToolTip="Kernel Event Providers that when hit will collect a stack trace">Kernel Stack Flags</TextBlock>
+                                        </StackPanel>
+                                        <ListBox Template="{StaticResource NoScrollList}" x:Name="lstKernelStackFlags" ItemsSource="{Binding KernelStackFlags}" Margin="24,0,0,0" BorderBrush="{x:Null}">
+                                            <ListBox.ItemContainerStyle>
+                                                <Style TargetType="{x:Type ListBoxItem}">
+                                                    <EventSetter Event="MouseDoubleClick" Handler="ProfilerList_DoubleClick" />
+                                                </Style>
+                                            </ListBox.ItemContainerStyle>
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal" ToolTip="{Binding Value.Description}">
+                                                        <CheckBox IsChecked="{Binding Value.IsEnabled}"></CheckBox>
+                                                        <TextBlock Text="{Binding Value.Name}"></TextBlock>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Style="{x:Null}" Tag="lstProviders" Content="-" Click="btnCollapseProviderList_Click" VerticalContentAlignment="Top" Margin="0,0,2,0" Padding="0,-4,0,0" Width="12" MaxWidth="12" Height="12" MaxHeight="12"></Button>
+                                            <TextBlock Margin="6,0,0,0">Common Providers</TextBlock>
+                                        </StackPanel>
+                                        <ListBox Template="{StaticResource NoScrollList}" x:Name="lstProviders" ItemsSource="{Binding Providers}" Margin="24,0,0,0" BorderBrush="{x:Null}">
+                                            <ListBox.ItemContainerStyle>
+                                                <Style TargetType="{x:Type ListBoxItem}">
+                                                    <EventSetter Event="MouseDoubleClick" Handler="ProfilerList_DoubleClick" />
+                                                </Style>
+                                            </ListBox.ItemContainerStyle>
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <CheckBox IsChecked="{Binding Value.IsEnabled}"></CheckBox>
+                                                        <TextBlock Text="{Binding Value.Name}"></TextBlock>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </StackPanel>
+                                </ScrollViewer>
+
+                                <StackPanel Grid.ColumnSpan="2" Grid.Row="1" Orientation="Horizontal">
+                                    <TextBlock VerticalAlignment="Center">Open ETL With: </TextBlock>
+                                    <Canvas Margin="12,0,0,0">
+                                        <ComboBox Width="200">
+                                            <TextBlock>WPA</TextBlock>
+                                            <TextBlock>Add Custom...</TextBlock>
+                                        </ComboBox>
+                                    </Canvas>
+                                </StackPanel>
+                                
+                                
+                                <!--
+                            <StackPanel Grid.Column="1" Margin="6,0,0,0" DataContext="{Binding Source={x:Reference lstProviders}, Path=SelectedItem.Value}" Visibility="{Binding KernelMode, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=True}">
+                                <TextBlock>Name:</TextBlock>
+                                <TextBox Text="{Binding Name}"></TextBox>
+                                <TextBlock>GUID:</TextBlock>
+                                <TextBox Text="{Binding GUID}"></TextBox>
+                                <TextBlock>Level:</TextBlock>
+                                <ComboBox></ComboBox>
+                                <TextBlock>Keywords:</TextBlock>
+                                <TextBox Text="{Binding HexKeywords}"></TextBox>
+                                <CheckBox Content="CLR" IsChecked="{Binding CLR}"></CheckBox>
+                                <Button x:Name="btnProfilerRemoveProvider" Content="Remove"></Button>
+                            </StackPanel>
+                            -->
+
+                            </Grid>
+                        </Expander>
+                    </Grid>
+
+                </MetroUI:NavigationButton>
             </MetroUI:NavigationMenu>
 
             <MetroUI:MetroDialog x:Name="dialogError" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -222,11 +386,24 @@
                 </Canvas>
             </MetroUI:MetroDialog>
 
+            <!-- TODO: move to some kind of binding model -->
+            <MetroUI:MetroDialog x:Name="dialogProfilerStatus" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Canvas>
+                    <MetroControls:ProgressIndicator Canvas.Top="10" Canvas.Left="55" Height="3" Width="500" ProgressColour="White"></MetroControls:ProgressIndicator>
+
+                    <TextBlock FontSize="20" FontWeight="Bold" Canvas.Top="20" Canvas.Left="55" x:Name="txtProfilerStatus"></TextBlock>
+                    <TextBlock Canvas.Left="55" Canvas.Top="60" Width="500" FontSize="16" TextWrapping="Wrap" x:Name="txtProfilerStatusMoreInformation"></TextBlock>
+
+                    <Button x:Name="btnStopProfiling" Content="STOP" Click="btnStopProfiling_Click" Height="22" Width="73" FontFamily="Segoe WP" Canvas.Left="311" Canvas.Top="150"></Button>
+                    <!-- TODO: provide a way to cancel (as opposed to stop) a profile? -->
+                </Canvas>
+            </MetroUI:MetroDialog>
+
             <MetroUI:MetroDialog x:Name="dialogSettings" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Canvas>
                     <TextBlock FontSize="20" FontWeight="Bold" Canvas.Left="54">Oh Oh! An error has occurred</TextBlock>
                     <TextBlock Canvas.Left="16" Canvas.Top="55" Width="370" Text="{Binding ErrorString}" FontSize="16" TextWrapping="Wrap"></TextBlock>
-                    <Button Style="{StaticResource WindowsMetroButtonStyle}" x:Name="btnCloseSettingsDialog" Content="Cancel" Click="btnCloseConnectDialog_Click"  Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverter}}" Height="22" Width="73" Canvas.Left="250" Canvas.Top="136"></Button>
+                    <Button Style="{StaticResource WindowsMetroButtonStyle}" x:Name="btnCloseSettingsDialog" Content="Cancel" Click="btnCloseConnectDialog_Click" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverter}}" Height="22" Width="73" Canvas.Left="250" Canvas.Top="136"></Button>
                 </Canvas>
             </MetroUI:MetroDialog>
 
@@ -265,6 +442,7 @@
                         RUNNING ELEVATED
                         </TextBlock>
                     </StackPanel>
+
                 </Canvas>
             </MetroUI:MetroDialog>
 

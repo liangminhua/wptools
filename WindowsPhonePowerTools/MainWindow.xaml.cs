@@ -5,6 +5,7 @@ using Microsoft.SmartDevice.Connectivity.Interface;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -13,6 +14,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security.Principal;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,6 +24,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WindowsPhone.Profiler;
 using WindowsPhone.Tools;
 
 namespace WindowsPhonePowerTools
@@ -48,7 +51,7 @@ namespace WindowsPhonePowerTools
             LoadPreviousXaps();
 
             // show the connect dialog
-            dialogConnect.Show();
+            dialogConnect.Open();
         }
 
         private void NavigationButton_OnSelectionChanged(object sender, EventArgs e)
@@ -77,6 +80,40 @@ namespace WindowsPhonePowerTools
                 if (_device != value)
                 {
                     _device = value;
+
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private Profiler _etwProfiler;
+        public Profiler EtwProfiler
+        {
+            get { return _etwProfiler; }
+            set
+            {
+                if (_etwProfiler != value)
+                {
+                    _etwProfiler = value;
+
+                    NotifyPropertyChanged();
+
+                    // new Profiler? New Session...
+                    // TODO: consider adding this into Profiler itself
+                    ProfilerSession = new ProfilerSession();
+                }
+            }
+        }
+
+        private ProfilerSession _profilerSession;
+        public ProfilerSession ProfilerSession
+        {
+            get { return _profilerSession; }
+            set
+            {
+                if (_profilerSession != value)
+                {
+                    _profilerSession = value;
 
                     NotifyPropertyChanged();
                 }
@@ -128,7 +165,7 @@ namespace WindowsPhonePowerTools
         }
 
         // used to determine that there are no previous xaps
-        private static string[] _noXapPathsList = new string[] {"* No previous Xaps *"};
+        private static string[] _noXapPathsList = new string[] { "* No previous Xaps *" };
         private string[] _previouseXapPaths = null;
         public string[] PreviousXapPaths
         {
@@ -175,29 +212,44 @@ namespace WindowsPhonePowerTools
         {
             Analytics.Instance.Track(Analytics.Categories.PowerTools, "Connect", _device.CurrentConnectableDevice.Name);
             _device.Connect();
-
+            
             if (_device.Connected)
+            {
                 dialogConnect.Close();
+                EtwProfiler = Profiler.Get(_device);
+            }
         }
 
         private void btnLaunchElevated_Click(object sender, RoutedEventArgs e)
         {
+            RelaunchProgramElevated();
+        }
+
+        private Process RelaunchProgramElevated(string args = null, bool shutdownAfterLaunch = true)
+        {
+            Process rv = null;
             ProcessStartInfo processInfo = new ProcessStartInfo(Assembly.GetExecutingAssembly().CodeBase);
 
             // relaunch with runas to get elevated
             processInfo.UseShellExecute = true;
             processInfo.Verb = "runas";
 
+            if (!string.IsNullOrEmpty(args))
+                processInfo.Arguments = args;
+
             try
             {
-                Process.Start(processInfo);
+                rv = Process.Start(processInfo);
 
                 // only shutdown if we launch successfully
-                Application.Current.Shutdown();
+                if (shutdownAfterLaunch)
+                    Application.Current.Shutdown();
             }
             catch (Exception)
             {
             }
+
+            return rv;
         }
 
         #endregion
@@ -733,11 +785,183 @@ namespace WindowsPhonePowerTools
 
         #endregion
 
+        #region Profiler
+
+        private void btnProfilerAddToSession_Click(object sender, RoutedEventArgs e)
+        {
+            if (cmbProfilerPredefinedSessions.SelectedItem == null)
+                return;
+
+            var kvpSession = (KeyValuePair<string, List<EtwProviderType>>)cmbProfilerPredefinedSessions.SelectedItem;
+
+            var predefinedSession = kvpSession.Value;
+
+            foreach (var provider in predefinedSession)
+            {
+                ProfilerSession.Providers[provider.Name].IsEnabled = true;
+            }
+
+        }
+
+        private void btnProfilerStart_Click(object sender, RoutedEventArgs e)
+        {
+            if (ProfilerSession.IsValid)
+            {
+                Task.Run(() => RunProfiler());
+            }
+            else
+            {
+                MessageBox.Show("We're missing some required information to start a profiling session. Make sure you've selected the target application and that at least one provider / kernel flag is selected.", "Missing information", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+        }
+
+        private void RunProfiler()
+        {
+            if (!Profiler.ProfilerConfiguredLocally())
+            {
+                try
+                {
+                    Profiler.ConfigureProfilerLocally();
+                }
+                catch
+                {
+                    if (!ConfigureProfilerElevated())
+                        return;
+
+                    // at this point we have attempted to configure the profiler elevated
+                    // if we're still failing then something else is at play
+
+                    if (!Profiler.ProfilerConfiguredLocally())
+                    {
+                        MessageBox.Show(
+@"Unfortunately something went wrong and we couldn't configure the profiler - even though we tried to elevate. 
+
+Here's some things you could try:
+
+° Try this again (make sure you hit 'Yes' on the elevation prompt)
+
+° Make sure the SDK is installed and that you can profile a native Windows Phone project
+
+° The file we tried to write to is: " + Profiler.WPTOOLS_PACKAGE_PATH + @" make sure that you have write access to that location and try again
+", "Profiler Setup Failed!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                        return;
+                    }
+                }
+            }
+
+            // TODO: maybe at some point this warning can just be shown statically in the UI
+            if (!File.Exists(Profiler.XPERF_PATH))
+            {
+                MessageBox.Show("We could not find xperf, so local merging will be skipped. Your profiling session will still continue.\n\nMore Information: https://wptools.codeplex.com/wikipage?title=No%20xperf");
+            }
+
+            EtwProfiler.StatusUpdated += EtwProfiler_StatusUpdated;
+
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                // TODO: this step shouldn't be here, since it's logic that is specific to the dialog, rather the enabled state
+                //       should bind to the profiling state
+                btnStopProfiling.IsEnabled = true;
+                dialogProfilerStatus.Open();
+            }));
+
+            EtwProfiler.StartProfiling(ProfilerSession);
+
+            EtwProfiler.WaitForProfilingStop(@"c:\temp\first_ever.vspx");
+
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                dialogProfilerStatus.Close();
+            }));
+        }
+
+        private void btnStopProfiling_Click(object sender, RoutedEventArgs e)
+        {
+            btnStopProfiling.IsEnabled = false;
+            EtwProfiler.StopProfiling();
+        }
+
+        void EtwProfiler_StatusUpdated(object sender, ProfilerStatusUpdatedArgs e)
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                // only enable this button when we're not profiling
+                btnStopProfiling.IsEnabled = (e.State == ProfilerState.Profiling);
+
+                txtProfilerStatus.Text = e.State.ToString();
+                txtProfilerStatusMoreInformation.Text = e.Message;
+            }));
+        }
+
+        private bool ConfigureProfilerElevated()
+        {
+            if (MessageBox.Show(
+@"We need to configure the Windows Phone Power Tools profiling pacakage on your machine. This is a one off operation that requires administrative privileges.
+
+May we continue?", "Configure Profiler?", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+            {
+                return false;
+            }
+
+            var proc = RelaunchProgramElevated(App.ARG_INSTALL_PROFILER, false);
+            proc.WaitForExit();
+
+            return true;
+        }
+
+        void ProfilerList_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ListBoxItem item = sender as ListBoxItem;
+
+            if (item != null)
+            {
+                if (item.DataContext is KeyValuePair<string, EtwProviderType>)
+                {
+                    EtwProviderType provider = ((KeyValuePair<string, EtwProviderType>)item.DataContext).Value;
+
+                    provider.IsEnabled = !provider.IsEnabled;
+                }
+                else if (item.DataContext is KeyValuePair<string, EtwKernelFlag>)
+                {
+                    EtwKernelFlag flag = ((KeyValuePair<string, EtwKernelFlag>)item.DataContext).Value;
+
+                    flag.IsEnabled = !flag.IsEnabled;
+                }
+            }
+        }
+
+        private void btnCollapseProviderList_Click(object sender, RoutedEventArgs e)
+        {
+            var collapseButton = (Button)sender;
+            var collapseTargetName = (string)(collapseButton).Tag;
+
+            if (collapseTargetName != null)
+            {
+                var collapseTarget = this.FindName(collapseTargetName) as ListBox;
+
+                if (collapseTarget != null)
+                {
+                    if ((string)collapseButton.Content == "-")
+                    {
+                        collapseButton.Content = "+";
+                        collapseTarget.Visibility = System.Windows.Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        collapseButton.Content = "-";
+                        collapseTarget.Visibility = System.Windows.Visibility.Visible;
+                    }
+                }
+            }
+        }
+
+        #endregion
+
         #region General UI Features
 
         private void btnLaunchConnect_Click(object sender, RoutedEventArgs e)
         {
-            dialogConnect.Show();
+            dialogConnect.Open();
         }
 
         private void btnCloseConnectDialog_Click(object sender, RoutedEventArgs e)
@@ -759,7 +983,7 @@ namespace WindowsPhonePowerTools
         {
             dialogSettings.Close();
         }
-        
+
         private void RestoreWindowSizeAndPos()
         {
 
@@ -784,7 +1008,7 @@ namespace WindowsPhonePowerTools
             if (WindowState == WindowState.Maximized)
             {
                 // Use the RestoreBounds as the current values will be 0, 0 and the size of the screen
-                
+
                 Properties.Settings.Default.WindowHeight = RestoreBounds.Height;
                 Properties.Settings.Default.WindowWidth = RestoreBounds.Width;
 
@@ -802,7 +1026,7 @@ namespace WindowsPhonePowerTools
                 Properties.Settings.Default.WindowTop = this.Top;
 
                 Properties.Settings.Default.WindowMaximised = false;
-           }
+            }
 
             Properties.Settings.Default.Save();
         }
@@ -850,7 +1074,7 @@ namespace WindowsPhonePowerTools
             if (maxXaps > 0)
             {
                 List<string> test = new List<string>();
-                
+
                 // StringCollection doesn't have a RemoveRange, oneday will move to serializing a List<string>
                 while (Properties.Settings.Default.PreviousXapPaths.Count > maxXaps)
                 {
