@@ -170,7 +170,7 @@ namespace WindowsPhonePowerTools
                 }
 
                 MessageBox.Show(
-                    "Oops - we've run into an exception that we didn't anticipate. Please file a bug at http://wptools.codebox.com (unless the text of the exception is expected).\n\n" + errString,
+                    "Oops - we've run into an exception that we didn't anticipate. Please file a bug at http://wptools.codeplex.com (unless the text of the exception is expected).\n\n" + errString,
                     "Unhandled Exception in Windows Phone Power Tools",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
