@@ -18,7 +18,7 @@ namespace WindowsPhonePowerTools
 
         #endregion
 
-        public enum Categories { PowerTools, Device, App, IsoStore };
+        public enum Categories { PowerTools, Device, App, IsoStore, Profiler };
 
         private Tracker _tracker;
 

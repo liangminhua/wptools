@@ -817,6 +817,8 @@ namespace WindowsPhonePowerTools
 
         private void RunProfiler()
         {
+            Analytics.Instance.Track(Analytics.Categories.Profiler, "Profile");
+
             if (!Profiler.ProfilerConfiguredLocally())
             {
                 try
@@ -867,6 +869,8 @@ Here's some things you could try:
                 dialogProfilerStatus.Open();
             }));
 
+            AnalyticsTrackEnabledProviders();
+
             EtwProfiler.StartProfiling(ProfilerSession);
 
             EtwProfiler.WaitForProfilingStop(etl);
@@ -879,6 +883,33 @@ Here's some things you could try:
             }));
         }
 
+        private void AnalyticsTrackEnabledProviders()
+        {
+            // track the scenario name
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                var scenarioName = ((KeyValuePair<string, ProfilerSession>)(cmbProfilerPredefinedSessions.SelectedValue)).Key;
+                Analytics.Instance.Track(Analytics.Categories.Profiler, "Scenario", scenarioName);
+            }));
+
+            // track the different flags and providers that are selected
+            foreach (var flag in ProfilerSession.KernelFlags)
+            {
+                Analytics.Instance.Track(Analytics.Categories.Profiler, "KernelFlags", flag.Key);
+            }
+
+            foreach (var flag in ProfilerSession.KernelStackFlags)
+            {
+                Analytics.Instance.Track(Analytics.Categories.Profiler, "KernelStackFlags", flag.Key);
+            }
+
+            foreach (var provider in ProfilerSession.Providers)
+            {
+                Analytics.Instance.Track(Analytics.Categories.Profiler, "EnabledProviders", provider.Key);
+            }
+
+        }
+
         private void OpenEtl(string etl)
         {
             if (File.Exists(Profiler.WPA_PATH))
@@ -889,6 +920,8 @@ Here's some things you could try:
 
         private void btnStopProfiling_Click(object sender, RoutedEventArgs e)
         {
+            Analytics.Instance.Track(Analytics.Categories.Profiler, "ManualStop");
+
             btnStopProfiling.IsEnabled = false;
             EtwProfiler.StopProfiling();
         }
