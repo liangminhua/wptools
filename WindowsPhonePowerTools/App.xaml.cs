@@ -41,7 +41,6 @@ namespace WindowsPhonePowerTools
                 //MessageBox.Show(arg);
                 if (arg == ARG_INSTALL_PROFILER)
                 {
-                    System.Diagnostics.Debugger.Break();
                     WindowsPhone.Profiler.Profiler.ConfigureProfilerLocally();
                     Application.Current.Shutdown();
                 }
