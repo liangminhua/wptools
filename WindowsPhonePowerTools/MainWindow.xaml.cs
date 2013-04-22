@@ -851,8 +851,10 @@ Here's some things you could try:
                 }
             }
 
-            string etl = @"c:\temp\first_ever.etl";
-
+            string etl = System.IO.Path.Combine(
+                System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),
+                DateTime.Now.ToString("yyyymmdd_HHmm") + ".etl");
+            
             // TODO: maybe at some point this warning can just be shown statically in the UI
             if (!File.Exists(Profiler.XPERF_PATH))
             {
