@@ -117,6 +117,8 @@ namespace WindowsPhone.Tools
                     zip.ExtractFile(entry, rv);
 
                     rv.Seek(0, SeekOrigin.Begin);
+
+                    break;
                 }
             }
 
