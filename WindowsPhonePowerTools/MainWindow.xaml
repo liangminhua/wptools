@@ -260,7 +260,7 @@
                             <!-- Presets -->
                             <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Scenario:</TextBlock>
                             <Canvas Grid.Row="2" Grid.Column="1">
-                                <ComboBox Width="300" x:Name="cmbProfilerPredefinedSessions" ItemsSource="{Binding EtwProfiler.PredefinedSessions}">
+                                <ComboBox Width="300" x:Name="cmbProfilerPredefinedSessions" ItemsSource="{Binding EtwProfiler.PredefinedScenarios}" SelectedIndex="0" SelectionChanged="cmbProfilerPredefinedSessions_SelectionChanged">
                                     <ComboBox.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding Key}"></TextBlock>
@@ -298,7 +298,7 @@
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal" ToolTip="{Binding Value.Description}">
-                                                        <CheckBox IsChecked="{Binding Value.IsEnabled}"></CheckBox>
+                                                        <CheckBox IsChecked="{Binding Value.IsEnabled}" Click="ProfilerList_Click"></CheckBox>
                                                         <TextBlock Text="{Binding Value.Name}"></TextBlock>
                                                     </StackPanel>
                                                 </DataTemplate>
@@ -317,7 +317,7 @@
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal" ToolTip="{Binding Value.Description}">
-                                                        <CheckBox IsChecked="{Binding Value.IsEnabled}"></CheckBox>
+                                                        <CheckBox IsChecked="{Binding Value.IsEnabled}" Click="ProfilerList_Click"></CheckBox>
                                                         <TextBlock Text="{Binding Value.Name}"></TextBlock>
                                                     </StackPanel>
                                                 </DataTemplate>
@@ -336,7 +336,7 @@
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal">
-                                                        <CheckBox IsChecked="{Binding Value.IsEnabled}"></CheckBox>
+                                                        <CheckBox IsChecked="{Binding Value.IsEnabled}" Click="ProfilerList_Click"></CheckBox>
                                                         <TextBlock Text="{Binding Value.Name}"></TextBlock>
                                                     </StackPanel>
                                                 </DataTemplate>

@@ -967,6 +967,56 @@ May we continue?", "Configure Profiler?", MessageBoxButton.YesNo, MessageBoxImag
             }
         }
 
+        private void cmbProfilerPredefinedSessions_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                // grab the ProfilerSession that represents this scenario
+                var scenario = ((KeyValuePair<string, ProfilerSession>)cmbProfilerPredefinedSessions.SelectedItem).Value;
+
+                // ignore the custom scenario
+                if (scenario.IsCustom)
+                    return;
+
+                // reset the current session to the settings in the selected scenario
+                foreach (var flag in ProfilerSession.KernelFlags.Values)
+                {
+                    flag.IsEnabled = scenario.KernelFlags[flag.Name].IsEnabled;
+                }
+
+                foreach (var flag in ProfilerSession.KernelStackFlags.Values)
+                {
+                    flag.IsEnabled = scenario.KernelStackFlags[flag.Name].IsEnabled;
+                }
+
+                foreach (var provider in ProfilerSession.Providers.Values)
+                {
+                    provider.IsEnabled = scenario.Providers[provider.Name].IsEnabled;
+                }
+            }
+            catch { }
+        }
+
+        private KeyValuePair<string, ProfilerSession> _customProfilerSession;
+
+        private void ProfilerList_Click(object sender, RoutedEventArgs e)
+        {
+            if (_customProfilerSession.Value == null)
+            {
+                // find the KVP for the custom session
+                foreach (var kvp in Profiler.PredefinedScenarios)
+                {
+                    if (kvp.Key == "Custom")
+                    {
+                        _customProfilerSession = kvp;
+                        break;
+                    }
+                }
+            }
+
+            cmbProfilerPredefinedSessions.SelectedValue = _customProfilerSession;
+        }
+
         #endregion
 
         #region General UI Features

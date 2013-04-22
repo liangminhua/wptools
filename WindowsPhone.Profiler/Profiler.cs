@@ -405,7 +405,7 @@ namespace WindowsPhone.Profiler
         /// There is an event to receive the file from the profiler, but we'll only implement that if this turns out to be unreliable
         /// </summary>
         /// <param name="targetFilename"></param>
-        public void CopyVspx(string targetFilename)
+        private void CopyVspx(string targetFilename)
         {
             string sourceDeviceFileName;
             long oldSize = -1;

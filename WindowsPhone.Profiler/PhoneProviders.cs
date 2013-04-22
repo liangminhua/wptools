@@ -8,34 +8,6 @@ namespace WindowsPhone.Profiler
 {
     public partial class Profiler
     {
-
-//            set TRACE_TESTFRAMEWORK=31293f4f-f7bb-487d-8b3b-f537b827352f
-//set TRACE_TEST=42C4E0C1-0D92-46f0-842C-1E791FA78D52
-//             * 
-//set TRACE_DXC=802ec45a-1e99-4b83-9920-87c98277ba9d
-//set TRACE_DXC_STACKS=%TRACE_DXC%:0x41:5:'stack'
-//set TRACE_DXC_NORMAL=%TRACE_DXC%:0xA36:5
-//             * 
-//set TRACE_UMD=a688ee40-d8d9-4736-b6f9-6b74935ba3b1:ffff:5
-//set TRACE_DXGI=CA11C036-0102-4A2D-A6AD-F03CFED5D3C9:0xf:6:'stack'
-//             * 
-//set TRACE_D3D11=db6f6ddb-ac77-4e88-8253-819df9bbf140:ffffffffffffffff:6:'stack'
-//             * 
-//set TRACE_D3D10LEVEL9=7E7D3382-023C-43cb-95D2-6F0CA6D70381:0x1
-//             * 
-//set TRACE_DSHOW=28cf047a-2437-4b24-b653-b9446a419a69
-//             * 
-//set TRACE_MF=f404b94e-27e0-4384-bfe8-1d8d390b0aa3+362007f7-6e50-4044-9082-dfa078c63a73:0x000000000000ffff:0x5
-//             * 
-//set TRACE_AE=a6a00efd-21f2-4a99-807e-9b3bf1d90285:0x000000000000ffff:0x3
-//             * 
-//set TRACE_DXVA2=a0386e75-f70c-464c-a9ce-33c44e091623:ffff:5
-//             * 
-//set TRACE_WME=8f2048e0-f260-4f57-a8d1-932376291682
-//             * 
-//set TRACE_SCHEDULEGUID=8cc44e31-7f28-4f45-9938-4810ff517464:ffff:6
-//set TRACE_SC=30336ed4-e327-447c-9de0-51b652c86108
-
         internal static List<EtwKernelFlag> _kernelFlags = new List<EtwKernelFlag>()
         {
             new EtwKernelFlag("PROC_THREAD", 0x3, "Process and Thread create/delete"),
@@ -141,26 +113,53 @@ namespace WindowsPhone.Profiler
             new EtwProviderType {Name = "Microsoft-Windows-MediaEngine", GUID = "{8f2048e0-f260-4f57-a8d1-932376291682}", Level = XmlProviderLevel.Warning, HexKeywords = "ffff"},
         };
 
-        private static Dictionary<string, List<EtwProviderType>> _predefinedSessions = new Dictionary<string, List<EtwProviderType>>()
+        private static Dictionary<string, ProfilerSession> _predefinedScenarios = new Dictionary<string, ProfilerSession>();
+
+        public static Dictionary<string, ProfilerSession> PredefinedScenarios { get { return _predefinedScenarios; } }
+
+        static Profiler()
         {
-            {"GPUView - Normal",
-                new List<EtwProviderType>() {
-                    //_phoneProviders["DX"].Copy(),
-                    /*
-                    _phoneProviders["Microsoft-Windows-DxgKrnl"].Copy(),
-                    _phoneProviders["UMD"].Copy(),
-                    _phoneProviders["Microsoft-Windows-DXGI"].Copy(),
-                    _phoneProviders["Microsoft-Windows-Direct3D11"].Copy(),
-                    _phoneProviders["Microsoft-Windows-D3D10Level9"].Copy(),
-                    _phoneProviders["Microsoft-Windows-MediaFoundation-Performance"].Copy(),
-                    _phoneProviders["MF"].Copy(),
-                    _phoneProviders["AE"].Copy(),
-                    _phoneProviders["DXVA2"].Copy(),
-                    _phoneProviders["Microsoft-Windows-MediaEngine"].Copy(),
-                    _phoneProviders["DShow"].Copy(),
-                     */
-                }
-            },
-        };
+            InitPredefinedScenarios();
+        }
+
+        private static void InitPredefinedScenarios()
+        {
+            // TODO: there has to be a better way (xml file?) to define these sessions
+
+            _predefinedScenarios["Standard"] = new ProfilerSession();
+
+            var standard = _predefinedScenarios["Standard"];
+            standard.KernelFlags["PROC_THREAD"].IsEnabled = true;
+            standard.KernelFlags["LOADER"].IsEnabled = true;
+            standard.KernelFlags["DISK_IO"].IsEnabled = true;
+            standard.KernelFlags["HARD_FAULTS"].IsEnabled = true;
+            standard.KernelFlags["PROFILE"].IsEnabled = true;
+            standard.KernelFlags["MEMORY"].IsEnabled = true;
+            standard.KernelFlags["CSWITCH"].IsEnabled = true;
+            standard.KernelFlags["INTERRUPT"].IsEnabled = true;
+
+            standard.KernelStackFlags["PROC_THREAD"].IsEnabled = true;
+            standard.KernelStackFlags["LOADER"].IsEnabled = true;
+            standard.KernelStackFlags["DISK_IO"].IsEnabled = true;
+            standard.KernelStackFlags["HARD_FAULTS"].IsEnabled = true;
+            standard.KernelStackFlags["PROFILE"].IsEnabled = true;
+            standard.KernelStackFlags["CSWITCH"].IsEnabled = true;
+            standard.KernelStackFlags["INTERRUPT"].IsEnabled = true;
+
+            standard.Providers["3rd Party Developer Provider"].IsEnabled = true;
+            standard.Providers["TaskHost"].IsEnabled = true;
+            standard.Providers["Microsoft-Windows-D3D10Level9"].IsEnabled = true;
+            standard.Providers["Microsoft-Windows-DirectWrite"].IsEnabled = true;
+            standard.Providers["Microsoft-Windows-Direct3D11"].IsEnabled = true;
+
+            standard.Providers["Microsoft-WindowsMobile-Compositor"].IsEnabled = true;
+            standard.Providers["DX"].IsEnabled = true;
+            standard.Providers["Microsoft-Windows-DXGI"].IsEnabled = true;
+            standard.Providers["Microsoft-WindowsPhone-Silverlight"].IsEnabled = true;
+            standard.Providers["Microsoft-Windows-WinHttp"].IsEnabled = true;
+            standard.Providers["Microsoft-WindowsPhone-Input"].IsEnabled = true;
+
+            _predefinedScenarios["Custom"] = new ProfilerSession(isCustom: true);
+        }
     }
 }

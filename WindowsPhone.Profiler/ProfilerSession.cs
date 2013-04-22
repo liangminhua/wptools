@@ -11,15 +11,33 @@ namespace WindowsPhone.Profiler
     {
 
         private Dictionary<string, EtwKernelFlag> _kernelFlags = new Dictionary<string, EtwKernelFlag>();
-        public Dictionary<string, EtwKernelFlag> KernelFlags { get { return _kernelFlags; } }
+        
+        public Dictionary<string, EtwKernelFlag> KernelFlags 
+        { 
+            get { return _kernelFlags; }
+            internal set { _kernelFlags = value; }
+        }
 
         private Dictionary<string, EtwKernelFlag> _kernelStackFlags = new Dictionary<string, EtwKernelFlag>();
-        public Dictionary<string, EtwKernelFlag> KernelStackFlags { get { return _kernelStackFlags; } }
+        public Dictionary<string, EtwKernelFlag> KernelStackFlags 
+        { 
+            get { return _kernelStackFlags; }
+            internal set { _kernelStackFlags = value; }
+        }
 
         private Dictionary<string, EtwProviderType> _providers = new Dictionary<string, EtwProviderType>();
-        public Dictionary<string, EtwProviderType> Providers { get { return _providers; } }
+        public Dictionary<string, EtwProviderType> Providers 
+        { 
+            get { return _providers; }
+            internal set { _providers = value; }
+        }
 
         public RemoteApplicationEx TargetApp { get; set; }
+
+        /// <summary>
+        /// If this is a custom session it will be ignored when selected in the predefined scenarios list
+        /// </summary>
+        public bool IsCustom { get; set; }
 
         /// <summary>
         /// Should the Etl be opened when profiling is completed. Not used by the profiler but can be useful
@@ -83,6 +101,11 @@ namespace WindowsPhone.Profiler
             CopyProviders();
 
             OpenEtlWhenFinished = true;
+        }
+
+        public ProfilerSession(bool isCustom)
+        {
+            IsCustom = isCustom;
         }
 
         private void CopyKernelFlags(ref Dictionary<string, EtwKernelFlag> target)
