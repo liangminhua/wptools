@@ -188,6 +188,9 @@ namespace WindowsPhonePowerTools
         #endregion
 
         #region General Goo
+
+        private bool _blockProfiling = false;
+
         #endregion
 
         #region Error Dialog
@@ -212,7 +215,7 @@ namespace WindowsPhonePowerTools
         {
             Analytics.Instance.Track(Analytics.Categories.PowerTools, "Connect", _device.CurrentConnectableDevice.Name);
             _device.Connect();
-            
+
             if (_device.Connected)
             {
                 dialogConnect.Close();
@@ -222,17 +225,33 @@ namespace WindowsPhonePowerTools
 
         private void btnLaunchElevated_Click(object sender, RoutedEventArgs e)
         {
-            RelaunchProgramElevated();
+            RelaunchPowerTools(launchElevated: true);
         }
 
-        private Process RelaunchProgramElevated(string args = null, bool shutdownAfterLaunch = true)
+        private void PromptToRestartPowerTools(string msg)
+        {
+            // always try this on the UI thread
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (MessageBox.Show(msg, "Restart Power Tools?", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+                {
+                    RelaunchPowerTools(shutdownAfterLaunch: true);
+                }
+            }));
+        }
+
+        private Process RelaunchPowerTools(string args = null, bool launchElevated = false, bool shutdownAfterLaunch = true)
         {
             Process rv = null;
             ProcessStartInfo processInfo = new ProcessStartInfo(Assembly.GetExecutingAssembly().CodeBase);
 
             // relaunch with runas to get elevated
             processInfo.UseShellExecute = true;
-            processInfo.Verb = "runas";
+
+            if (launchElevated)
+            {
+                processInfo.Verb = "runas";
+            }
 
             if (!string.IsNullOrEmpty(args))
                 processInfo.Arguments = args;
@@ -817,7 +836,6 @@ namespace WindowsPhonePowerTools
 
         private void RunProfiler()
         {
-            Analytics.Instance.Track(Analytics.Categories.Profiler, "Profile");
 
             if (!Profiler.ProfilerConfiguredLocally())
             {
@@ -849,12 +867,22 @@ Here's some things you could try:
                         return;
                     }
                 }
+
+                _blockProfiling = true;
             }
+
+            if (_blockProfiling)
+            {
+                PromptToRestartPowerTools("You need to restart the Power Tools to complete the profiler installation.\n\nRestart Now?");
+                return;
+            }
+
+            Analytics.Instance.Track(Analytics.Categories.Profiler, "Profile");
 
             string etl = System.IO.Path.Combine(
                 System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),
                 DateTime.Now.ToString("yyyymmdd_HHmm") + ".etl");
-            
+
             // TODO: maybe at some point this warning can just be shown statically in the UI
             if (!File.Exists(Profiler.XPERF_PATH))
             {
@@ -950,7 +978,7 @@ May we continue?", "Configure Profiler?", MessageBoxButton.YesNo, MessageBoxImag
                 return false;
             }
 
-            var proc = RelaunchProgramElevated(App.ARG_INSTALL_PROFILER, false);
+            var proc = RelaunchPowerTools(App.ARG_INSTALL_PROFILER, launchElevated: true, shutdownAfterLaunch: false);
             proc.WaitForExit();
 
             return true;
