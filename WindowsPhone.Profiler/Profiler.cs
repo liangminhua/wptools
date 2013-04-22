@@ -2,7 +2,9 @@
 using Microsoft.SmartDevice.Connectivity.Interface;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -87,14 +89,25 @@ namespace WindowsPhone.Profiler
             "WindowsPhonePowerTools",
             "Profiler");
 
-        // standard install location: C:\Program Files (x86)\Windows Kits\8.0\Windows Performance Toolkit\xperf.exe
+        // standard install location: C:\Program Files (x86)\Windows Kits\8.0\Windows Performance Toolkit\
         // win8 install URL: http://msdn.microsoft.com/en-us/windows/hardware/hh852363.aspx
-        public static readonly string XPERF_PATH = Path.Combine(
+        private static readonly string WPT_PATH = Path.Combine(
             System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFilesX86),
             "Windows Kits",
             "8.0",
-            "Windows Performance Toolkit",
-            "xperf.exe");          
+            "Windows Performance Toolkit");
+
+        public static readonly string XPERF_PATH = Path.Combine(
+            WPT_PATH,
+            "xperf.exe");
+
+        public static readonly string XPERFVIEW_PATH = Path.Combine(
+            WPT_PATH,
+            "xperfview.exe");
+
+        public static readonly string WPA_PATH = Path.Combine(
+            WPT_PATH,
+            "wpa.exe");  
 
         // the name of the file that will be installed alongside the profiler. The contents of this file
         // drive the profiler session.
@@ -296,23 +309,67 @@ namespace WindowsPhone.Profiler
             // by itself, force a stop anyway
             this.RunProfilerCommand(ProfilerCommand.StopProfiling);
 
-            CopyEtl(localEtlFile);
-            MergeEtl(localEtlFile);
+            string tempVspxFile = Path.GetTempFileName();
+            string tempEtlFile = Path.GetTempFileName();
+
+            try
+            {
+                CopyVspx(tempVspxFile);
+                ExtractEtl(tempVspxFile, tempEtlFile);
+                MergeEtl(tempEtlFile, localEtlFile);
+            }
+            finally
+            {
+                try { File.Delete(tempVspxFile); } catch { }
+                try { File.Delete(tempEtlFile); } catch { }
+            }
 
             EndSession();
+        }
+
+        private void ExtractEtl(string tempVspxPath, string tempEtlPath)
+        {
+            OnStatusUpdated(ProfilerState.Stopping, "Extracting ETL file from profiler output...");
+
+            ZipStorer vspx = ZipStorer.Open(tempVspxPath, FileAccess.Read);
+
+            List<ZipStorer.ZipFileEntry> entries = vspx.ReadCentralDir();
+
+            // Look for the etl
+            foreach (ZipStorer.ZipFileEntry entry in entries)
+            {
+                if (entry.FilenameInZip.EndsWith(".etl"))
+                {
+                    vspx.ExtractFile(entry, tempEtlPath);
+
+                    vspx.Close();
+
+                    return;
+                }
+            }
+
+            vspx.Close();
+
+            throw new FileNotFoundException("Couldn't find an etl file in the vspx that we retrieved from the device");
         }
 
         /// <summary>
         /// Remerge the ETL file on the local machine to pickup any developer specific providers
         /// </summary>
         /// <param name="localEtlFile"></param>
-        private void MergeEtl(string localEtlFile)
+        private void MergeEtl(string tempEtlFile, string localEtlFile)
         {
             // this is non-fatal and we expect the calling UI to warn about this
             if (!File.Exists(XPERF_PATH))
                 return;
 
             OnStatusUpdated(ProfilerState.Stopping, "Baking local ETW symbols into your trace...");
+
+            // merge the temporary etl file into itself at the local path. Merging one file only will simply copy the file
+            // to the new location but bake in any missing ETW symbols that may be registered on the local machine (for example
+            // the developer's manifest which will not be registered on the device)
+            var proc = Process.Start(XPERF_PATH, "-merge \"" + tempEtlFile + "\" \"" + localEtlFile + "\"");
+            proc.WaitForExit();
         }
 
         /// <summary>
@@ -348,7 +405,7 @@ namespace WindowsPhone.Profiler
         /// There is an event to receive the file from the profiler, but we'll only implement that if this turns out to be unreliable
         /// </summary>
         /// <param name="targetFilename"></param>
-        public void CopyEtl(string targetFilename)
+        public void CopyVspx(string targetFilename)
         {
             string sourceDeviceFileName;
             long oldSize = -1;

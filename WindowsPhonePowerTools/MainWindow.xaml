@@ -258,7 +258,7 @@
                             </Canvas>
 
                             <!-- Presets -->
-                            <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Session:</TextBlock>
+                            <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Scenario:</TextBlock>
                             <Canvas Grid.Row="2" Grid.Column="1">
                                 <ComboBox Width="300" x:Name="cmbProfilerPredefinedSessions" ItemsSource="{Binding EtwProfiler.PredefinedSessions}">
                                     <ComboBox.ItemTemplate>
@@ -346,9 +346,9 @@
                                 </ScrollViewer>
 
                                 <StackPanel Grid.ColumnSpan="2" Grid.Row="1" Orientation="Horizontal">
-                                    <TextBlock VerticalAlignment="Center">Open ETL With: </TextBlock>
+                                    <CheckBox VerticalAlignment="Center" IsChecked="{Binding ProfilerSession.OpenEtlWhenFinished}">When profiling completes open ETL With:</CheckBox>
                                     <Canvas Margin="12,0,0,0">
-                                        <ComboBox Width="200">
+                                        <ComboBox Width="200" SelectedIndex="0">
                                             <TextBlock>WPA</TextBlock>
                                             <TextBlock>Add Custom...</TextBlock>
                                         </ComboBox>

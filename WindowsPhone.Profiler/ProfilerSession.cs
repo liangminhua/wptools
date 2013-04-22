@@ -21,6 +21,12 @@ namespace WindowsPhone.Profiler
 
         public RemoteApplicationEx TargetApp { get; set; }
 
+        /// <summary>
+        /// Should the Etl be opened when profiling is completed. Not used by the profiler but can be useful
+        /// for GUIs
+        /// </summary>
+        public bool OpenEtlWhenFinished { get; set; }
+
         public bool IsValid
         {
             get
@@ -75,6 +81,8 @@ namespace WindowsPhone.Profiler
             CopyKernelFlags(ref _kernelFlags);
             CopyKernelFlags(ref _kernelStackFlags);
             CopyProviders();
+
+            OpenEtlWhenFinished = true;
         }
 
         private void CopyKernelFlags(ref Dictionary<string, EtwKernelFlag> target)

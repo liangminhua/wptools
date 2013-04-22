@@ -849,6 +849,8 @@ Here's some things you could try:
                 }
             }
 
+            string etl = @"c:\temp\first_ever.etl";
+
             // TODO: maybe at some point this warning can just be shown statically in the UI
             if (!File.Exists(Profiler.XPERF_PATH))
             {
@@ -867,12 +869,22 @@ Here's some things you could try:
 
             EtwProfiler.StartProfiling(ProfilerSession);
 
-            EtwProfiler.WaitForProfilingStop(@"c:\temp\first_ever.vspx");
+            EtwProfiler.WaitForProfilingStop(etl);
 
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 dialogProfilerStatus.Close();
+
+                OpenEtl(etl);
             }));
+        }
+
+        private void OpenEtl(string etl)
+        {
+            if (File.Exists(Profiler.WPA_PATH))
+            {
+                Process.Start(Profiler.WPA_PATH, etl);
+            }
         }
 
         private void btnStopProfiling_Click(object sender, RoutedEventArgs e)
