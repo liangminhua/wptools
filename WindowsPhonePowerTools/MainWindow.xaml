@@ -215,7 +215,7 @@
                         <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Margin="5,0,0,0">Note: App names will appear as GUIDs unless they have been installed or updated with this tool</TextBlock>
                     </Grid>
                 </MetroUI:NavigationButton>
-                <MetroUI:NavigationButton Source="/images/navbuttons/profiler.png" Text="Profiler" OnSelectionChanged="NavigationButton_OnSelectionChanged">
+                <MetroUI:NavigationButton Source="/images/navbuttons/profiler.png" Text="Profiler (BETA)" OnSelectionChanged="NavigationButton_OnSelectionChanged">
 
                     <Grid x:Name="gridProfiler" IsEnabled="{Binding Device.Connected}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <Grid.RowDefinitions>
