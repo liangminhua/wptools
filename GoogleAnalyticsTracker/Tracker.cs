@@ -52,6 +52,11 @@ namespace GoogleAnalyticsTracker
             : this(trackingAccount, trackingDomain, new AnalyticsSession())
         {
         }
+#elif NETFX_CORE
+        public Tracker(string trackingAccount, string trackingDomain)
+            : this(trackingAccount, trackingDomain, new WinRtAnalyticsSession())
+        {
+        }
 #endif
 
         public Tracker(string trackingAccount, string trackingDomain, IAnalyticsSession analyticsSession)
@@ -136,17 +141,39 @@ namespace GoogleAnalyticsTracker
 #endif
                         .ContinueWith(task =>
                                          {
-                                             var returnValue = new TrackingResult {Url = url, Parameters = parameters, Success = true};
-                                             if (task.IsFaulted && task.Exception != null && ThrowOnErrors)
+                                             try
                                              {
-                                                 throw task.Exception;
-                                             } 
-                                             else if (task.IsFaulted)
-                                             {
-                                                 returnValue.Success = false;
-                                                 returnValue.Exception = task.Exception;
+                                                 var returnValue = new TrackingResult
+                                                     {
+                                                         Url = url,
+                                                         Parameters = parameters,
+                                                         Success = true
+                                                     };
+                                                 if (task.IsFaulted && task.Exception != null && ThrowOnErrors)
+                                                 {
+                                                     throw task.Exception;
+                                                 }
+                                                 else if (task.IsFaulted)
+                                                 {
+                                                     returnValue.Success = false;
+                                                     returnValue.Exception = task.Exception;
+                                                 }
+
+                                                 System.Diagnostics.Debug.WriteLine("Analytics Complete: {0}/{1}/{2}", parameters["utme"], returnValue.Success, returnValue.Exception);
+
+                                                 return returnValue;
                                              }
-                                             return returnValue;
+                                             finally
+                                             {
+                                                 if (!task.IsFaulted && task.Result != null)
+                                                 {
+                                                     var disposableResult = task.Result as IDisposable;
+                                                     if (disposableResult != null)
+                                                     {
+                                                         disposableResult.Dispose();
+                                                     }
+                                                 }
+                                             }
                                          });
         }
 

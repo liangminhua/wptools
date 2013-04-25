@@ -20,3 +20,4 @@ GoogleAnalyticsTracker/bin/*
 GoogleAnalyticsTracker/obj/*
 WindowsPhone.Profiler/bin/*
 WindowsPhone.Profiler/obj/*
+packages/*

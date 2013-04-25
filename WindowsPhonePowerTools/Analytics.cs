@@ -51,10 +51,21 @@ namespace WindowsPhonePowerTools
             UniqueId = Properties.Settings.Default.UniqueId;
         }
         
+        public async Task TrackAsync(Categories category, string action, string label = null, int value = 0) 
+        {
+            System.Diagnostics.Debug.WriteLine("Analytics: Async: {0}/{1}/{2}/{3}", category.ToString(), action, label, value);
+            
+            if (!_disabled)
+                await _tracker.TrackEventAsync(category.ToString(), action, label, value);
+
+        }
+
         public void Track(Categories category, string action, string label = null, int value = 0)
         {
             if (!_disabled)
                 _tracker.TrackEventAsync(category.ToString(), action, label, value);
+
+                System.Diagnostics.Debug.WriteLine("Analytics: {0}/{1}/{2}/{3}", category.ToString(), action, label, value);
         }
     }
 }

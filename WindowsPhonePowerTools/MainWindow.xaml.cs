@@ -922,21 +922,29 @@ Here's some things you could try:
                 Analytics.Instance.Track(Analytics.Categories.Profiler, "Scenario", scenarioName);
             }));
 
-            // track the different flags and providers that are selected
-            foreach (var flag in ProfilerSession.KernelFlags)
+            // queue all of these events on a background thread so that they can run synchronously (relative to each other)
+            Task.Run(new Action(async () =>
             {
-                Analytics.Instance.Track(Analytics.Categories.Profiler, "KernelFlags", flag.Key);
-            }
+                Thread.Sleep(2000);
+                // track the different flags and providers that are selected
+                foreach (var flag in ProfilerSession.KernelFlags)
+                {
+                    await Analytics.Instance.TrackAsync(Analytics.Categories.Profiler, "KernelFlags", flag.Key);
+                    Thread.Sleep(500);
+                }
 
-            foreach (var flag in ProfilerSession.KernelStackFlags)
-            {
-                Analytics.Instance.Track(Analytics.Categories.Profiler, "KernelStackFlags", flag.Key);
-            }
+                foreach (var flag in ProfilerSession.KernelStackFlags)
+                {
+                    await Analytics.Instance.TrackAsync(Analytics.Categories.Profiler, "KernelStackFlags", flag.Key);
+                    Thread.Sleep(500);
+                }
 
-            foreach (var provider in ProfilerSession.Providers)
-            {
-                Analytics.Instance.Track(Analytics.Categories.Profiler, "EnabledProviders", provider.Key);
-            }
+                foreach (var provider in ProfilerSession.Providers)
+                {
+                    await Analytics.Instance.TrackAsync(Analytics.Categories.Profiler, "EnabledProviders", provider.Key);
+                    Thread.Sleep(500);
+                }
+            }));
 
         }
 
