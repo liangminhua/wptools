@@ -952,7 +952,7 @@ Here's some things you could try:
         {
             if (File.Exists(Profiler.WPA_PATH))
             {
-                Process.Start(Profiler.WPA_PATH, etl);
+                Process.Start(Profiler.WPA_PATH, "\"" + etl + "\"");
             }
         }
 
