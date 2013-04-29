@@ -52,6 +52,25 @@ namespace WindowsPhonePowerTools
 
             // show the connect dialog
             dialogConnect.Open();
+
+            SetDefaultDevice();
+        }
+
+        private void SetDefaultDevice()
+        {
+            string previousDevice = Properties.Settings.Default.PreviousDevice;
+
+            if (string.IsNullOrEmpty(previousDevice))
+                return;
+
+            foreach (var device in Device.Devices)
+            {
+                if (device.Name == previousDevice)
+                {
+                    Device.CurrentConnectableDevice = device;
+                    return;
+                }
+            }
         }
 
         private void NavigationButton_OnSelectionChanged(object sender, EventArgs e)
@@ -221,6 +240,8 @@ namespace WindowsPhonePowerTools
                 dialogConnect.Close();
                 EtwProfiler = Profiler.Get(_device);
             }
+
+            Properties.Settings.Default.PreviousDevice = _device.CurrentConnectableDevice.Name;
         }
 
         private void btnLaunchElevated_Click(object sender, RoutedEventArgs e)
