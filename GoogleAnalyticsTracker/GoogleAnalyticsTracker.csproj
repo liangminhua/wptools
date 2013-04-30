@@ -51,7 +51,6 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -62,24 +61,19 @@
     <Compile Include="DateTimeExtensions.cs" />
     <Compile Include="Tracker.tracking.cs" />
     <Compile Include="TrackingResult.cs" />
-    <Compile Include="Web\HttpContextBaseExtensions.cs" />
     <Compile Include="AnalyticsSession.cs" />
-    <Compile Include="Web\CookieBasedAnalyticsSession.cs" />
     <Compile Include="CustomVariable.cs" />
     <Compile Include="EventTrackerExtensions.cs" />
     <Compile Include="IAnalyticsSession.cs" />
     <Compile Include="Tracker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Web\PageViewTrackerExtensions.cs" />
     <Compile Include="UtmeGenerator.cs" />
     <Compile Include="Tracker.async.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Web\Mvc\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
