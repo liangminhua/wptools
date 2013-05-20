@@ -77,7 +77,7 @@ namespace WindowsPhone.Profiler
 
         internal static List<EtwProviderType> _phoneProviders = new List<EtwProviderType>()
         {
-            new EtwProviderType {Name = "3rd Party Developer Provider", GUID = "{7A68C8E0-BE90-4039-9048-2A69F64BDF3C}", Level = XmlProviderLevel.Warning, HexKeywords = "ffff"},
+            new EtwProviderType {Name = "3rd Party Developer Provider", GUID = "{7A68C8E0-BE90-4039-9048-2A69F64BDF3C}", Level = XmlProviderLevel.Verbose, HexKeywords = "ffff"},
             new EtwProviderType {Name = "Microsoft-Windows-Services", GUID = "{0063715b-eeda-4007-9429-ad526f62696e}", Level = XmlProviderLevel.Warning, HexKeywords = "ffff"},
             new EtwProviderType {Name = "Microsoft-Windows-Winsock-WS2HELP", GUID = "{d5c25f9a-4d47-493e-9184-40dd397a004d}", Level = XmlProviderLevel.Warning, HexKeywords = "ffff"},
             new EtwProviderType {Name = "Microsoft-Windows-Winsock-AFD", GUID = "{e53c6823-7bb8-44bb-90dc-3f86090d48a6}", Level = XmlProviderLevel.Warning, HexKeywords = "ffff"},
