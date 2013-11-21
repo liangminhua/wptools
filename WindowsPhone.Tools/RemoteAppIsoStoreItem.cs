@@ -1,6 +1,4 @@
-﻿extern alias SmartDeviceConnectivityWrapper10;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -249,16 +247,6 @@ namespace WindowsPhone.Tools
                 if (remoteFileObject != null)
                 {
                     remoteFileObject.GetRemoteIsolatedStorageFile().DeleteFile(_path);
-                }
-                else
-                {
-                    // try the 10.0 version
-                    var remoteFileObject10 = remoteIso as SmartDeviceConnectivityWrapper10::Microsoft.SmartDevice.Connectivity.Wrapper.RemoteIsolatedStorageFileObject;
-
-                    if (remoteFileObject10 != null) 
-                    {
-                        WindowsPhone.Tools.Legacy10.Utils.DeleteFile(remoteFileObject10, _path);
-                    }
                 }
             }
         }
