@@ -36,14 +36,9 @@ namespace WindowsPhonePowerTools
         {
             var args = Environment.GetCommandLineArgs();
 
+            // unused now that we don't have a profiler. Leaving in for future potential use.
             foreach (var arg in args)
             {
-                //MessageBox.Show(arg);
-                if (arg == ARG_INSTALL_PROFILER)
-                {
-                    WindowsPhone.Profiler.Profiler.ConfigureProfilerLocally();
-                    Application.Current.Shutdown();
-                }
             }
         }
 

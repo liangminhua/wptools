@@ -24,7 +24,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using WindowsPhone.Profiler;
 using WindowsPhone.Tools;
 
 namespace WindowsPhonePowerTools
@@ -99,40 +98,6 @@ namespace WindowsPhonePowerTools
                 if (_device != value)
                 {
                     _device = value;
-
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-
-        private Profiler _etwProfiler;
-        public Profiler EtwProfiler
-        {
-            get { return _etwProfiler; }
-            set
-            {
-                if (_etwProfiler != value)
-                {
-                    _etwProfiler = value;
-
-                    NotifyPropertyChanged();
-
-                    // new Profiler? New Session...
-                    // TODO: consider adding this into Profiler itself
-                    ProfilerSession = new ProfilerSession();
-                }
-            }
-        }
-
-        private ProfilerSession _profilerSession;
-        public ProfilerSession ProfilerSession
-        {
-            get { return _profilerSession; }
-            set
-            {
-                if (_profilerSession != value)
-                {
-                    _profilerSession = value;
 
                     NotifyPropertyChanged();
                 }
@@ -238,7 +203,6 @@ namespace WindowsPhonePowerTools
             if (_device.Connected)
             {
                 dialogConnect.Close();
-                EtwProfiler = Profiler.Get(_device);
             }
 
             Properties.Settings.Default.PreviousDevice = _device.CurrentConnectableDevice.Name;

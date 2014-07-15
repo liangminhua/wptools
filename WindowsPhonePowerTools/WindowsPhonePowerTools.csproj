@@ -184,10 +184,6 @@
       <Project>{8BE245AB-068B-49B2-8E81-4DCBA65C9317}</Project>
       <Name>MetroUI</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WindowsPhone.Profiler\WindowsPhone.Profiler.csproj">
-      <Project>{00f19699-ff8a-43ae-8b71-fabf63ec1a03}</Project>
-      <Name>WindowsPhone.Profiler</Name>
-    </ProjectReference>
     <ProjectReference Include="..\WindowsPhone.Tools\WindowsPhone.Tools.csproj">
       <Project>{EAE44D9A-8C45-4A6C-81EB-999F0FF6D237}</Project>
       <Name>WindowsPhone.Tools</Name>
