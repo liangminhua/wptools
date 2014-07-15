@@ -561,7 +561,7 @@ namespace WindowsPhonePowerTools
             string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
 
             // only allow dropping on Application root level items and directories
-            if (files == null || targetItem == null || (!targetItem.IsApplication && !targetItem.RemoteFile.IsDirectory()))
+            if (files == null || targetItem == null || (!targetItem.IsApplication && !targetItem.IsRemoteStore && !targetItem.RemoteFile.IsDirectory()))
                 return;
 
             // prevent an item from being dragged on itself, or onto its parent

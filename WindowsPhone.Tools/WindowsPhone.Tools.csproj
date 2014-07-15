@@ -41,17 +41,23 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.SmartDevice.Connectivity\v4.0_11.0.0.0__b03f5f7f11d50a3a</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Smartdevice.Connectivity.Interface, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Smartdevice.Connectivity.Interface, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.SmartDevice.Connectivity.Interface\v4.0_11.0.0.0__b03f5f7f11d50a3a\Microsoft.Smartdevice.Connectivity.Interface.dll</HintPath>
+      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.SmartDevice.Connectivity.Interface\v4.0_12.0.0.0__b03f5f7f11d50a3a\Microsoft.Smartdevice.Connectivity.Interface.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Smartdevice.ConnectivityWrapper.11, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.SmartDevice.ConnectivityWrapper.11\v4.0_11.0.0.0__b03f5f7f11d50a3a\Microsoft.Smartdevice.ConnectivityWrapper.11.dll</HintPath>
+      <Aliases>Wrapper11</Aliases>
     </Reference>
-    <Reference Include="Microsoft.Smartdevice.MultiTargeting.Connectivity, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Smartdevice.ConnectivityWrapper.12, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.SmartDevice.MultiTargeting.Connectivity\v4.0_11.0.0.0__b03f5f7f11d50a3a\Microsoft.Smartdevice.MultiTargeting.Connectivity.dll</HintPath>
+      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.SmartDevice.ConnectivityWrapper.12\v4.0_12.0.0.0__b03f5f7f11d50a3a\Microsoft.Smartdevice.ConnectivityWrapper.12.dll</HintPath>
+      <Aliases>Wrapper12</Aliases>
+    </Reference>
+    <Reference Include="Microsoft.Smartdevice.MultiTargeting.Connectivity, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.SmartDevice.MultiTargeting.Connectivity\v4.0_12.0.0.0__b03f5f7f11d50a3a\Microsoft.Smartdevice.MultiTargeting.Connectivity.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

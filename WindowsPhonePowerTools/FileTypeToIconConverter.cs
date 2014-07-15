@@ -43,7 +43,13 @@ namespace WindowsPhonePowerTools
             if (isoStoreItem != null)
             {
                 if (isoStoreItem.IsApplication)
+                {
                     return imageApp;
+                } 
+                else if (isoStoreItem.IsRemoteStore)
+                {
+                    return imageDir;
+                }
 
                 var file = isoStoreItem.RemoteFile;
 
@@ -68,6 +74,7 @@ namespace WindowsPhonePowerTools
                             return img;
                     }
                 }
+                
             }
 
             return imageUnknown;

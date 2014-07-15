@@ -1,4 +1,6 @@
-﻿using System;
+﻿extern alias Wrapper11;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +9,7 @@ using Microsoft.SmartDevice.Connectivity;
 using System.Collections.ObjectModel;
 using System.IO;
 using Microsoft.SmartDevice.Connectivity.Interface;
-using Microsoft.SmartDevice.Connectivity.Wrapper;
+using Wrapper11.Microsoft.SmartDevice.Connectivity.Wrapper;
 
 namespace WindowsPhone.Tools
 {
@@ -16,6 +18,9 @@ namespace WindowsPhone.Tools
         private IDevice _device;
         private RemoteApplicationEx _appEx;
 
+        // used for Modern apps who have multiple IsoStores
+        private IRemoteIsolatedStorageFile _remoteStore;
+        
         public IRemoteApplication RemoteApp { get; private set; }
 
         public string Name { get; set; }
@@ -31,6 +36,8 @@ namespace WindowsPhone.Tools
         public bool IsApplication { get; set; }
 
         public IRemoteFileInfo RemoteFile { get; private set; }
+
+        public bool IsRemoteStore { get; private set; }
 
         /// <summary>
         /// So, why is this an Object? RemoteFileInfo needs to be polymorphic, accepting
@@ -77,6 +84,14 @@ namespace WindowsPhone.Tools
         }
 
         /// <summary>
+        /// Used to create a fake entry so that directories can be queried
+        /// </summary>
+        internal RemoteAppIsoStoreItem(RemoteAppIsoStoreItem parent)
+        {
+            Parent = parent;
+        }
+
+        /// <summary>
         /// Construct a new toplevel IsoStore representation for this xap
         /// </summary>
         /// <param name="device"></param>
@@ -105,10 +120,11 @@ namespace WindowsPhone.Tools
         /// </summary>
         /// <param name="app"></param>
         /// <param name="remoteFile"></param>
-        private RemoteAppIsoStoreItem(RemoteApplicationEx app, IRemoteFileInfo remoteFile, RemoteAppIsoStoreItem parent)
+        private RemoteAppIsoStoreItem(RemoteApplicationEx app, IRemoteFileInfo remoteFile, IRemoteIsolatedStorageFile remoteStore, RemoteAppIsoStoreItem parent)
         {
             RemoteApp = app.RemoteApplication;
 
+            _remoteStore = remoteStore;
             _appEx = app;
             Parent = parent;
 
@@ -126,11 +142,27 @@ namespace WindowsPhone.Tools
             
             _path = RemoteFile.GetRelativePath();
 
+            // Modern applications are rooted by their IsoStore object so don't need the full path
+            if (_path.Contains("%"))
+                _path = "";
+
             if (RemoteFile.IsDirectory())
             {
                 Children.Add(new FakeRemoteAppIsoStoreItem(this));
             }
 
+        }
+
+        public RemoteAppIsoStoreItem(RemoteApplicationEx app, string store)
+        {
+            _appEx = app;
+            Name = store;
+            _remoteStore = app.RemoteApplication.GetIsolatedStore(store);
+
+            // these are all fake directories
+            Children.Add(new FakeRemoteAppIsoStoreItem(this));
+
+            IsRemoteStore = true;
         }
 
         /// <summary>
@@ -140,11 +172,9 @@ namespace WindowsPhone.Tools
         /// <param name="path">Returns the full local path (i.e. localPath + [file/dir]name)</param>
         public string Get(string localPath, bool overwrite)
         {
-            var remoteIso = RemoteApp.GetIsolatedStore();
-
             string fullLocalPath = Path.Combine(localPath, Path.GetFileName(Name));
 
-            if (IsApplication || RemoteFile.IsDirectory())
+            if (IsApplication || IsRemoteStore || RemoteFile.IsDirectory())
             {
                 Directory.CreateDirectory(fullLocalPath);
 
@@ -161,7 +191,7 @@ namespace WindowsPhone.Tools
             {
 
                 if (overwrite || !File.Exists(fullLocalPath))
-                    remoteIso.ReceiveFile(_path, fullLocalPath, true);
+                    _remoteStore.ReceiveFile(_path, fullLocalPath, true);
             }
                 
             return fullLocalPath;
@@ -182,8 +212,6 @@ namespace WindowsPhone.Tools
 
         public void Put(string localFile, string relativeDirectory = "", bool overwrite = false)
         {
-            var remoteIso = RemoteApp.GetIsolatedStore();
-
             FileAttributes attrib = File.GetAttributes(localFile);
 
             if ((attrib & FileAttributes.Directory) == FileAttributes.Directory)
@@ -194,7 +222,7 @@ namespace WindowsPhone.Tools
                 files.AddRange(Directory.GetDirectories(localFile));
                 
                 // create the directory on the device
-                remoteIso.CreateDirectory(newRelativeDirectory);
+                _remoteStore.CreateDirectory(newRelativeDirectory);
 
                 foreach (string file in files)
                 {
@@ -205,17 +233,15 @@ namespace WindowsPhone.Tools
             {
                 string deviceFilename = Path.Combine(relativeDirectory, Path.GetFileName(localFile));
 
-                if (overwrite || !remoteIso.FileExists(deviceFilename))
+                if (overwrite || !_remoteStore.FileExists(deviceFilename))
                 {
-                    remoteIso.SendFile(localFile, deviceFilename, createNew: true);
+                    _remoteStore.SendFile(localFile, deviceFilename, createNew: true);
                 }
             }
         }
 
         public void Delete()
         {
-            var remoteIso = RemoteApp.GetIsolatedStore();
-
             if (IsApplication)
             {
                 // delete everything under this application
@@ -230,33 +256,25 @@ namespace WindowsPhone.Tools
                 // really wants to kill these they can delete them individually
                 string shared = Path.Combine(_path, "Shared");
 
-                remoteIso.CreateDirectory(shared);
-                remoteIso.CreateDirectory(Path.Combine(shared, "Transfers"));
-                remoteIso.CreateDirectory(Path.Combine(shared, "ShellContent"));
+                _remoteStore.CreateDirectory(shared);
+                _remoteStore.CreateDirectory(Path.Combine(shared, "Transfers"));
+                _remoteStore.CreateDirectory(Path.Combine(shared, "ShellContent"));
             } 
             else if (RemoteFile.IsDirectory())
             {
-                remoteIso.DeleteDirectory(_path);
+                _remoteStore.DeleteDirectory(_path);
             }
             else
             {
                 // really? no delete file??? RemoteIsolatedStorageFile is hidden (internal) within the wrapper
                 // not sure if there is an easy way to get it
-                var remoteFileObject = remoteIso as RemoteIsolatedStorageFileObject;
+                var remoteFileObject = _remoteStore as RemoteIsolatedStorageFileObject;
 
                 if (remoteFileObject != null)
                 {
                     remoteFileObject.GetRemoteIsolatedStorageFile().DeleteFile(_path);
                 }
             }
-        }
-
-        /// <summary>
-        /// Used to create a fake entry so that directories can be queried
-        /// </summary>
-        internal RemoteAppIsoStoreItem(RemoteAppIsoStoreItem parent)
-        {
-            Parent = parent;
         }
 
         /// <summary>
@@ -283,17 +301,36 @@ namespace WindowsPhone.Tools
             //Opened = true;
             Opened = true;
 
-            var remoteIso = RemoteApp.GetIsolatedStore();
+            IRemoteIsolatedStorageFile remoteIso = _remoteStore;
 
+            if (remoteIso == null)
+            {
+                try
+                {
+                    remoteIso = RemoteApp.GetIsolatedStore();
+
+                }
+                catch (RemoteIsolatedStorageException)
+                {
+                    // an exception here means that we are handling an 8.1 app which needs to be handled specially
+                    // Roaming, Local, Temp
+                    UpdateModern(force);
+                    return;
+                }
+            }
+            
             List<IRemoteFileInfo> remoteFiles;
 
             try
             {
-                remoteFiles = remoteIso.GetDirectoryListing(_path);
-
-                foreach (IRemoteFileInfo remoteFile in remoteFiles)
+                if (remoteIso != null)
                 {
-                    Children.Add(new RemoteAppIsoStoreItem(_appEx, remoteFile, this));
+                    remoteFiles = remoteIso.GetDirectoryListing(_path);
+
+                    foreach (IRemoteFileInfo remoteFile in remoteFiles)
+                    {
+                        Children.Add(new RemoteAppIsoStoreItem(_appEx, remoteFile, remoteIso, this));
+                    }
                 }
             }
             catch (FileNotFoundException)
@@ -301,6 +338,21 @@ namespace WindowsPhone.Tools
                 // no files, oh well :)
             }
 
+        }
+
+        /// <summary>
+        /// Modern applications have multiple IsoStores so add these as top level folders which can then be handled in
+        /// regular Update
+        /// </summary>
+        /// <param name="force"></param>
+        private void UpdateModern(bool force)
+        {
+            var isoStores = new List<string> { "Local", "Roaming", "Temp" };
+
+            foreach (var store in isoStores)
+            {
+                Children.Add(new RemoteAppIsoStoreItem(_appEx, store));
+            }
         }
 
         # region INotifyPropertyChanged
