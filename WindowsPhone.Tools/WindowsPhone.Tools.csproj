@@ -71,7 +71,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConnectionManager.cs" />
     <Compile Include="CoreConExtensions.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="KnownApplication.cs" />
