@@ -158,7 +158,7 @@ namespace WindowsPhone.Tools
             _appEx = app;
             Name = store;
             _remoteStore = app.RemoteApplication.GetIsolatedStore(store);
-
+            
             // these are all fake directories
             Children.Add(new FakeRemoteAppIsoStoreItem(this));
 
@@ -212,6 +212,10 @@ namespace WindowsPhone.Tools
 
         public void Put(string localFile, string relativeDirectory = "", bool overwrite = false)
         {
+            // TODO: this shouldn't die silently
+            if (IsApplication)
+                return;
+
             FileAttributes attrib = File.GetAttributes(localFile);
 
             if ((attrib & FileAttributes.Directory) == FileAttributes.Directory)
@@ -288,7 +292,7 @@ namespace WindowsPhone.Tools
             // if we are forcing an update then the assumption is that we want an update
             // of either the current item or its container. If this is not a directory and
             // we have been forced, force an update on the parent
-            if (force && !IsApplication && !RemoteFile.IsDirectory())
+            if (force && !IsApplication && (RemoteFile != null && !RemoteFile.IsDirectory()))
             {
                 if (this.Parent != null)
                     this.Parent.Update(force: true);
@@ -316,20 +320,6 @@ namespace WindowsPhone.Tools
                 {
                     remoteIso = RemoteApp.GetIsolatedStore("Local");
                 }
-
-                /*
-                try
-                {
-                    remoteIso = RemoteApp.GetIsolatedStore();
-
-                }
-                catch (RemoteIsolatedStorageException)
-                {
-                    // an exception here means that we are handling an 8.1 app which needs to be handled specially
-                    // Roaming, Local, Temp
-                    UpdateModern(force);
-                    return;
-                }*/
             }
             
             List<IRemoteFileInfo> remoteFiles;
