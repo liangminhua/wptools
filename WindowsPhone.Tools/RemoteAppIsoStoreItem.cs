@@ -305,6 +305,19 @@ namespace WindowsPhone.Tools
 
             if (remoteIso == null)
             {
+
+                if (RemoteApp.InstanceID == Guid.Empty)
+                {
+                    // 8.1
+                    UpdateModern(force);
+                    return;
+                }
+                else
+                {
+                    remoteIso = RemoteApp.GetIsolatedStore("Local");
+                }
+
+                /*
                 try
                 {
                     remoteIso = RemoteApp.GetIsolatedStore();
@@ -316,7 +329,7 @@ namespace WindowsPhone.Tools
                     // Roaming, Local, Temp
                     UpdateModern(force);
                     return;
-                }
+                }*/
             }
             
             List<IRemoteFileInfo> remoteFiles;
