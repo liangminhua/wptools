@@ -1,4 +1,4 @@
-﻿extern alias Wrapper11;
+﻿//extern alias Wrapper11;
 extern alias Wrapper12;
 
 using System;
@@ -56,7 +56,7 @@ namespace WindowsPhone.Tools
         public static RemoteFileInfo GetInternalRemoteFileInfo(this IRemoteFileInfo wrapperRemoteFileInfo)
         {
             BindingFlags eFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-            var fieldInfo = (typeof(Wrapper11.Microsoft.SmartDevice.Connectivity.Wrapper.RemoteFileInfoObject)).GetField("mRemoteFileInfo", eFlags);
+            var fieldInfo = (typeof(Wrapper12.Microsoft.SmartDevice.Connectivity.Wrapper.RemoteFileInfoObject)).GetField("mRemoteFileInfo", eFlags);
 
             if (fieldInfo != null)
             {
@@ -78,10 +78,10 @@ namespace WindowsPhone.Tools
         /// </summary>
         /// <param name="wrapperRemoteIsoFile"></param>
         /// <returns></returns>
-        public static RemoteIsolatedStorageFile GetRemoteIsolatedStorageFile(this Wrapper11.Microsoft.SmartDevice.Connectivity.Wrapper.RemoteIsolatedStorageFileObject wrapperRemoteIsoFile) 
+        public static RemoteIsolatedStorageFile GetRemoteIsolatedStorageFile(this Wrapper12.Microsoft.SmartDevice.Connectivity.Wrapper.RemoteIsolatedStorageFileObject wrapperRemoteIsoFile) 
         {
             BindingFlags eFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-            var fieldInfo = (typeof(Wrapper11.Microsoft.SmartDevice.Connectivity.Wrapper.RemoteIsolatedStorageFileObject)).GetField("mRemoteIsolatedStorageFile", eFlags);
+            var fieldInfo = (typeof(Wrapper12.Microsoft.SmartDevice.Connectivity.Wrapper.RemoteIsolatedStorageFileObject)).GetField("mRemoteIsolatedStorageFile", eFlags);
 
             if (fieldInfo != null)
                 return fieldInfo.GetValue(wrapperRemoteIsoFile) as RemoteIsolatedStorageFile;

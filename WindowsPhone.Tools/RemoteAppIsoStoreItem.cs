@@ -1,4 +1,5 @@
-﻿extern alias Wrapper11;
+﻿//extern alias Wrapper11;
+extern alias Wrapper12;
 
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,9 @@ using Microsoft.SmartDevice.Connectivity;
 using System.Collections.ObjectModel;
 using System.IO;
 using Microsoft.SmartDevice.Connectivity.Interface;
-using Wrapper11.Microsoft.SmartDevice.Connectivity.Wrapper;
+using Wrapper12.Microsoft.SmartDevice.Connectivity.Wrapper;
+
+//using Wrapper11.Microsoft.SmartDevice.Connectivity.Wrapper;
 
 namespace WindowsPhone.Tools
 {
